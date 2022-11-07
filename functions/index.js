@@ -1,0 +1,108 @@
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
+const db = admin.firestore();
+
+const getData = (collection, doc) => {
+    return db
+        .collection(collection)
+        .doc(doc)
+        .get()
+        .then(function (doc) {
+            if (doc.exists) {
+                return doc.data();
+            } else {
+                return false;
+            }
+        });
+};
+export async function deleteData(collection, doc, ) {
+    await  db
+      .collection(collection)
+      .doc(doc)
+      .delete()
+      .then(() => {
+        console.log('Data deleted!');
+      });
+  }
+const getAllData = async (collection) => {
+    try {
+        const ref = db.collection(collection);
+        const querySnapshot = await ref?.get();
+        const data = [];
+        querySnapshot.forEach(documentSnapshot => {
+            data?.push(documentSnapshot.data());
+        });
+        return data;
+    } catch (error) {
+        throw new Error(SERVICES._returnError(error));
+    }
+};
+const filterCollections = async (collection, key, op, value) => {
+    try {
+        const ref = db.collection(collection);
+        const querySnapshot = await ref?.where(key, op, value).get();
+        const data = [];
+        querySnapshot.forEach(documentSnapshot => {
+            data?.push(documentSnapshot.data());
+        });
+        return data;
+    } catch (error) {
+        throw new Error(SERVICES._returnError(error));
+    }
+};
+function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+    }
+    return result;
+  }
+async function saveData(collection, doc, jsonObject, merge = true) {
+    await db
+        .collection(collection)
+        .doc(doc)
+        .set(jsonObject, { merge: merge })
+        .catch(function (error) {
+            console.error('Error writing document: ', error);
+        });
+}
+exports.sendChatMsgNotification = functions.firestore
+    .document('GroupChats/{cid}/messages/{mid}')
+    .onWrite(async (change, context) => {
+        try {
+            let after = change.after.data();
+            let before = change.before.data();
+            console.log("After", after);
+            console.log("Before", before);
+            let ownerAlbum = await getData('GroupMembers', after?.chatId);
+            let allUsers = await filterCollections('Login', 'email', 'in', ownerAlbum?.members?.length > 0 ? ownerAlbum?.members : ['h1000@gmail.com'],)
+            const payload = {
+                notification: {
+                    title: `${after?.name} Sent a message`,
+                    body: `${after?.msg}`,
+                    sound: 'default',
+                },
+                data: after?.chatData,
+            };
+            const options = {
+                priority: 'high',
+                timeToLive: 60 * 60 * 24,
+            };
+            allUsers?.map(i => {
+                if (i?.token) {
+                    admin
+                        .messaging()
+                        .sendToDevice(i?.token, payload, options)
+                        .then(reponse => {
+                            console.log('Send Chat Notification ');
+                        });
+                }
+            })
+        } catch (error) {
+            console.log('error in Chat Notification', error);
+        }
+    });

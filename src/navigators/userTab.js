@@ -9,6 +9,7 @@ import fontFamily from '../assets/config/fontFamily';
 import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import ShowStates from '../screens/ShowStates/ShowStates';
+import Profile from '../screens/Profile/Profile';
 
 const ScannerButton = (prop) => {
   return (
@@ -51,6 +52,18 @@ const UserTab=(props)=> {
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <FontAwesome5 name={'map'} size={20} color={focused ? "#fff" : "grey"} />
               <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>States</Text>
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen name="Profile" component={Profile}
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Entypo name={'user'} size={20} color={focused ? "#fff" : "grey"} />
+              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Profile</Text>
             </View>
           )
         }}

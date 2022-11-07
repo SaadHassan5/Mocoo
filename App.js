@@ -7,18 +7,28 @@
  */
 
 import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
-import {} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { } from 'react-native';
 import { Provider } from 'react-redux';
 import Stack from './src/navigators/main-navigator';
 import { store } from './src/root/store';
+import { cancel, LocalNotifee } from './src/Notification/LocalPushController';
+import { bootstrap, foreNotifee, notf, onBackNotify } from './src/Notification/NotificationHandler';
 
-const App=()=>{
-  return(
+const App = () => {
+  const nav = useRef();
+
+  useEffect(() => {
+    onBackNotify(nav)
+    bootstrap(nav)
+    foreNotifee(nav);
+    notf();
+  }, [])
+  return (
     <Provider store={store}>
-    <NavigationContainer>
-      <Stack/>
-    </NavigationContainer>
+      <NavigationContainer ref={nav}>
+        <Stack />
+      </NavigationContainer>
     </Provider>
   )
 }

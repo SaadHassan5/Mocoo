@@ -96,7 +96,7 @@ export default function RegisterScreen(props) {
         show={show}
         pickerButtonOnPress={(item) => {
           console.log('OBJ',item?.name?.en);
-          setCountryCode(item.dial_code);
+          setCountryCode(item.dial_code?.split('+')[1]);
           setCountry(item?.name?.en)
           setShow(false);
         }}

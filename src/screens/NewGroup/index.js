@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, View, FlatList, Image, ScrollView } from 'react-native'
+import { ActivityIndicator, View, FlatList, Image, ScrollView, Text } from 'react-native'
 import AppButton from '../../components/AppButton'
 import AppTextInput from '../../components/AppTextInput'
 import Header from '../../components/Header'
@@ -13,22 +13,12 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import { connect } from 'react-redux'
 import { ChangeBackgroundColor, GetUser } from '../../root/action'
 
-function NewState(props) {
+function NewGroup(props) {
     const [active, setActive] = useState(false)
     const [change, setChange] = useState(false)
     const [imgs, setImgs] = useState([])
     const [countryName, setCountryName] = useState(props?.user?.country)
     const [cState, setcState] = useState("")
-    const [open, setOpen] = useState(false);
-    const [dropValue, setValue] = useState("Buy Sell - Sell Something to friends and mutual Friends");
-    const [items, setItems] = useState([
-        { label: 'Buy Sell - Sell Something to friends and mutual Friends', value: 'Buy Sell - Sell Something to friends and mutual Friends' },
-        { label: 'Going Out', value: 'Going Out' },
-        { label: 'House on rent', value: 'House on rent' },
-        { label: 'Trip plan/Idea', value: 'Trip plan/Idea' },
-        { label: 'Need help', value: 'Need help' },
-    ]);
-
     useEffect(() => {
         console.log(props?.route);
 
@@ -51,20 +41,23 @@ function NewState(props) {
                 if (res) {
                     let obj = {
                         country: countryName?.toLowerCase(),
-                        state: cState,
+                        state:props?.route?.params?.state,
+                        groupName:props?.route?.params?.cityName+"-"+cState,
+                        cityId:props?.route?.params?.cityId,
+                        stateId:props?.route?.params?.stateId,
                         owner:props?.user?.email,
                     }
                     props?.navigation?.goBack();
                             let r = await uploadFile(imgs[0]?.uri, imgs[0]?.fileName, countryName)
                     obj = {
                         ...obj,
-                        image: r,
+                        groupImage: r,
                     }
                     let iid= props?.user?.name?.split(' ')[0]?.toLowerCase()+ makeid(20);
                     console.log('Save obj',obj);
-                    await saveData("States", iid, {
+                    await saveData("Groups", iid, {
                         ...obj,
-                        stateId:iid,
+                        groupId:iid,
                         time:new Date()?.getTime(),
                     })
                 }
@@ -99,30 +92,17 @@ function NewState(props) {
             <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
                 <Header
                     style={{ backgroundColor: colors.light }}
-                    title="Add State"
+                    title="Add Group"
                     onPress={() => props.navigation.goBack()}
                 />
 
                     <View style={styles.paymentWrapper}>
                         <View style={styles.paymentBox}>
-                            <AppTextInput value={countryName} onChange={(e) => { setCountryName(e) }} placeholderText="Country" />
-                            <AppTextInput value={cState} onChange={(e) => { setcState(e) }} placeholderText="State Name" />
-                            {/* <DropDownPicker
-                                open={open}
-                                value={dropValue}
-                                items={items}
-                                setOpen={setOpen}
-                                setValue={setValue}
-                                setItems={setItems}
-                                style={{ borderWidth: 1 }}
-                                containerStyle={{ borderWidth: 0 }}
-                                placeholder="Buy Sell - Sell Something to friends and mutual Friends"
-                                // containerStyle={{borderColor:palette.lighBlueBtn}}
-                                placeholderStyle={{
-                                    color: "grey",
-                                    fontWeight: "bold"
-                                }}
-                            /> */}
+                            <AppTextInput editable={false} value={props?.route?.params?.country}  placeholderText="Country" />
+                            <AppTextInput editable={false} value={props?.route?.params?.state}  placeholderText="State" />
+                            <AppTextInput editable={false} value={props?.route?.params?.cityName} placeholderText="City" />
+                            <Text style={{...styles.btnTxt,color:'black'}}>Name will be: {props?.route?.params?.cityName}-{cState}</Text>
+                            <AppTextInput value={cState} onChange={(e) => { setcState(e) }} placeholderText="Group Name" />
                             {imgs?.length > 0 &&
                                 <FlatList
                                     numColumns={2}
@@ -139,7 +119,7 @@ function NewState(props) {
                                     } />
                             }
                             <AppButton onPress={() => onBrowse()} style={{ marginTop: 15 }} title="Add Image" />
-                            <AppButton onPress={() => onPost()} style={{ marginTop: 15 }} title="Add State" />
+                            <AppButton onPress={() => onPost()} style={{ marginTop: 15 }} title="Add Group" />
                         </View>
                     </View>
             </ScrollView>
@@ -160,4 +140,4 @@ const mapStateToProps = (state) => {
     }
   }
   // export default Home
-  export default connect(mapStateToProps, mapDispatchToProps)(NewState);
+  export default connect(mapStateToProps, mapDispatchToProps)(NewGroup);
