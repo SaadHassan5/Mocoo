@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "887841796181",
+    "project_id": "mocoo-4ee45",
+    "storage_bucket": "mocoo-4ee45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887841796181:android:067304f56d8e89aa9364dc",
+        "android_client_info": {
+          "package_name": "com.mocoo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRROQuPmK-StAw3jGnvqQ85Z7flIc6GXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887841796181:android:02e849699eb547b39364dc",
+        "android_client_info": {
+          "package_name": "com.mocooproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRROQuPmK-StAw3jGnvqQ85Z7flIc6GXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
