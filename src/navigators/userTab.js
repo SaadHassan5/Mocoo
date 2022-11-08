@@ -10,6 +10,7 @@ import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import ShowStates from '../screens/ShowStates/ShowStates';
 import Profile from '../screens/Profile/Profile';
+import MyChat from '../screens/MyChat/MyChat';
 
 const ScannerButton = (prop) => {
   return (
@@ -52,6 +53,20 @@ const UserTab=(props)=> {
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <FontAwesome5 name={'map'} size={20} color={focused ? "#fff" : "grey"} />
               <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>States</Text>
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen name="Chat" component={MyChat}
+        options={{
+          // tabBarLabel: true,
+          // title: 'Group',
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Entypo name={'chat'} size={20} color={focused ? "#fff" : "grey"} />
+              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Chat</Text>
             </View>
           )
         }}

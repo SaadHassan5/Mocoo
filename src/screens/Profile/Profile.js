@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Share, View, StyleSheet, Image, TouchableOpacity, ScrollView,ActivityIndicator } from 'react-native';
+import { Share, View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 import notifee, {
 } from '@notifee/react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { db, getData, saveData, uploadFile } from '../../Auth/fire';
+import { db, filterCollectionSingle, getData, saveData, uploadFile } from '../../Auth/fire';
 import { IMAGES } from '../../assets/imgs';
 import { colors, spacing } from '../../theme';
 import fontFamily from '../../assets/config/fontFamily';
@@ -18,20 +18,28 @@ import { ChangeBackgroundColor, GetUser } from '../../root/action';
 import AppTextInput from '../../components/AppTextInput';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { GlobalStyles } from '../../global/globalStyles';
 
 function Profile(props) {
   const [email, setEmail] = useState(props?.user?.email)
   const [editName, setEditName] = useState(false)
+  const [allGroups, setAllGroups] = useState([])
   const [nameToBe, setNameToBe] = useState(props?.user?.name)
+  const [bio, setBio] = useState(props?.user?.bio ? props?.user?.bio : '')
   const [active, setActive] = useState(false)
 
   useEffect(() => {
     db.collection('Users')?.doc(props?.user?.email)
-            .onSnapshot(documentSnapshot => {
-                getUser();
-            });
-      getUser();
+      .onSnapshot(documentSnapshot => {
+        getUser();
+        getSubscribedCities();
+      });
   }, [])
+  async function getSubscribedCities() {
+    const res = await filterCollectionSingle('Groups', 'groupId', 'in', props?.user?.subscribedIds?.length > 0 ? props?.user?.subscribedIds : ['abc'])
+    console.log('grooooups', res);
+    setAllGroups(res)
+  }
   const getUser = async () => {
     const val = await AsyncStorage.getItem("User")
     const res = await getData("Users", val)
@@ -93,6 +101,7 @@ function Profile(props) {
           Google?.onGoogleLogout()
           await AsyncStorage.removeItem("google");
         }
+        props?.getUser({})
         props.navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -111,7 +120,7 @@ function Profile(props) {
       if (res) {
         setEditName(false)
         await saveData('Users', props?.user?.email, {
-          name: nameToBe,
+          name: nameToBe,bio:bio,
         })
         setEditName(false)
       }
@@ -140,23 +149,42 @@ function Profile(props) {
             }
           </TouchableOpacity>
           <View style={styles.userInfo}>
+          <TouchableOpacity onPress={() => { setEditName(!editName) }} style={{  alignSelf:'center' }}>
+              <AppText style={{ ...styles.emailTxt, color: 'gray',marginTop:-HP(3) }} preset='h4'>Edit</AppText>
+            </TouchableOpacity>
             {editName ?
               <View>
                 <AppTextInput value={nameToBe} onChange={(e) => { setNameToBe(e) }} />
+                <AppTextInput placeholderText={'BIO'} value={bio} onChange={(e) => { setBio(e) }} />
                 <View style={{ marginVertical: HP(1), ...styles.row, justifyContent: 'space-around' }}>
                   <CustomBtn1 txt={'Save'} txtStyle={{ fontSize: 15 }} style={{ width: WP(30), paddingVertical: HP(1), }} onPress={() => { saveName() }} />
                   <CustomBtn1 txt={'Cancel'} txtStyle={{ fontSize: 15 }} style={{ marginLeft: WP(5), width: WP(30), paddingVertical: HP(1), }} onPress={() => { setEditName(!editName) }} />
                 </View>
               </View>
               :
-              <TouchableOpacity onPress={() => { setEditName(!editName) }} style={{ marginTop: HP(1), ...styles.row, alignSelf: 'center' }}>
+              <View>
+
                 <AppText style={{ ...styles.emailTxt, textAlign: 'center' }} preset='h4'>{props.user.name}</AppText>
-                <Entypo name='pencil' size={20} color={palette?.lighBlueBtnTitle} style={{ paddingLeft: WP(2) }} />
-              </TouchableOpacity>
+                <AppText style={{ ...styles.emailTxt, textAlign: 'center',fontFamily:fontFamily.medium }} preset='h4'>{props?.user?.bio}</AppText>
+
+              </View>
             }
             <AppText style={styles.userEmail}>{props.user.email}</AppText>
           </View>
-        </View>
+          
+        </View >
+        <FlatList
+          numColumns={1}
+          style={{ flex: 1, marginTop: HP(7) }}
+          data={allGroups}
+          contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
+          keyExtractor={item => item.id}
+          renderItem={({ item, index }) =>
+            <TouchableOpacity onPress={() => { props?.navigation?.navigate('GroupChat', item) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
+              <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.groupName}</Text>
+            </TouchableOpacity>
+          } />
 
       </ScrollView>
     </>

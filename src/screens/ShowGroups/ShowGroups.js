@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUser } from '../../root/action';
 import { db, filterCollectionDouble, filterCollectionSingle, getData, saveData } from '../../Auth/fire';
 import { GlobalStyles } from '../../global/globalStyles';
-import { HP, WP } from '../../assets/config';
+import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
@@ -28,26 +28,32 @@ const ShowGroups = (props) => {
     setAllGroups(res)
   }
   async function goToGroup(item) {
-    const res = await getData('GroupMembers', item?.id)
-    if (res?.members?.find(i => i?.email == props?.user?.emai))
+    // const res = await getData('GroupMembers', item?.id)
+    // console.log('resss',res?.members);
+    // if (!res?.members?.find(i => i == props?.user?.email)){
+    //   AlertService.confirm('You need to Join Group', 'Subscribe', 'cancel').then(async (r) => {
+    //     if (r) {
+    //       AlertService?.toastPrompt("Subscribed")
+    //       props?.navigation?.navigate('GroupChat', item)
+    //       let temp=res?.members?[...res?.members,props?.user?.email]:[props?.user?.email]
+    //       let tempUser=!props?.user?.subscribedIds?.find(i => i == item?.id)?[...props?.user?.subscribedIds,item?.id]:[...props?.user?.subscribedIds]
+    //       await saveData('GroupMembers',item?.id,{
+    //         members:temp,
+    //       })
+    //       await saveData('Users',props?.user?.email,{
+    //         subscribedIds:tempUser,
+    //       })
+    //     }
+    //   })
+    // }
+    // else {
       props?.navigation?.navigate('GroupChat', item)
-    else {
-      AlertService.confirm('You need to Join Group', 'Subscribe', 'cancel').then(async (r) => {
-        if (r) {
-          AlertService?.toastPrompt("Subscribed")
-          props?.navigation?.navigate('GroupChat', item)
-          let temp=res?.members?[...res?.members]:[props?.user?.email]
-          await saveData('GroupMembers',item?.id,{
-            members:temp,
-          })
-        }
-      })
-    }
+    // }
   }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
       <Header goBack={false} title={'Groups'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewGroup', props?.route?.params)}} txt={'Add Group'} style={{ width: WP(70), marginTop: HP(4), alignSelf: 'center' }} />
+      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewGroup', props?.route?.params)}} txt={'Add Group'} style={{ width: WP(70),backgroundColor:palette?.white, alignSelf: 'center' }} />
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
         <FlatList
           numColumns={1}

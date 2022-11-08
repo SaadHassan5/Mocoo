@@ -33,7 +33,7 @@ export async function getAllOfNestedCollection(collection: any,doc,collection1) 
 export async function filterCollectionDouble(collection: any,key,op,value,key1,op1,value1) {
   try {
     let data: any[] = [];
-    let querySnapshot = await firestore().collection(collection).where(key1,op,value).where(key1,op1,value1).get();
+    let querySnapshot = await firestore().collection(collection).where(key,op,value).where(key1,op1,value1).get();
     querySnapshot.forEach(function (doc) {
         data.push({ ...doc?.data(), id: doc?.ref?.id });
     });
@@ -80,6 +80,20 @@ export async function deleteData(collection: any, doc: any, ) {
   await  firestore()
     .collection(collection)
     .doc(doc)
+    .delete()
+    .then(() => {
+      res=true
+      console.log('Data deleted!');
+    }).catch((err)=>{
+      res=false;
+    })
+    return res;
+}
+export async function nestedDeleteData(collection: any, doc: any,col1:any,doc1 ) {
+  let res;
+  await  firestore()
+    .collection(collection)
+    .doc(doc)?.collection(col1)?.doc(doc1)
     .delete()
     .then(() => {
       res=true

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUser } from '../../root/action';
 import { db, filterCollectionSingle, getData } from '../../Auth/fire';
 import { GlobalStyles } from '../../global/globalStyles';
-import { HP, WP } from '../../assets/config';
+import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 
@@ -29,7 +29,7 @@ const ShowCities = (props) => {
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
       <Header goBack={false} title={'Cities'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewCities',props?.route?.params) }} txt={'Add City'} style={{ width: WP(70), marginTop: HP(4), alignSelf: 'center' }} />
+      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewCities',props?.route?.params) }} txt={'Add City'} style={{ width: WP(70),  alignSelf: 'center',backgroundColor:palette?.white }} />
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
         <FlatList
           numColumns={1}

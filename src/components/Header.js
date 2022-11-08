@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Platform, StatusBar, SafeAreaView } from "react-native";
+import { View, TouchableOpacity, Platform, StatusBar, SafeAreaView, Image } from "react-native";
 import React from "react";
 
 import { ArrowLeft, Logout } from "../svg";
@@ -7,7 +7,7 @@ import { colors } from "../theme";
 import { HP, WP } from "../assets/config";
 import fontFamily from "../assets/config/fontFamily";
 
-export default function Header({ goBack = true, onPress, title, titleStyle, style, logout, rightOptionTxt,rightOptionPress,leftOptionTxt,leftOptionPress  }) {
+export default function Header({ goBack = true, onPress, title, titleStyle, style, logout, rightOptionTxt, rightOptionPress, leftOptionTxt, leftOptionPress, titleView, img,imgStyle }) {
     return (
         <SafeAreaView
             style={[{
@@ -95,19 +95,24 @@ export default function Header({ goBack = true, onPress, title, titleStyle, styl
                     <Logout />
                 </TouchableOpacity>
             )}
-            <AppText
-                preset="h4"
-                style={{
-                    fontSize: 18,
-                    color: colors.black,
-                    textAlign:'center',
-                    fontFamily: fontFamily.bold,width:WP(65),
-                    ...titleStyle,
-                }}
-                numberOfLines={1}
-            >
-                {title}
-            </AppText>
+            <View style={{ width: WP(65), ...titleView }}>
+                {img &&
+                    <Image source={{ uri: img }} style={{ ...imgStyle }} />
+                }
+                <AppText
+                    preset="h4"
+                    style={{
+                        fontSize: 18,
+                        color: colors.black,
+                        textAlign: 'center',
+                        fontFamily: fontFamily.bold,
+                        ...titleStyle,
+                    }}
+                    numberOfLines={1}
+                >
+                    {title}
+                </AppText>
+            </View>
         </SafeAreaView>
     );
 }

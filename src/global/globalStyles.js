@@ -28,5 +28,8 @@ export const GlobalStyles=StyleSheet.create({
       },
       boldTxt:{
         fontFamily:fontFamily.bold,fontSize:18,color:palette.blackGray
+      },
+      mediumTxt:{
+        fontFamily:fontFamily.mediumTxt,fontSize:15,color:palette.blackGray
       }
 })

@@ -34,10 +34,10 @@ export default function RegisterScreen(props) {
   const [countryCode, setCountryCode] = useState('');
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const handleFormSubmit = async (values) => {
-    if (phone.length<7 || countryCode?.trim() == "") {
+    if (phone.length<7 || countryCode?.trim() == "" || country?.trim() == "" || imgs=={}) {
       AlertService?.show('Enter valid number')
       return
     }
@@ -58,15 +58,15 @@ export default function RegisterScreen(props) {
           country:country,
         })
       setActive(false)
-      }
       props.navigation.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [
-            { name: 'UserTab' },
+            { name: 'Splash' },
           ]
         })
       );
+      }
     }
   }
   async function onBrowse(res) {

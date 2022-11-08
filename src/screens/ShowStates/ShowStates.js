@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUser } from '../../root/action';
 import { db, filterCollectionSingle, getData } from '../../Auth/fire';
 import { GlobalStyles } from '../../global/globalStyles';
-import { HP, WP } from '../../assets/config';
+import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 
@@ -16,20 +16,21 @@ const ShowStates = (props) => {
   const [allStates, setAllStates] = useState([])
 
   useEffect(() => { 
+    console.log('RED',props?.user);
     db.collection('States')?.where('country', '==', props?.user?.country?.toLowerCase())
     .onSnapshot(documentSnapshot => {
         getStates();
     });
   }, [])
   async function getStates() {
-    const res = await filterCollectionSingle('States', 'country', '==', props?.user?.country?.toLowerCase())
+    const res = await filterCollectionSingle('States', 'country', '==', props?.user?.country?props?.user?.country.toLowerCase():"")
     console.log('States=======>', res);
     setAllStates(res)
   }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
       <Header goBack={false} title={'States'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewState') }} txt={'Add States'} style={{ width: WP(70), marginTop: HP(4), alignSelf: 'center' }} />
+      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewState') }} txt={'Add States'} style={{ width: WP(70), alignSelf: 'center',backgroundColor:palette?.white }} />
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
         <FlatList
           numColumns={1}

@@ -51,7 +51,7 @@ export default function LoginScreen(props) {
       <CountryPicker
         show={show}
         pickerButtonOnPress={(item) => {
-          setCountryCode(item.dial_code);
+          setCountryCode(item.dial_code?.split('+')[1]);
           setShow(false);
         }}
         onBackdropPress={() => { setShow(false) }}
@@ -67,13 +67,14 @@ export default function LoginScreen(props) {
         </View>
         <View style={styles.formContainer}>
           <AppForm
+          validationSchema={validationSchema}
             initialValues={{ password: "" }}
             onSubmit={async (values) => {
+              const password = values.password;
               if (phone.length < 7 || countryCode?.trim() == "") {
                 AlertService?.show('Enter valid number')
                 return
               }
-              const password = values.password;
               if (check == 'uncheck')
                 await FireAuth.Signin(countryCode + phone, password, props)
               else {
@@ -92,7 +93,6 @@ export default function LoginScreen(props) {
                 //   AlertService?.toastPrompt("Wrong Credentials")
               }
             }}
-            validationSchema={validationSchema}
           >
             <View style={{ flexDirection: 'row', marginBottom: HP(2) }}>
               <TouchableOpacity style={{ backgroundColor: colors.light }} onPress={() => { setShow(true) }}>
@@ -115,6 +115,7 @@ export default function LoginScreen(props) {
               <Checkbox status={check == "check" ? 'checked' : 'unchecked'} color={colors.primary} uncheckedColor={'red'} />
             </TouchableOpacity>
             <SubmitButton title="Login" style={{ marginTop: spacing[4],paddingVertical:HP(1) }} />
+            
           </AppForm>
         </View>
       </ScrollView>

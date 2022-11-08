@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Platform, ToastAndroid } from 'react-native';
-import { filterCollection, getData, saveData } from './fire';
+import { filterCollection, filterCollectionDouble, filterCollectionSingle, getData, saveData } from './fire';
 import { CommonActions } from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import AlertService from '../Services/alertService';
@@ -84,8 +84,8 @@ const Signup = async (email, password, name, props) => {
 }
 const Signin = async (email, password, props) => {
   // let dat=new Date().toDateString().toString().split(' ')
-  console.log('signin');
-  const res =await filterCollection('Login',email,password,'email','password')
+  console.log('signin',email+"  ",password);
+  const res =await filterCollectionDouble('Login',"email","==",email,"password",'==',password)
   if(res?.length>0){
       AlertService.toastPrompt('signed in!');
       const fcmToken = await messaging().getToken()

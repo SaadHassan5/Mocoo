@@ -12,6 +12,8 @@ import GroupChat from '../screens/Chat.js/GroupChat';
 import ShowGroups from '../screens/ShowGroups/ShowGroups';
 import NewGroup from '../screens/NewGroup';
 import Profile from '../screens/Profile/Profile';
+import IndividualChat from '../screens/IndividualChat/IndividualChat';
+import MyChat from '../screens/MyChat/MyChat';
 
 const MyStack = createStackNavigator();
 class Stack extends Component {
@@ -30,6 +32,8 @@ class Stack extends Component {
           <MyStack.Screen name="ShowGroups" component={ShowGroups} />
           <MyStack.Screen name="NewGroup" component={NewGroup} />
           <MyStack.Screen name="Profile" component={Profile} />
+          <MyStack.Screen name="IndividualChat" component={IndividualChat} />
+          <MyStack.Screen name="MyChat" component={MyChat} />
         </MyStack.Navigator>
     )
   }
