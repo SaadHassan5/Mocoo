@@ -36,7 +36,7 @@ const Splash = (props) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
-      <View style={{ width: '100%', height: "100%", backgroundColor: '#000000', alignSelf: 'center', justifyContent: 'center', alignItems: 'center', position: 'absolute', }}>
+      <View style={{ width: '100%', height: "100%", backgroundColor: '#FF5757', alignSelf: 'center', justifyContent: 'center', alignItems: 'center', position: 'absolute', }}>
         <ImageBackground resizeMode='contain' style={{width: '100%', height: "100%", }} source={IMAGES.blackLogo}>
 
         </ImageBackground>
