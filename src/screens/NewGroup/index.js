@@ -6,7 +6,7 @@ import Header from '../../components/Header'
 import { launchImageLibrary } from 'react-native-image-picker';
 import { HP, WP } from '../../assets/config'
 import { colors } from '../../theme'
-import { saveData, uploadFile } from '../../Auth/fire'
+import { getData, saveData, uploadFile } from '../../Auth/fire'
 import AlertService from '../../Services/alertService'
 import { styles } from './style'
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -19,10 +19,24 @@ function NewGroup(props) {
     const [imgs, setImgs] = useState([])
     const [countryName, setCountryName] = useState(props?.user?.country)
     const [cState, setcState] = useState("")
+    const [open, setOpen] = useState(false);
+    const [dropValue, setValue] = useState(null);
+    const [items, setItems] = useState([]);
+
     useEffect(() => {
         console.log(props?.route);
+        getCategories();
 
     }, [])
+    async function getCategories(){
+        let res=await getData('AdminData','group');
+        console.log('ress',res);
+        let temp=[]
+        res?.categorie?.map((i)=>{
+            temp?.push({label:i,value:i})
+        })
+        setItems(temp)
+    }
     function makeid(length) {
         var result = '';
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -34,7 +48,7 @@ function NewGroup(props) {
         return result;
     }
     async function onPost() {
-        if (countryName?.trim() != "" && cState?.trim() != "" && imgs?.length > 0) {
+        if (countryName?.trim() != "" && cState?.trim() != "" && imgs?.length > 0 && dropValue!=null) {
 
             // console.log("TMEMATCH", tempMatch);
             AlertService.confirm("Confirmation").then(async (res) => {
@@ -46,6 +60,7 @@ function NewGroup(props) {
                         cityId:props?.route?.params?.cityId,
                         stateId:props?.route?.params?.stateId,
                         owner:props?.user?.email,
+                        category:dropValue
                     }
                     props?.navigation?.goBack();
                             let r = await uploadFile(imgs[0]?.uri, imgs[0]?.fileName, countryName)
@@ -103,6 +118,22 @@ function NewGroup(props) {
                             <AppTextInput editable={false} value={props?.route?.params?.cityName} placeholderText="City" />
                             <Text style={{...styles.btnTxt,color:'black'}}>Name will be: {props?.route?.params?.cityName}-{cState}</Text>
                             <AppTextInput value={cState} onChange={(e) => { setcState(e) }} placeholderText="Group Name" />
+                             <DropDownPicker
+                                open={open}
+                                value={dropValue}
+                                items={items}
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                setItems={setItems}
+                                style={{ borderWidth: 1 }}
+                                containerStyle={{ borderWidth: 0 }}
+                                placeholder="Select Category"
+                                // containerStyle={{borderColor:palette.lighBlueBtn}}
+                                placeholderStyle={{
+                                    color: "grey",
+                                    fontWeight: "bold"
+                                }}
+                            />
                             {imgs?.length > 0 &&
                                 <FlatList
                                     numColumns={2}

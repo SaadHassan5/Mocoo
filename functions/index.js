@@ -115,7 +115,7 @@ exports.sendChatMsgNotification = functions.firestore
             let before = change.before.data();
             console.log("After", after);
             console.log("Before", before);
-            let allUsers = await getData('Users',after?.reciever)
+            let allUsers = await getData('Login',after?.reciever)
             const payload = {
                 notification: {
                     title: `${after?.name} Sent a message`,
@@ -138,5 +138,43 @@ exports.sendChatMsgNotification = functions.firestore
                 }
         } catch (error) {
             console.log('error in individual Chat Notification', error);
+        }
+    });
+    exports.sendCommmunityChatMsgNotification = functions.firestore
+    .document('CommunityChats/{cid}/messages/{mid}')
+    .onWrite(async (change, context) => {
+        try {
+            let after = change.after.data();
+            let before = change.before.data();
+            console.log("After", after);
+            console.log("Before", before);
+            let ownerAlbum = await getData('CommunityMembers', after?.chatId);
+            let p=ownerAlbum?.members?[...ownerAlbum?.members]:[]
+            let allUsers = await filterCollections('Login', 'email', 'in', p?.length > 0 ? p : ['h1000@gmail.com'],)
+            console.log('members',ownerAlbum,p,"All",allUsers,);
+            const payload = {
+                notification: {
+                    title: `${after?.name} Sent a message`,
+                    body: `${after?.msg}`,
+                    sound: 'default',
+                },
+                data: after?.chatData,
+            };
+            const options = {
+                priority: 'high',
+                timeToLive: 60 * 60 * 24,
+            };
+            allUsers?.map(i => {
+                if (i?.token) {
+                    admin
+                        .messaging()
+                        .sendToDevice(i?.token, payload, options)
+                        .then(reponse => {
+                            console.log('Send CommunityMembers Notification ');
+                        });
+                }
+            })
+        } catch (error) {
+            console.log('error in CommunityMembers Notification', error);
         }
     });

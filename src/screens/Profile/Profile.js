@@ -180,7 +180,7 @@ function Profile(props) {
           contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => { props?.navigation?.navigate('GroupChat', item) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
+            <TouchableOpacity onPress={() => {console.log('ITEM',item); props?.navigation?.navigate('GroupTab', {groupId:item?.groupId,groupName:item?.groupName,owner:item?.owner}) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
               <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.groupName}</Text>
             </TouchableOpacity>

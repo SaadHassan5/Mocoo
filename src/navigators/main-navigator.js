@@ -14,6 +14,14 @@ import NewGroup from '../screens/NewGroup';
 import Profile from '../screens/Profile/Profile';
 import IndividualChat from '../screens/IndividualChat/IndividualChat';
 import MyChat from '../screens/MyChat/MyChat';
+import SubGroupPosts from '../screens/SubGroupPosts/SubGroupPosts';
+import GroupTab from './groupTab';
+import NewPost from '../screens/NewPost';
+import GroupMembers from '../screens/GroupMembers/GroupMembers';
+import ShowCommunity from '../screens/ShowCommunity/ShowCommunity';
+import NewCommunity from '../screens/NewCommunity';
+import CommunityChat from '../screens/CommunityChat/CommunityChat';
+import OtherProfile from '../screens/OtherProfile/OtherProfile';
 
 const MyStack = createStackNavigator();
 class Stack extends Component {
@@ -34,6 +42,14 @@ class Stack extends Component {
           <MyStack.Screen name="Profile" component={Profile} />
           <MyStack.Screen name="IndividualChat" component={IndividualChat} />
           <MyStack.Screen name="MyChat" component={MyChat} />
+          <MyStack.Screen name="SubGroupPosts" component={SubGroupPosts} />
+          <MyStack.Screen name="GroupTab" component={GroupTab} />
+          <MyStack.Screen name="NewPost" component={NewPost} />
+          <MyStack.Screen name="GroupMembers" component={GroupMembers} />
+          <MyStack.Screen name="ShowCommunity" component={ShowCommunity} />
+          <MyStack.Screen name="NewCommunity" component={NewCommunity} />
+          <MyStack.Screen name="CommunityChat" component={CommunityChat} />
+          <MyStack.Screen name="OtherProfile" component={OtherProfile} />
         </MyStack.Navigator>
     )
   }

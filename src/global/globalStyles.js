@@ -30,6 +30,9 @@ export const GlobalStyles=StyleSheet.create({
         fontFamily:fontFamily.bold,fontSize:18,color:palette.blackGray
       },
       mediumTxt:{
-        fontFamily:fontFamily.mediumTxt,fontSize:15,color:palette.blackGray
+        fontFamily:fontFamily.medium,fontSize:15,color:palette.blackGray
+      },
+      lightTxt:{
+        fontFamily:fontFamily.light,fontSize:15,color:palette.blackGray
       }
 })

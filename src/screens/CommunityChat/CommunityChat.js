@@ -13,40 +13,41 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import AlertService from '../../Services/alertService';
 import { GlobalStyles } from '../../global/globalStyles';
-import { Menu } from 'react-native-paper';
-import { onPost } from '../../Auth/manipulateData';
 
-const GroupChat = (props) => {
+const CommunityChat = (props) => {
   const [post, setPost] = useState(props?.route?.params)
   const [chat, setChat] = useState([])
   const [members, setMembers] = useState([])
   const [membersDetail, setMembersDetail] = useState([])
-  const [chatId, setChatId] = useState(props?.route?.params?.groupId)
+  const [chatId, setChatId] = useState(props?.route?.params?.communityId)
   const [newCom, setNewCom] = useState('')
   const [active, setActive] = useState(false)
   const [replyMod, setReplyMod] = useState(false)
   const [replyObj, setReplyObj] = useState({})
-  const [visible, setVisible] = useState(false);
   const scrollRef = useRef();
   useEffect(() => {
-    db.collection('GroupChats').doc(chatId)?.collection('messages')
+    console.log("PROPS",props?.route);
+    db.collection('CommunityChats').doc(chatId)?.collection('messages')
       .onSnapshot(documentSnapshot => {
         getConservation();
       });
-    getMembers();
+      db?.collection('CommunityMembers').doc(chatId)
+      .onSnapshot(documentSnapshot => {
+        getMembers();
+      });
 
   }, [])
-  async function getUser() {
-    const res = await getData('Users', props?.user?.email)
+  async function getUser(){
+    const res =await getData('Users',props?.user?.email)
     props?.getUser(res)
   }
   const getMembers = async () => {
-    let res = await getData('GroupMembers', chatId)
+    let res = await getData('CommunityMembers', chatId)
     setMembers(res?.members ? res?.members : [])
     setMembersDetail(res?.membersDetails ? res?.membersDetails : [])
   }
   const getConservation = async () => {
-    const res = await getAllOfNestedCollection("GroupChats", chatId, "messages");
+    const res = await getAllOfNestedCollection("CommunityChats", chatId, "messages");
     let temp = res?.sort((b, a) => a?.createdAt - b?.createdAt)
     console.log(res);
     scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 })
@@ -65,7 +66,7 @@ const GroupChat = (props) => {
         name: props?.user?.name,
         msg: newCom,
         chatId: chatId,
-        chatData: { id: chatId, screen: 'GroupChat' },
+        chatData: { id: chatId, screen: 'CommunityChat' },
       }
       if (replyMod) {
         rObj = {
@@ -75,12 +76,12 @@ const GroupChat = (props) => {
       }
       setNewCom('')
       // console.log("Reply OBJ",r);
-      await saveData('GroupChats', chatId, {
+      await saveData('CommunityChats', chatId, {
         chatId: chatId,
-        groupName: props?.route?.params?.groupName,
+        communityName: props?.route?.params?.name,
         owner: props?.route?.params?.owner,
       })
-      await saveNestedData("GroupChats", chatId, 'messages', {
+      await saveNestedData("CommunityChats", chatId, 'messages', {
         ...rObj
       })
       if (chat?.length == 0) {
@@ -90,47 +91,40 @@ const GroupChat = (props) => {
       setActive(false)
     }
   }
-  async function joinGroup() {
-    AlertService.confirm('You need to Join Group', 'Subscribe', 'cancel').then(async (r) => {
-      if (r) {
-        AlertService?.toastPrompt("Subscribed")
-        let tempUser = !props?.user?.subscribedIds?.find(i => i == chatId) ? [...props?.user?.subscribedIds, chatId] : [...props?.user?.subscribedIds]
-        await saveData('Users', props?.user?.email, {
-          subscribedIds: tempUser,
+  async function joinGroup(){
+    AlertService.confirm('Confirmation', 'Subscribe', 'cancel').then(async (r) => {
+          if (r) {
+            AlertService?.toastPrompt("Subscribed")
+            let sub=props?.user?.subCommunity?[...props?.user?.subCommunity]:[]
+            let tempUser=!sub?.find(i => i == chatId)?[...sub,chatId]:[...sub];
+            await saveData('Users',props?.user?.email,{
+              subCommunity:tempUser,
+            })
+            let temp=members?[...members,props?.user?.email]:[props?.user?.email]
+            let tempD=membersDetail?[...membersDetail,{email:props?.user?.email,name:props?.user?.name,profileUri:props?.user?.profileUri}]:[{email:props?.user?.email,name:props?.user?.name,profileUri:props?.user?.profileUri}]
+            await saveData('CommunityMembers',chatId,{
+              members:temp,
+              membersDetails:tempD
+            })
+            setMembers(temp)
+            getUser()
+          }
         })
-        let temp = members ? [...members, props?.user?.email] : [props?.user?.email]
-        let tempD = membersDetail ? [...membersDetail, { email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri }] : [{ email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri }]
-        await saveData('GroupMembers', chatId, {
-          members: temp,
-          membersDetails: tempD
-        })
-        setMembers(temp)
-        getUser()
-      }
-    })
   }
-  async function onDelete(item) {
-    AlertService?.confirm('Are you sure?').then(async (res) => {
-      if (res) {
-        await nestedDeleteData('GroupChats', chatId, 'messages', item?.id)
-      }
-    })
-  }
-  async function makePost(item){
-    AlertService.confirm('Upload this message as Post?','Yes','No').then(async(res)=>{if(res){
-     await onPost(props,'',item?.msg,chatId,[])
-      AlertService.toastPrompt('Posted')
+  async function onDelete(item){
+    AlertService?.confirm('Are you sure?').then(async(res)=>{if(res){
+      await nestedDeleteData('CommunityChats',chatId,'messages',item?.id)
     }})
   }
   return (
     <>
       <Header
         style={{ backgroundColor: colors.light }}
-        title={post?.groupName}
+        title={props?.route?.params?.name?.split(post?.groupName)[1]}
         onPress={() => { props?.navigation?.goBack() }}
       />
-      {!members?.find(i => i == props?.user?.email) &&
-        <CustomBtn1 onPress={() => { joinGroup() }} txt={'Join +'} txtStyle={{ fontSize: 14 }} style={{ width: WP(40), paddingVertical: HP(1), alignSelf: "center" }} />
+      {!members?.find(i=> i==props?.user?.email) &&
+      <CustomBtn1 onPress={()=>{joinGroup()}} txt={'Join +'} txtStyle={{fontSize:14}} style={{width:WP(40),paddingVertical:HP(1),alignSelf:"center"}}/>
       }
       <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
         <FlatList
@@ -146,13 +140,6 @@ const GroupChat = (props) => {
 
               <TouchableOpacity onLongPress={() => { setReplyMod(true); setReplyObj(item) }}
                 style={{ ...styles?.card, backgroundColor: item?.email != props?.user?.email ? "rgba(245,128,128,0.7)" : palette?.lighBlueBtnTitle, width: WP(85), alignSelf: item?.email != props?.user?.email ? 'flex-start' : 'flex-end' }}>
-                {/* <Menu
-                  visible={visible}
-                  onDismiss={() => { setVisible(false) }}
-                  anchor={<TouchableOpacity onPress={() => { setVisible(true) }}><Text style={{ ...styles.emailTxt }}>...</Text></TouchableOpacity>}>
-                  <Menu.Item onPress={() => { }} title="Item 1" />
-                  <Menu.Item onPress={() => { }} title="Item 1" />
-                </Menu> */}
                 {item?.reply &&
                   <View style={{ paddingVertical: HP(1) }}>
                     <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light }}>{item?.email != props?.user?.name && item?.name?.split(' ')[0] + " "}Replied to {item?.reply?.replyEmail == props?.user?.email ? 'You' : item?.reply?.replyName?.split(' ')[0]}</Text>
@@ -161,7 +148,7 @@ const GroupChat = (props) => {
                   </View>
                 }
                 <View style={{ ...styles.row, }}>
-                  <TouchableOpacity onPress={() => { item?.email != props?.user?.email ? props?.navigation?.navigate('OtherProfile', { email: item?.email }) : console.log('my'); }}>
+                  <TouchableOpacity onPress={() => { item?.email!=props?.user?.email?props?.navigation?.navigate('OtherProfile',{email:item?.email}) :console.log('my');}}>
                     <Image source={{ uri: item?.profileUri }} style={{ width: WP(12), height: WP(12), borderRadius: WP(10) }} />
                   </TouchableOpacity>
                   <View style={{ paddingHorizontal: WP(2) }}>
@@ -170,19 +157,14 @@ const GroupChat = (props) => {
                   </View>
                 </View>
                 <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light, fontSize: 13, marginTop: HP(1), alignSelf: 'flex-end' }}>{new Date(item?.createdAt).toTimeString().split(" ")[0]}</Text>
-                {props?.user?.email == '921234567890' &&
-                  <CustomBtn1 onPress={() => { onDelete(item) }} txt={'Delete'} txtStyle={{ fontSize: 14 }} style={{ backgroundColor: palette?.purple, width: WP(20) }} />
-                }
-                <View style={{...styles.row,position: 'absolute', right: 0, }}>
-                  {props?.user?.email != item?.email &&
-                    <TouchableOpacity style={{ paddingHorizontal: WP(2) }}>
-                      <Text style={{ ...GlobalStyles.mediumTxt, color: '#fff' }}>Report</Text>
-                    </TouchableOpacity>
-                  }
-                  <TouchableOpacity onPress={()=>{makePost(item)}} style={{paddingHorizontal: WP(5) }}>
-                    <Text style={{ ...GlobalStyles.boldTxt, color: '#fff' }}>...</Text>
-                  </TouchableOpacity>
-                </View>
+              {props?.user?.email=='921234567890' &&
+              <CustomBtn1 onPress={()=>{onDelete(item)}} txt={'Delete'} txtStyle={{fontSize:14}} style={{backgroundColor:palette?.purple,width:WP(20)}}/>
+              }
+              {props?.user?.email!=item?.email &&
+              <TouchableOpacity style={{position:'absolute',right:0,paddingHorizontal:WP(5)}}>
+                <Text style={{...GlobalStyles.mediumTxt,color:'#fff'}}>Report</Text>
+              </TouchableOpacity>
+              }
               </TouchableOpacity>
             </View>
           } />
@@ -231,7 +213,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 // export default Home
-export default connect(mapStateToProps, mapDispatchToProps)(GroupChat);
+export default connect(mapStateToProps, mapDispatchToProps)(CommunityChat);
 
 const styles = StyleSheet.create({
 

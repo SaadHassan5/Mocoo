@@ -4,27 +4,16 @@ export const ChangeBackgroundColor = (backgroundColor: any) => {
         payload: backgroundColor
     };
 };
-export const CameraImgs = (Imgs: any) => {
-    return {
-        type: 'Get_Imgs',
-        payload: Imgs
-    };
-};
+
 export const GetUser = (user: any) => {
     return {
         type: 'user',
         payload: user
     };
-};
-export const GetLn = (ln: any) => {
+}
+export const GetUpdateApp = (updateApp: any) => {
     return {
-        type: 'ln',
-        payload: ln
+        type: 'updateApp',
+        payload: updateApp
     };
-};
-export const GetRoute = (routy: any) => {
-    return {
-        type: 'routy',
-        payload: routy
-    };
-};
+}
