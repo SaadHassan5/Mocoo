@@ -27,7 +27,7 @@ const GroupMembers = (props) => {
   async function getStates() {
     const res = await getData('GroupMembers', props?.route?.params?.groupId)
     console.log('States=======>', res);
-    setAllGroups(res?.membersDetails?res?.membersDetails:[])
+    setAllGroups(res?.membersDetails ? res?.membersDetails : [])
   }
 
   return (
@@ -36,7 +36,7 @@ const GroupMembers = (props) => {
       {/* <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewPost', props?.route?.params) }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center' }} /> */}
       {/* backgroundColor:palette?.white, */}
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
-      <Text style={{ ...GlobalStyles.boldTxt, textAlign:'center',paddingVertical:HP(1)}}>Total Group Members {allGroups?.length}</Text>
+        <Text style={{ ...GlobalStyles.boldTxt, textAlign: 'center', paddingVertical: HP(1) }}>Total Group Members {allGroups?.length}</Text>
         <FlatList
           numColumns={1}
           style={{ flex: 1, marginTop: HP(4) }}
@@ -44,10 +44,18 @@ const GroupMembers = (props) => {
           contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => { }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row,alignItems:'flex-start', marginBottom: HP(3) }}>
+            <TouchableOpacity onPress={() => { props?.navigation?.navigate('OtherProfile',{email:item?.email})}} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, alignItems: 'flex-start', marginBottom: HP(3) }}>
               <Image source={{ uri: item?.profileUri }} style={{ width: WP(14), height: WP(14), borderRadius: WP(12) }} />
-              <View style={{paddingLeft:WP(5)}}>
-                <Text style={{ ...GlobalStyles.boldTxt,  width: WP(60) }}>{item?.name}</Text>
+              <View style={{ paddingLeft: WP(5) }}>
+                <Text style={{ ...GlobalStyles.boldTxt, width: WP(60) }}>{item?.name}</Text>
+                {item?.bio != "" &&
+                  <TouchableOpacity>
+                    <Text style={{ ...GlobalStyles.lightTxt, width: WP(60),textDecorationLine:'underline' }}>{item?.bio}</Text>
+                  </TouchableOpacity>
+                }
+                {item?.insta != "" &&
+                  <Text style={{ ...GlobalStyles.lightTxt, width: WP(60) ,textDecorationLine:'underline'}}>Insta: {item?.insta}</Text>
+                }
               </View>
             </TouchableOpacity>
           } />

@@ -34,5 +34,8 @@ export const GlobalStyles=StyleSheet.create({
       },
       lightTxt:{
         fontFamily:fontFamily.light,fontSize:15,color:palette.blackGray
+      },
+      urlTxt:{
+        fontFamily:fontFamily.light,fontSize:15,color:palette.white,textDecorationLine:'underline'
       }
 })

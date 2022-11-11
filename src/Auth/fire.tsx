@@ -1,7 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import firebase from '@react-native-firebase/app';
 import storage from '@react-native-firebase/storage';
-import database from '@react-native-firebase/database';
 
 export const db=firestore();
 export async function getAllOfCollection(collection: any) {

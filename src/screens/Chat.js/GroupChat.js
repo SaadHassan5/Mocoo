@@ -15,7 +15,8 @@ import AlertService from '../../Services/alertService';
 import { GlobalStyles } from '../../global/globalStyles';
 import { Menu } from 'react-native-paper';
 import { onPost } from '../../Auth/manipulateData';
-
+import ParsedText from 'react-native-parsed-text';
+import { giveLink } from '../../Services/DynamicLink';
 const GroupChat = (props) => {
   const [post, setPost] = useState(props?.route?.params)
   const [chat, setChat] = useState([])
@@ -26,14 +27,17 @@ const GroupChat = (props) => {
   const [active, setActive] = useState(false)
   const [replyMod, setReplyMod] = useState(false)
   const [replyObj, setReplyObj] = useState({})
-  const [visible, setVisible] = useState(false);
+  const [isMember, setisMember] = useState(false);
   const scrollRef = useRef();
   useEffect(() => {
     db.collection('GroupChats').doc(chatId)?.collection('messages')
       .onSnapshot(documentSnapshot => {
         getConservation();
       });
-    getMembers();
+    db.collection('GroupMembers').doc(chatId)
+      .onSnapshot(documentSnapshot => {
+        getMembers();
+      });
 
   }, [])
   async function getUser() {
@@ -44,6 +48,9 @@ const GroupChat = (props) => {
     let res = await getData('GroupMembers', chatId)
     setMembers(res?.members ? res?.members : [])
     setMembersDetail(res?.membersDetails ? res?.membersDetails : [])
+    console.log(res);
+    let f = res?.members?.find(i => i == props?.user?.email)
+    setisMember(!f ? true : false)
   }
   const getConservation = async () => {
     const res = await getAllOfNestedCollection("GroupChats", chatId, "messages");
@@ -54,7 +61,7 @@ const GroupChat = (props) => {
   }
   const onSend = async () => {
     if (newCom?.trim() != "") {
-      setActive(true)
+      setisMember(false)
       Keyboard?.dismiss()
       const value = await AsyncStorage.getItem("User")
 
@@ -87,27 +94,26 @@ const GroupChat = (props) => {
         await getConservation();
       }
       scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 })
-      setActive(false)
+      if (isMember)
+        await joinGroup()
     }
   }
   async function joinGroup() {
-    AlertService.confirm('You need to Join Group', 'Subscribe', 'cancel').then(async (r) => {
-      if (r) {
-        AlertService?.toastPrompt("Subscribed")
-        let tempUser = !props?.user?.subscribedIds?.find(i => i == chatId) ? [...props?.user?.subscribedIds, chatId] : [...props?.user?.subscribedIds]
-        await saveData('Users', props?.user?.email, {
-          subscribedIds: tempUser,
-        })
-        let temp = members ? [...members, props?.user?.email] : [props?.user?.email]
-        let tempD = membersDetail ? [...membersDetail, { email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri }] : [{ email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri }]
-        await saveData('GroupMembers', chatId, {
-          members: temp,
-          membersDetails: tempD
-        })
-        setMembers(temp)
-        getUser()
-      }
+    setisMember(false)
+    AlertService?.toastPrompt("Subscribed")
+    let tempUser = !props?.user?.subscribedIds?.find(i => i == chatId) ? [...props?.user?.subscribedIds, chatId] : [...props?.user?.subscribedIds]
+    await saveData('Users', props?.user?.email, {
+      subscribedIds: tempUser,
     })
+    let temp = members ? [...members, props?.user?.email] : [props?.user?.email]
+    let us = { email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri, insta: props?.user?.insta ? props?.user?.insta : '', bio: props?.user?.bio ? props?.user?.bio : '' }
+    let tempD = membersDetail ? [...membersDetail, us] : [us]
+    await saveData('GroupMembers', chatId, {
+      members: temp,
+      membersDetails: tempD
+    })
+    setMembers(temp)
+    getUser()
   }
   async function onDelete(item) {
     AlertService?.confirm('Are you sure?').then(async (res) => {
@@ -116,11 +122,18 @@ const GroupChat = (props) => {
       }
     })
   }
-  async function makePost(item){
-    AlertService.confirm('Upload this message as Post?','Yes','No').then(async(res)=>{if(res){
-     await onPost(props,'',item?.msg,chatId,[])
-      AlertService.toastPrompt('Posted')
-    }})
+  async function makePost(item) {
+    AlertService.confirm('Upload this message as Post?', 'Yes', 'No').then(async (res) => {
+      if (res) {
+        await onPost(props, '', item?.msg, chatId, [])
+        AlertService.toastPrompt('Posted')
+      }
+    })
+  }
+  async function handleUrlPress(url, matchIndex /*: number*/) {
+    console.log(url,matchIndex);
+    giveLink(props,url)
+    // LinkingIOS.openURL(url);
   }
   return (
     <>
@@ -129,7 +142,7 @@ const GroupChat = (props) => {
         title={post?.groupName}
         onPress={() => { props?.navigation?.goBack() }}
       />
-      {!members?.find(i => i == props?.user?.email) &&
+      {isMember &&
         <CustomBtn1 onPress={() => { joinGroup() }} txt={'Join +'} txtStyle={{ fontSize: 14 }} style={{ width: WP(40), paddingVertical: HP(1), alignSelf: "center" }} />
       }
       <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
@@ -166,20 +179,31 @@ const GroupChat = (props) => {
                   </TouchableOpacity>
                   <View style={{ paddingHorizontal: WP(2) }}>
                     <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
-                    <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, paddingRight: WP(5), fontSize: 17 }}>{item?.msg}</Text>
+                    <ParsedText
+                      style={{...GlobalStyles?.mediumTxt,color:'#fff'}}
+                      parse={
+                        [
+                          { type: 'url', style: GlobalStyles.urlTxt, onPress: handleUrlPress },
+                        ]
+                      }
+                      childrenProps={{ allowFontScaling: false }}
+                    >
+                      {item?.msg}
+                    </ParsedText>
+                    {/* <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, paddingRight: WP(5), fontSize: 17 }}>{item?.msg}</Text> */}
                   </View>
                 </View>
                 <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light, fontSize: 13, marginTop: HP(1), alignSelf: 'flex-end' }}>{new Date(item?.createdAt).toTimeString().split(" ")[0]}</Text>
                 {props?.user?.email == '921234567890' &&
                   <CustomBtn1 onPress={() => { onDelete(item) }} txt={'Delete'} txtStyle={{ fontSize: 14 }} style={{ backgroundColor: palette?.purple, width: WP(20) }} />
                 }
-                <View style={{...styles.row,position: 'absolute', right: 0, }}>
+                <View style={{ ...styles.row, position: 'absolute', right: 0, }}>
                   {props?.user?.email != item?.email &&
                     <TouchableOpacity style={{ paddingHorizontal: WP(2) }}>
                       <Text style={{ ...GlobalStyles.mediumTxt, color: '#fff' }}>Report</Text>
                     </TouchableOpacity>
                   }
-                  <TouchableOpacity onPress={()=>{makePost(item)}} style={{paddingHorizontal: WP(5) }}>
+                  <TouchableOpacity onPress={() => { makePost(item) }} style={{ paddingHorizontal: WP(5) }}>
                     <Text style={{ ...GlobalStyles.boldTxt, color: '#fff' }}>...</Text>
                   </TouchableOpacity>
                 </View>

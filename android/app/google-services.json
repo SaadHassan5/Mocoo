@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:887841796181:android:067304f56d8e89aa9364dc",
-        "android_client_info": {
-          "package_name": "com.mocoo"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCRROQuPmK-StAw3jGnvqQ85Z7flIc6GXM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:887841796181:android:02e849699eb547b39364dc",
         "android_client_info": {
           "package_name": "com.mocooproject"
@@ -43,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "887841796181-jjb29oqmlpm30h8fu4s17tp5ulsoec4s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mocooproject",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "887841796181-qtuaprrlc5mgk4nj7fkp7c1ga4ja9l1o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mocooproject",
+            "certificate_hash": "4f5a5ec6278544105809e82e0a1e1687924a95bd"
+          }
+        },
+        {
           "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -58,6 +45,13 @@
             {
               "client_id": "887841796181-uh4k1u7mtiq77foihubjmbkmtuiv8bi7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "887841796181-k8t8467vldj66p0d3fmq2ec9fji3d41h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.MocooProject"
+              }
             }
           ]
         }

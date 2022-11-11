@@ -94,7 +94,7 @@ exports.sendChatMsgNotification = functions.firestore
                 timeToLive: 60 * 60 * 24,
             };
             allUsers?.map(i => {
-                if (i?.token) {
+                if (i?.token  && after?.email!=i?.email) {
                     admin
                         .messaging()
                         .sendToDevice(i?.token, payload, options)
@@ -128,7 +128,7 @@ exports.sendChatMsgNotification = functions.firestore
                 priority: 'high',
                 timeToLive: 60 * 60 * 24,
             };
-                if (allUsers?.token) {
+                if (allUsers?.token ) {
                     admin
                         .messaging()
                         .sendToDevice(allUsers?.token, payload, options)
@@ -165,7 +165,7 @@ exports.sendChatMsgNotification = functions.firestore
                 timeToLive: 60 * 60 * 24,
             };
             allUsers?.map(i => {
-                if (i?.token) {
+                if (i?.token && after?.email!=i?.email) {
                     admin
                         .messaging()
                         .sendToDevice(i?.token, payload, options)

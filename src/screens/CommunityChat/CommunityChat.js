@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, Alert } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, Alert, Linking } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors, spacing } from '../../theme';
 import Header from '../../components/Header';
@@ -24,9 +24,10 @@ const CommunityChat = (props) => {
   const [active, setActive] = useState(false)
   const [replyMod, setReplyMod] = useState(false)
   const [replyObj, setReplyObj] = useState({})
+  const [isMember, setisMember] = useState(false);
   const scrollRef = useRef();
   useEffect(() => {
-    console.log("PROPS",props?.route);
+    console.log("PROPS=======>",props?.route);
     db.collection('CommunityChats').doc(chatId)?.collection('messages')
       .onSnapshot(documentSnapshot => {
         getConservation();
@@ -45,6 +46,8 @@ const CommunityChat = (props) => {
     let res = await getData('CommunityMembers', chatId)
     setMembers(res?.members ? res?.members : [])
     setMembersDetail(res?.membersDetails ? res?.membersDetails : [])
+    let f = res?.members?.find(i => i == props?.user?.email)
+    setisMember(!f ? true : false)
   }
   const getConservation = async () => {
     const res = await getAllOfNestedCollection("CommunityChats", chatId, "messages");
@@ -55,6 +58,7 @@ const CommunityChat = (props) => {
   }
   const onSend = async () => {
     if (newCom?.trim() != "") {
+      setisMember(false)
       setActive(true)
       Keyboard?.dismiss()
       const value = await AsyncStorage.getItem("User")
@@ -89,11 +93,11 @@ const CommunityChat = (props) => {
       }
       scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 })
       setActive(false)
+     await joinGroup()
     }
   }
   async function joinGroup(){
-    AlertService.confirm('Confirmation', 'Subscribe', 'cancel').then(async (r) => {
-          if (r) {
+    setisMember(false)
             AlertService?.toastPrompt("Subscribed")
             let sub=props?.user?.subCommunity?[...props?.user?.subCommunity]:[]
             let tempUser=!sub?.find(i => i == chatId)?[...sub,chatId]:[...sub];
@@ -108,22 +112,24 @@ const CommunityChat = (props) => {
             })
             setMembers(temp)
             getUser()
-          }
-        })
   }
   async function onDelete(item){
     AlertService?.confirm('Are you sure?').then(async(res)=>{if(res){
       await nestedDeleteData('CommunityChats',chatId,'messages',item?.id)
     }})
   }
+  async function onShareUrl(){
+    let url='whatsapp://send?text=' + `${props?.user?.name} has invited you to join community https://mocooproject.page.link/community/${chatId}`;
+    await Linking?.openURL(url)
+  }
   return (
     <>
       <Header
         style={{ backgroundColor: colors.light }}
-        title={props?.route?.params?.name?.split(post?.groupName)[1]}
+        title={props?.route?.params?.name?.split('-')[2]} rightOptionPress={()=>{onShareUrl()}} rightOptionTxt={'Share'}
         onPress={() => { props?.navigation?.goBack() }}
       />
-      {!members?.find(i=> i==props?.user?.email) &&
+      {isMember &&
       <CustomBtn1 onPress={()=>{joinGroup()}} txt={'Join +'} txtStyle={{fontSize:14}} style={{width:WP(40),paddingVertical:HP(1),alignSelf:"center"}}/>
       }
       <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>

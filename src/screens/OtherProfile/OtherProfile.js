@@ -57,10 +57,13 @@ function Profile(props) {
 
               <AppText style={{ ...styles.emailTxt, textAlign: 'center' }} preset='h4'>{user.name}</AppText>
               {/* <AppText style={{ ...styles.emailTxt, textAlign: 'center', fontFamily: fontFamily.medium }} preset='h4'>{user?.bio}</AppText> */}
-              {user?.bio &&
-                <AppText style={styles.emailTxt}>{user.bio}</AppText>
-              }
-              <AppText style={styles.userEmail}>{user.email}</AppText>
+              {props?.user?.bio!="" &&
+                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center'}} >Bio: {props?.user?.bio}</AppText>
+                }
+                {props?.user?.insta!="" &&
+                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center', }} >Insta: {props?.user?.insta}</AppText>
+                }
+              {/* <AppText style={styles.userEmail}>{user.email}</AppText> */}
 
             </View>
             <TouchableOpacity onPress={() => { props?.navigation?.navigate('IndividualChat', { email: user?.email, profileUri: user?.profileUri, name: user?.name }) }} style={{ alignSelf: 'center', paddingVertical: HP(1), paddingHorizontal: WP(5) }}>
@@ -78,7 +81,7 @@ function Profile(props) {
           renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => { console.log('ITEM', item); props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner }) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.groupName}</Text>
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10),width:WP(60) }}>{item?.groupName}</Text>
             </TouchableOpacity>
           } />
 

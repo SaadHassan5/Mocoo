@@ -27,6 +27,19 @@ const GroupTab=(props)=> {
         }
       }}
     >
+    <Tab.Screen name="Members" component={GroupMembers} initialParams={props?.route?.params}
+    options={{
+      // tabBarLabel: true,
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarIcon: ({ color, size, focused }) => (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Entypo name={'users'} size={20} color={focused ? "black" : "grey"} />
+          <Text style={{ color: focused ? "black" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Members</Text>
+        </View>
+      )
+    }}
+  />
        <Tab.Screen name="GroupChat" component={GroupChat} initialParams={props?.route?.params}
         options={{
           // tabBarLabel: true,
@@ -40,19 +53,6 @@ const GroupTab=(props)=> {
           )
         }}
       />
-        <Tab.Screen name="Members" component={GroupMembers} initialParams={props?.route?.params}
-        options={{
-          // tabBarLabel: true,
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Entypo name={'users'} size={20} color={focused ? "black" : "grey"} />
-              <Text style={{ color: focused ? "black" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Members</Text>
-            </View>
-          )
-        }}
-      />
       <Tab.Screen name="ShowCommunity" component={ShowCommunity} initialParams={props?.route?.params}
         options={{
           // tabBarLabel: true,
@@ -61,7 +61,7 @@ const GroupTab=(props)=> {
           tabBarIcon: ({ color, size, focused }) => (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <MaterialCommunityIcons name={'nature-people'} size={20} color={focused ? "black" : "grey"} />
-              <Text style={{ color: focused ? "black" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Small Chat</Text>
+              <Text style={{ color: focused ? "black" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Small Chats</Text>
             </View>
           )
         }}

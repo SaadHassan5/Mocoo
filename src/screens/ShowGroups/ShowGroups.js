@@ -26,8 +26,8 @@ const ShowGroups = (props) => {
   }, [])
   async function getCategories() {
     let res = await getData('AdminData', 'group');
-    let temp = res?.categorie?.map((i) => {
-      return { category: i }
+    let temp = res?.categorie?.map((i,index) => {
+      return { category: i,select:index==0?true:false }
     })
     setCategory(temp)
   }

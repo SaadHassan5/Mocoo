@@ -98,6 +98,7 @@ const IndividualChat = (props) => {
       <Header
         style={{ backgroundColor: colors.light }}
         img={post?.profileUri}
+        onPressImg={()=>{props?.navigation?.navigate('OtherProfile',{email:post?.email})}}
         imgStyle={{ width: WP(13), height: WP(13), borderRadius: WP(10), marginRight: WP(5) }}
         titleView={{ ...styles.row, justifyContent: 'center' }}
         title={post?.name}

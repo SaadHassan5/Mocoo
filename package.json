@@ -40,6 +40,7 @@
     "react-native-linear-gradient": "^2.6.2",
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^4.12.4",
+    "react-native-parsed-text": "^0.0.22",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-reanimated": "^2.4.0",

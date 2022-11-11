@@ -14,11 +14,13 @@ import Stack from './src/navigators/main-navigator';
 import { store } from './src/root/store';
 import { cancel, LocalNotifee } from './src/Notification/LocalPushController';
 import { bootstrap, foreNotifee, notf, onBackNotify } from './src/Notification/NotificationHandler';
+import { getLink } from './src/Services/DynamicLink';
 
 const App = () => {
   const nav = useRef();
 
   useEffect(() => {
+    getLink(nav)
     onBackNotify(nav)
     bootstrap(nav)
     foreNotifee(nav);

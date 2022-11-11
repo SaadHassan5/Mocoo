@@ -11,6 +11,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import ShowStates from '../screens/ShowStates/ShowStates';
 import Profile from '../screens/Profile/Profile';
 import MyChat from '../screens/MyChat/MyChat';
+import StateNav from './statesNav';
 
 const ScannerButton = (prop) => {
   return (
@@ -43,7 +44,7 @@ const UserTab=(props)=> {
       }}
 
     >
-      <Tab.Screen name="ShowStates" component={ShowStates}
+      <Tab.Screen name="ShowStates" component={StateNav}
         options={{
           // tabBarLabel: true,
           // title: 'Group',

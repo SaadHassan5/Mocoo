@@ -26,6 +26,7 @@ function Profile(props) {
   const [allGroups, setAllGroups] = useState([])
   const [nameToBe, setNameToBe] = useState(props?.user?.name)
   const [bio, setBio] = useState(props?.user?.bio ? props?.user?.bio : '')
+  const [insta, setInsta] = useState(props?.user?.insta ? props?.user?.insta : '@')
   const [active, setActive] = useState(false)
 
   useEffect(() => {
@@ -120,7 +121,7 @@ function Profile(props) {
       if (res) {
         setEditName(false)
         await saveData('Users', props?.user?.email, {
-          name: nameToBe,bio:bio,
+          name: nameToBe, bio: bio, insta: insta,
         })
         setEditName(false)
       }
@@ -149,13 +150,16 @@ function Profile(props) {
             }
           </TouchableOpacity>
           <View style={styles.userInfo}>
-          <TouchableOpacity onPress={() => { setEditName(!editName) }} style={{  alignSelf:'center' }}>
-              <AppText style={{ ...styles.emailTxt, color: 'gray',marginTop:-HP(3) }} preset='h4'>Edit</AppText>
+            <TouchableOpacity onPress={() => { setEditName(!editName) }} style={{ alignSelf: 'center' }}>
+              <Text style={{ ...styles.emailTxt, color: 'gray', marginTop: -HP(3), textDecorationLine: 'underline' }} preset='h4'>Edit</Text>
             </TouchableOpacity>
             {editName ?
               <View>
                 <AppTextInput value={nameToBe} onChange={(e) => { setNameToBe(e) }} />
+                <Text style={{ ...styles.emailTxt, color: 'black', }} >Bio</Text>
                 <AppTextInput placeholderText={'BIO'} value={bio} onChange={(e) => { setBio(e) }} />
+                <Text style={{ ...styles.emailTxt, color: 'black', }} >Instagram</Text>
+                <AppTextInput placeholderText={'Insta'} value={insta} onChange={(e) => { setInsta(e) }} />
                 <View style={{ marginVertical: HP(1), ...styles.row, justifyContent: 'space-around' }}>
                   <CustomBtn1 txt={'Save'} txtStyle={{ fontSize: 15 }} style={{ width: WP(30), paddingVertical: HP(1), }} onPress={() => { saveName() }} />
                   <CustomBtn1 txt={'Cancel'} txtStyle={{ fontSize: 15 }} style={{ marginLeft: WP(5), width: WP(30), paddingVertical: HP(1), }} onPress={() => { setEditName(!editName) }} />
@@ -165,13 +169,17 @@ function Profile(props) {
               <View>
 
                 <AppText style={{ ...styles.emailTxt, textAlign: 'center' }} preset='h4'>{props.user.name}</AppText>
-                <AppText style={{ ...styles.emailTxt, textAlign: 'center',fontFamily:fontFamily.medium }} preset='h4'>{props?.user?.bio}</AppText>
-
+                {props?.user?.bio!="" &&
+                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center'}} preset='h4'>Bio: {props?.user?.bio}</AppText>
+                }
+                {props?.user?.insta!="" &&
+                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center', }} preset='h4'>Insta: {props?.user?.insta}</AppText>
+                }
               </View>
             }
             <AppText style={styles.userEmail}>{props.user.email}</AppText>
           </View>
-          
+
         </View >
         <FlatList
           numColumns={1}
@@ -180,7 +188,7 @@ function Profile(props) {
           contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => {console.log('ITEM',item); props?.navigation?.navigate('GroupTab', {groupId:item?.groupId,groupName:item?.groupName,owner:item?.owner}) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
+            <TouchableOpacity onPress={() => { console.log('ITEM', item); props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner }) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
               <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.groupName}</Text>
             </TouchableOpacity>
