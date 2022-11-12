@@ -34,7 +34,7 @@ export default function RegisterScreen(props) {
   const [countryCode, setCountryCode] = useState('');
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   const handleFormSubmit = async (values) => {
     if (phone.length<7 || countryCode?.trim() == "" || country?.trim() == "" || imgs=={}) {

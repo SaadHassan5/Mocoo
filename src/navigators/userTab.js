@@ -7,7 +7,7 @@ import { HP, palette, WP } from '../assets/config';
 import { colors } from '../theme';
 import fontFamily from '../assets/config/fontFamily';
 import Entypo from "react-native-vector-icons/Entypo"
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ShowStates from '../screens/ShowStates/ShowStates';
 import Profile from '../screens/Profile/Profile';
 import MyChat from '../screens/MyChat/MyChat';

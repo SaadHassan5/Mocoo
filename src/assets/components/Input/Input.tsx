@@ -39,7 +39,7 @@ const Styles = StyleSheet.create({
 export class Input extends React.Component<Props, State> {
   render() {
     return (
-      <View>
+      <View pointerEvents={this.props.editable? "none" : "auto"}>
         {this.props.password ?
           <TextInput autoCapitalize='none' onChangeText={this.props.onChange} secureTextEntry={this.props.eye} textContentType={'password'}  placeholder={this.props.placeTxt} placeholderTextColor={'#B7C1DF'} style={{ ...Styles.inp, ...this?.props?.styles, }} />
           :

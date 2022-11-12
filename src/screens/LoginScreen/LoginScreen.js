@@ -90,7 +90,7 @@ export default function LoginScreen(props) {
                 }
                 else
                   console.warn("Incorrect");
-                //   AlertService?.toastPrompt("Wrong Credentials")
+                AlertService?.toastPrompt("Wrong Credentials")
               }
             }}
           >
