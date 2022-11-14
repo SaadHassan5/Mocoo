@@ -2,7 +2,7 @@ import { makeid } from "../assets/config/MakeId";
 import AlertService from "../Services/alertService";
 import { saveData } from "./fire";
 
-export async function onPost(props,title,desc,groupId,imgs) {
+export async function onPost(props,title,desc,groupId,imgs,type) {
     if ( desc?.trim() != "") {
                 let iid= groupId+""?.slice(0,5)+"-"+ makeid(20);
                 let obj = {
@@ -13,6 +13,7 @@ export async function onPost(props,title,desc,groupId,imgs) {
                     reject:false,
                     groupId:groupId,
                     postId:iid,
+                    type:type,
                     userDetails:{
                         name:props?.user?.name,
                         profileUri:props?.user?.profileUri,

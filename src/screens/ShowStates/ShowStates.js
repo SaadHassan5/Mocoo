@@ -5,13 +5,16 @@ import { useState } from 'react';
 import { IMAGES } from '../../assets/imgs';
 import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUser } from '../../root/action';
-import { db, filterCollectionSingle, getData } from '../../Auth/fire';
+import { db, filterCollectionSingle, getData, saveData } from '../../Auth/fire';
 import { GlobalStyles } from '../../global/globalStyles';
 import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import { Input } from '../../assets/components/Input/Input';
 import UpdateModal from '../../assets/components/Modal/UpdateModal';
+// import Geocoder from 'react-native-geocoding';
+// import { _returnAddress } from '../../Services/LocationService';
+// Geocoder.init('AIzaSyA-nEsnSMgDAHbXJpP81LIxkW_ITv23VMc');
 
 const ShowStates = (props) => {
   const [active, setActive] = useState(false)
@@ -28,7 +31,23 @@ const ShowStates = (props) => {
       .onSnapshot(documentSnapshot => {
         getStates();
       });
+      // if(!props?.user?.city){
+      //   getLocation()
+      // }
   }, [])
+  // async function getLocation(){
+  //   Geocoder.from(32.585411, 71.54361700000004)
+  //   .then(async(json) => {
+  //       var addressComponent = _returnAddress(json);
+  //      console.log('Add',addressComponent);
+  //      await saveData('Users',props?.user?.email,{
+  //       city:addressComponent?.city,
+  //      })
+  //   }).catch(error => {
+  //    console.log('error',error);
+        
+  //   })
+  // }
   async function getStates() {
     const res = await filterCollectionSingle('States', 'country', '==', props?.user?.country ? props?.user?.country.toLowerCase() : "")
     console.log('States=======>', res);
@@ -36,11 +55,6 @@ const ShowStates = (props) => {
     setForSearch(res)
   }
   async function onSearch() {
-    //     fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + 32.585411 + ',' + 71.54361700000004 + '&key=' + 'AIzaSyBUzhzbhsFawQT3agkQ1cinAmi1JUT35HQ')
-    //         .then((response) => response.json())
-    //         .then((responseJson) => {
-    //             console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
-    // })
     let filteredData = forSearch.filter(function (item) {
       return item.state.toLowerCase().includes(searchTxt?.toLowerCase());
     });
@@ -71,7 +85,7 @@ const ShowStates = (props) => {
             </TouchableOpacity>
           } />
       </ScrollView>
-      <UpdateModal mod={updeteMod} onPress={()=>{setUpdateMod(false)}} onUpate={async()=>{await Linking?.openURL('https://play.google.com/store/apps/details?id=com.mocooproject')}}/>
+      {/* <UpdateModal mod={updeteMod} onPress={()=>{setUpdateMod(false)}} onUpate={async()=>{await Linking?.openURL('https://play.google.com/store/apps/details?id=com.mocooproject')}}/> */}
     </SafeAreaView>
   )
 }

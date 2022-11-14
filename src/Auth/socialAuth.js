@@ -34,8 +34,18 @@ const config = {
 
 // firebase.initializeApp(credentials);
 
-const Logout = async () => {
-  await auth().signOut();
+const Logout = async (props) => {
+  await AsyncStorage.removeItem("User")
+  await AsyncStorage.removeItem("Admin")
+  props?.getUser({})
+  props.navigation.dispatch(
+    CommonActions.reset({
+      index: 0,
+      routes: [
+        { name: 'Splash' },
+      ]
+    })
+  );
 }
 Date.prototype.getWeek = function () {
   var onejan = new Date(this.getFullYear(), 0, 1);
@@ -49,63 +59,63 @@ const Signup = async (email, password, name, props) => {
   let response = {};
   const today = new Date();
   const currentWeekNumber = today.getWeek();
-  const res=await getData('Login',email)
-  if(res) {
+  const res = await getData('Login', email)
+  if (res) {
     AlertService?.show('User Already Exist')
-    response=false
+    response = false
   }
-  else{
-      AlertService.toastPrompt('User account created & signed in!');
-      const fcmToken = await messaging().getToken()
-      console.log("user", res);
-      await AsyncStorage.setItem('User', email);
-      await saveData("Users", email, {
-        email: email,
-        name: name,
-        history: [],
-        pin: [],
-        subscribedIds: [],
-        profileUri: '',
-        showReminder: true,
-        QA: [],
-      })
-      await saveData('Login',email,{
-        email: email,
-        password:password,
-        token: fcmToken,
-        month: new Date().getMonth(),
-        date: new Date().getDate(),
-        year: new Date().getFullYear(),
-        week: currentWeekNumber,
-      })
-      response = true;
-    }
+  else {
+    AlertService.toastPrompt('User account created & signed in!');
+    const fcmToken = await messaging().getToken()
+    console.log("user", res);
+    await AsyncStorage.setItem('User', email);
+    await saveData("Users", email, {
+      email: email,
+      name: name,
+      history: [],
+      pin: [],
+      subscribedIds: [],
+      profileUri: '',
+      showReminder: true,
+      QA: [],
+    })
+    await saveData('Login', email, {
+      email: email,
+      password: password,
+      token: fcmToken,
+      month: new Date().getMonth(),
+      date: new Date().getDate(),
+      year: new Date().getFullYear(),
+      week: currentWeekNumber,
+    })
+    response = true;
+  }
   return response;
 }
 const Signin = async (email, password, props) => {
   // let dat=new Date().toDateString().toString().split(' ')
-  console.log('signin',email+"  ",password);
-  const res =await filterCollectionDouble('Login',"email","==",email,"password",'==',password)
-  if(res?.length>0){
-      AlertService.toastPrompt('signed in!');
-      const fcmToken = await messaging().getToken()
-      await AsyncStorage.setItem('User', email);
-      await saveData("Login", email, {
-        email: email,
-        token: fcmToken,
+  console.log('signin', email + "  ", password);
+  const res = await filterCollectionDouble('Login', "email", "==", email, "password", '==', password)
+  if (res?.length > 0) {
+    AlertService.toastPrompt('signed in!');
+    const fcmToken = await messaging().getToken()
+    await AsyncStorage.setItem('User', email);
+    await saveData("Login", email, {
+      email: email,
+      token: fcmToken,
+    })
+    props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Splash' },
+        ]
       })
-      props.navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [
-            { name: 'Splash' },
-          ]
-        })
-      );
-    }
-    else{
-      AlertService?.show('Invalid Credentials')
-    }
+    );
+  }
+  else {
+    AlertService?.show('Invalid Credentials')
+  }
 }
 export const FireAuth = {
   Signup,

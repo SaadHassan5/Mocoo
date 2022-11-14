@@ -15,15 +15,15 @@ const getData = (collection, doc) => {
             }
         });
 };
-async function deleteData(collection, doc, ) {
-    await  db
-      .collection(collection)
-      .doc(doc)
-      .delete()
-      .then(() => {
-        console.log('Data deleted!');
-      });
-  }
+async function deleteData(collection, doc,) {
+    await db
+        .collection(collection)
+        .doc(doc)
+        .delete()
+        .then(() => {
+            console.log('Data deleted!');
+        });
+}
 const getAllData = async (collection) => {
     try {
         const ref = db.collection(collection);
@@ -55,11 +55,11 @@ function makeid(length) {
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() *
-        charactersLength));
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
     }
     return result;
-  }
+}
 async function saveData(collection, doc, jsonObject, merge = true) {
     await db
         .collection(collection)
@@ -69,6 +69,7 @@ async function saveData(collection, doc, jsonObject, merge = true) {
             console.error('Error writing document: ', error);
         });
 }
+////////////Chats
 exports.sendChatMsgNotification = functions.firestore
     .document('GroupChats/{cid}/messages/{mid}')
     .onWrite(async (change, context) => {
@@ -78,9 +79,9 @@ exports.sendChatMsgNotification = functions.firestore
             console.log("After", after);
             console.log("Before", before);
             let ownerAlbum = await getData('GroupMembers', after?.chatId);
-            let p=ownerAlbum?.members?[...ownerAlbum?.members]:[]
+            let p = ownerAlbum?.members ? [...ownerAlbum?.members] : []
             let allUsers = await filterCollections('Login', 'email', 'in', p?.length > 0 ? p : ['h1000@gmail.com'],)
-            console.log('members',ownerAlbum,p,"All",allUsers,);
+            console.log('members', ownerAlbum, p, "All", allUsers,);
             const payload = {
                 notification: {
                     title: `${after?.name} Sent a message`,
@@ -94,7 +95,7 @@ exports.sendChatMsgNotification = functions.firestore
                 timeToLive: 60 * 60 * 24,
             };
             allUsers?.map(i => {
-                if (i?.token  && after?.email!=i?.email) {
+                if (i?.token && after?.email != i?.email) {
                     admin
                         .messaging()
                         .sendToDevice(i?.token, payload, options)
@@ -107,7 +108,7 @@ exports.sendChatMsgNotification = functions.firestore
             console.log('error in Chat Notification', error);
         }
     });
-    exports.sendIndividualChatMsgNotification = functions.firestore
+exports.sendIndividualChatMsgNotification = functions.firestore
     .document('IndividualChat/{cid}/messages/{mid}')
     .onWrite(async (change, context) => {
         try {
@@ -115,7 +116,7 @@ exports.sendChatMsgNotification = functions.firestore
             let before = change.before.data();
             console.log("After", after);
             console.log("Before", before);
-            let allUsers = await getData('Login',after?.reciever)
+            let allUsers = await getData('Login', after?.reciever)
             const payload = {
                 notification: {
                     title: `${after?.name} Sent a message`,
@@ -128,19 +129,19 @@ exports.sendChatMsgNotification = functions.firestore
                 priority: 'high',
                 timeToLive: 60 * 60 * 24,
             };
-                if (allUsers?.token ) {
-                    admin
-                        .messaging()
-                        .sendToDevice(allUsers?.token, payload, options)
-                        .then(reponse => {
-                            console.log('Send individual Chat Notification ');
-                        });
-                }
+            if (allUsers?.token) {
+                admin
+                    .messaging()
+                    .sendToDevice(allUsers?.token, payload, options)
+                    .then(reponse => {
+                        console.log('Send individual Chat Notification ');
+                    });
+            }
         } catch (error) {
             console.log('error in individual Chat Notification', error);
         }
     });
-    exports.sendCommmunityChatMsgNotification = functions.firestore
+exports.sendCommmunityChatMsgNotification = functions.firestore
     .document('CommunityChats/{cid}/messages/{mid}')
     .onWrite(async (change, context) => {
         try {
@@ -149,9 +150,9 @@ exports.sendChatMsgNotification = functions.firestore
             console.log("After", after);
             console.log("Before", before);
             let ownerAlbum = await getData('CommunityMembers', after?.chatId);
-            let p=ownerAlbum?.members?[...ownerAlbum?.members]:[]
+            let p = ownerAlbum?.members ? [...ownerAlbum?.members] : []
             let allUsers = await filterCollections('Login', 'email', 'in', p?.length > 0 ? p : ['h1000@gmail.com'],)
-            console.log('members',ownerAlbum,p,"All",allUsers,);
+            console.log('members', ownerAlbum, p, "All", allUsers,);
             const payload = {
                 notification: {
                     title: `${after?.name} Sent a message`,
@@ -165,7 +166,7 @@ exports.sendChatMsgNotification = functions.firestore
                 timeToLive: 60 * 60 * 24,
             };
             allUsers?.map(i => {
-                if (i?.token && after?.email!=i?.email) {
+                if (i?.token && after?.email != i?.email) {
                     admin
                         .messaging()
                         .sendToDevice(i?.token, payload, options)
@@ -178,3 +179,87 @@ exports.sendChatMsgNotification = functions.firestore
             console.log('error in CommunityMembers Notification', error);
         }
     });
+
+///////////////////////
+exports.sendNewPostNotification = functions.firestore
+    .document('Posts/{id}')
+    .onWrite(async (change, context) => {
+        try {
+            let after = change.after.data();
+            let before = change.before.data();
+            let docId = context.params.id;
+            console.log("After", after);
+            console.log("Before", before);
+            if (!before) {
+                let group = await getData('GroupMembers', after?.groupId);
+                let p = group?.members.map(x => x);
+                console.log('Members',p);
+                const allUsers = await filterCollections("Login",'email','in',p?.length>0?p:['anc']);
+                const payload = {
+                    notification: {
+                        title: `${after?.userDetails?.name} added new Post`,
+                        body: `New Post`,
+                        sound: 'default',
+                    },
+                    data:{screen:'newPost',groupId:after?.groupId,}
+                };
+                const options = {
+                    priority: 'high',
+                    timeToLive: 60 * 60 * 24,
+                };
+                allUsers?.map(i => {
+                    if (i?.token) {
+                        admin
+                            .messaging()
+                            .sendToDevice(i?.token, payload, options)
+                            .then(reponse => {
+                                console.log('Send Post Notification to Everybody ');
+                            });
+                    }
+                })
+            }
+        } catch (error) {
+            console.log('error in Post Notification', error);
+        }
+    });
+
+    exports.sendNewCommentNotification = functions.firestore
+    .document('Comments/{id}')
+    .onWrite(async (change, context) => {
+        try {
+            let after = change.after.data();
+            let before = change.before.data();
+            let docId = context.params.id;
+            console.log("After", after);
+            console.log("Before", before);
+            if (!before) {
+                let group = await getData('GroupMembers', after?.groupId);
+                let p = group?.members.map(x => x);
+                const allUsers = await filterCollections("Login",'email','in',p?.length>0?p:['anc']);
+                const payload = {
+                    notification: {
+                        title: `${after?.name} added new Comment`,
+                        body: `${after?.text}`,
+                        sound: 'default',
+                    },
+                    data:{screen:'newComment',groupId:after?.groupId,postId:after?.postId}
+                };
+                const options = {
+                    priority: 'high',
+                    timeToLive: 60 * 60 * 24,
+                };
+                allUsers?.map(i => {
+                    if (i?.token) {
+                        admin
+                            .messaging()
+                            .sendToDevice(i?.token, payload, options)
+                            .then(reponse => {
+                                console.log('Send Comment Notification to Everybody ');
+                            });
+                    }
+                })
+            }
+        } catch (error) {
+            console.log('error in Comment Notification', error);
+        }
+    })

@@ -17,6 +17,7 @@ import { Menu } from 'react-native-paper';
 import { onPost } from '../../Auth/manipulateData';
 import ParsedText from 'react-native-parsed-text';
 import { giveLink } from '../../Services/DynamicLink';
+import PostTypeModal from '../../assets/components/Modal/PostTypeModal';
 const GroupChat = (props) => {
   const [post, setPost] = useState(props?.route?.params)
   const [chat, setChat] = useState([])
@@ -28,6 +29,9 @@ const GroupChat = (props) => {
   const [replyMod, setReplyMod] = useState(false)
   const [replyObj, setReplyObj] = useState({})
   const [isMember, setisMember] = useState(false);
+  const [postType, setPostType] = useState('Discussion');
+  const [postMod, setPostMod] = useState(false);
+  const [pos, setPos] = useState({});
   const scrollRef = useRef();
   useEffect(() => {
     db.collection('GroupChats').doc(chatId)?.collection('messages')
@@ -125,7 +129,8 @@ const GroupChat = (props) => {
   async function makePost(item) {
     AlertService.confirm('Upload this message as Post?', 'Yes', 'No').then(async (res) => {
       if (res) {
-        await onPost(props, '', item?.msg, chatId, [])
+        setPos({});setPostMod(false)
+        await onPost(props, '', item?.msg, chatId, [],postType)
         AlertService.toastPrompt('Posted')
       }
     })
@@ -203,7 +208,7 @@ const GroupChat = (props) => {
                       <Text style={{ ...GlobalStyles.mediumTxt, color: '#fff' }}>Report</Text>
                     </TouchableOpacity>
                   }
-                  <TouchableOpacity onPress={() => { makePost(item) }} style={{ paddingHorizontal: WP(5) }}>
+                  <TouchableOpacity onPress={() => { setPos(item);setPostMod(true) }} style={{ paddingHorizontal: WP(5) }}>
                     <Text style={{ ...GlobalStyles.boldTxt, color: '#fff' }}>...</Text>
                   </TouchableOpacity>
                 </View>
@@ -231,6 +236,7 @@ const GroupChat = (props) => {
             <Text style={{ ...styles.emailTxt, color: palette.lighBlueBtnTitle, fontSize: 18 }}>Send</Text>
           </TouchableOpacity>
         </View>
+        <PostTypeModal onSave={()=>{makePost(pos)}} mod={postMod} onPress={()=>{setPostMod(false)}} type={postType} setType={setPostType}/>
       </View>
     </>
   )

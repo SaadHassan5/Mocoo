@@ -6,7 +6,7 @@ import { CommonActions } from '@react-navigation/native';
 import notifee, {
 } from '@notifee/react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { db, filterCollectionSingle, getData, saveData, uploadFile } from '../../Auth/fire';
+import { db, deleteData, filterCollectionSingle, getData, saveData, uploadFile } from '../../Auth/fire';
 import { IMAGES } from '../../assets/imgs';
 import { colors, spacing } from '../../theme';
 import fontFamily from '../../assets/config/fontFamily';
@@ -19,6 +19,7 @@ import AppTextInput from '../../components/AppTextInput';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { GlobalStyles } from '../../global/globalStyles';
+import { FireAuth } from '../../Auth/socialAuth';
 
 function Profile(props) {
   const [email, setEmail] = useState(props?.user?.email)
@@ -94,23 +95,7 @@ function Profile(props) {
   const handleSignOut = async () => {
     AlertService.confirm("Are you sure you want to Logout?").then(async (res) => {
       if (res) {
-        await AsyncStorage.removeItem("User")
-        await AsyncStorage.removeItem("Admin")
-        await notifee.cancelAllNotifications();
-        const goo = await AsyncStorage.getItem("google");
-        if (goo != null) {
-          Google?.onGoogleLogout()
-          await AsyncStorage.removeItem("google");
-        }
-        props?.getUser({})
-        props.navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              { name: 'Splash' },
-            ]
-          })
-        );
+       FireAuth.Logout(props)
       }
     })
   }
@@ -126,6 +111,13 @@ function Profile(props) {
         setEditName(false)
       }
     })
+  }
+  async function onDelete(){
+    AlertService?.confirm('Are You sure?').then(async(res)=>{if(res){
+      await deleteData('Users',props?.user?.email,)
+      await deleteData('Login',props?.user?.email,)
+      FireAuth.Logout(props)
+    }})
   }
   return (
     <>
@@ -178,6 +170,7 @@ function Profile(props) {
               </View>
             }
             <AppText style={styles.userEmail}>{props.user.email}</AppText>
+            <CustomBtn1 onPress={()=>{onDelete()}} txt={'Delete My Account'} txtStyle={{color:palette.letterRed}} style={{paddingVertical:HP(1),backgroundColor:'transparent'}}/>
           </View>
 
         </View >
@@ -190,7 +183,7 @@ function Profile(props) {
           renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => { console.log('ITEM', item); props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner }) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.groupName}</Text>
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10),width:WP(60) }}>{item?.groupName}</Text>
             </TouchableOpacity>
           } />
 

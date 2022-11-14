@@ -13,19 +13,20 @@ import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
 import Fontiso from 'react-native-vector-icons/Fontisto'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-const SubGroupPosts = (props) => {
+const ShowPosts = (props) => {
   const [active, setActive] = useState(false)
   const [allGroups, setAllGroups] = useState([])
   useEffect(() => {
     console.log('PROPS', props);
     // props?.navigation?.navigate('NewPost', props?.route?.params)
-    db.collection('Posts')?.where('groupId', '==', props?.route?.params?.groupId)
+    db.collection('Posts').where('groupId', 'in', props?.user?.subscribedIds?.length>0?props?.user?.subscribedIds:['abc'])
       .onSnapshot(documentSnapshot => {
         getStates();
       });
   }, [])
   async function getStates() {
-    const res = await filterCollectionSingle('Posts', 'groupId', '==', props?.route?.params?.groupId)
+    console.log('ids',props?.user?.subscribedIds?.length>0?props?.user?.subscribedIds:['abc']);
+    const res = await filterCollectionSingle('Posts', 'groupId', 'in', props?.user?.subscribedIds?.length>0?props?.user?.subscribedIds:['abc'])
     console.log('States=======>', res);
     setAllGroups(res)
   }
@@ -33,7 +34,7 @@ const SubGroupPosts = (props) => {
     console.log(item1);
     let sub = item1?.likedBy ? [...item1?.likedBy] : [];
     sub.push({ email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri })
-    console.log('Sub', item1?.id, sub);
+    console.log('Sub', item1?.id,sub);
     await saveData("Posts", item1?.id, {
       likes: item1?.likedBy ? item1?.likes + 1 : 1,
       likedBy: sub
@@ -55,17 +56,17 @@ const SubGroupPosts = (props) => {
   return (
     <SafeAreaView style={{ ...GlobalStyles.container, }}>
       <Header goBack={false} title={'Posts'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewPost', props?.route?.params) }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(4), backgroundColor: '#fff' }} />
+      {/* <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewPost', props?.route?.params) }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(4), backgroundColor: '#fff' }} /> */}
       {/* backgroundColor:palette?.white, */}
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
         <FlatList
           numColumns={1}
-          style={{ flex: 1, marginTop: HP(7) }}
+          style={{ flex: 1, marginTop:HP(2) }}
           data={allGroups}
           contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) =>
-            <View style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, }}>
+            <View style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow,marginTop:HP(4) }}>
               <TouchableOpacity onPress={() => { props?.navigation?.navigate('PostDetails', item) }} style={{ ...GlobalStyles.row, alignItems: 'flex-start', marginBottom: HP(3) }}>
                 <Image source={{ uri: item?.userDetails?.profileUri }} style={{ width: WP(14), height: WP(14), borderRadius: WP(12) }} />
                 <View style={{ paddingLeft: WP(5) }}>
@@ -77,7 +78,7 @@ const SubGroupPosts = (props) => {
                   }
                 </View>
               </TouchableOpacity>
-              <View style={{ ...GlobalStyles?.row, justifyContent: 'space-around', paddingHorizontal: WP(10) }}>
+              <View style={{ ...GlobalStyles?.row, justifyContent:'space-around',paddingHorizontal:WP(10) }}>
                 {item?.likedBy?.find(e => e?.email == props?.user?.email) ?
                   <TouchableOpacity onPress={() => { unLike(item) }} style={{ ...GlobalStyles?.row }}>
                     <Fontiso name='like' size={25} color={palette?.angry} />
@@ -89,10 +90,10 @@ const SubGroupPosts = (props) => {
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{item?.likes ? item?.likes : 0}</Text>
                   </TouchableOpacity>
                 }
-                <TouchableOpacity onPress={() => { }} style={{ ...GlobalStyles?.row }}>
-                  <Fontiso name='comments' size={25} color={palette?.angry} />
-                  <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{item?.commentCount}</Text>
-                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {  }} style={{ ...GlobalStyles?.row }}>
+                    <Fontiso name='comments' size={25} color={palette?.angry} />
+                    <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{item?.commentCount}</Text>
+                  </TouchableOpacity>
               </View>
             </View>
           } />
@@ -115,4 +116,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 // export default Home
-export default connect(mapStateToProps, mapDispatchToProps)(SubGroupPosts);
+export default connect(mapStateToProps, mapDispatchToProps)(ShowPosts);

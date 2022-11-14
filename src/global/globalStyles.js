@@ -27,15 +27,15 @@ export const GlobalStyles=StyleSheet.create({
           alignItems:"center"
       },
       boldTxt:{
-        fontFamily:fontFamily.bold,fontSize:18,color:palette.blackGray
+        fontFamily:fontFamily.bold,fontSize:16,color:palette.blackGray
       },
       mediumTxt:{
-        fontFamily:fontFamily.medium,fontSize:15,color:palette.blackGray
+        fontFamily:fontFamily.medium,fontSize:14,color:palette.blackGray
       },
       lightTxt:{
-        fontFamily:fontFamily.light,fontSize:15,color:palette.blackGray
+        fontFamily:fontFamily.light,fontSize:14,color:palette.blackGray
       },
       urlTxt:{
-        fontFamily:fontFamily.light,fontSize:15,color:palette.white,textDecorationLine:'underline'
+        fontFamily:fontFamily.light,fontSize:14,color:palette.white,textDecorationLine:'underline'
       }
 })

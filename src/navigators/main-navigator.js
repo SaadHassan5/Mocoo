@@ -24,6 +24,7 @@ import CommunityChat from '../screens/CommunityChat/CommunityChat';
 import OtherProfile from '../screens/OtherProfile/OtherProfile';
 import PostDetails from '../screens/PostDetails/PostDetails';
 import StateNav from './statesNav';
+import ShowPosts from '../screens/ShowPosts/ShowPosts';
 
 const MyStack = createStackNavigator();
 class Stack extends Component {
@@ -54,6 +55,7 @@ class Stack extends Component {
           <MyStack.Screen name="OtherProfile" component={OtherProfile} />
           <MyStack.Screen name="PostDetails" component={PostDetails} />
           <MyStack.Screen name="StateNav" component={StateNav} />
+          <MyStack.Screen name="ShowPosts" component={ShowPosts} />
         </MyStack.Navigator>
     )
   }

@@ -81,6 +81,7 @@ const PostDetails = (props) => {
         approve: true,
         reject: false,
         postId: post?.postId,
+        groupId: post?.groupId,
         profileUri: props.user.profileUri,
         name: props?.user?.name,
         commentId:iid,
