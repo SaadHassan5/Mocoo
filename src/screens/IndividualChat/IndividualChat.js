@@ -11,6 +11,8 @@ import { ChangeBackgroundColor, GetUser } from '../../root/action';
 import { db, filterCollectionSingle, filterOP, getAllOfNestedCollection, saveData, saveNestedData } from '../../Auth/fire';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { makeid } from '../../assets/config/MakeId';
+import { IMAGES } from '../../assets/imgs';
+import { GlobalStyles } from '../../global/globalStyles';
 
 const IndividualChat = (props) => {
   const [post, setPost] = useState(props?.route?.params)
@@ -68,6 +70,7 @@ const IndividualChat = (props) => {
           createdAt: new Date().getTime(),
           profileUri: props?.user?.profileUri,
           name: props?.user?.name,
+          verified: props?.user?.verified ? props?.user?.verified : false,
           msg: newCom,
           reciever: props?.route?.params?.email,
           chatData: { id: props?.route?.params?.email + '-' + value, screen: 'IndividualChat', reciever: props?.route?.params?.email }
@@ -80,6 +83,7 @@ const IndividualChat = (props) => {
           profileUri: props?.user?.profileUri,
           name: props?.user?.name,
           msg: newCom,
+          verified: props?.user?.verified ? props?.user?.verified : false,
           reciever: props?.route?.params?.email,
           chatData: { id: chatId, screen: 'IndividualChat', reciever: props?.route?.params?.email },
         })
@@ -98,7 +102,7 @@ const IndividualChat = (props) => {
       <Header
         style={{ backgroundColor: colors.light }}
         img={post?.profileUri}
-        onPressImg={()=>{props?.navigation?.navigate('OtherProfile',{email:post?.email})}}
+        onPressImg={() => { props?.navigation?.navigate('OtherProfile', { email: post?.email }) }}
         imgStyle={{ width: WP(13), height: WP(13), borderRadius: WP(10), marginRight: WP(5) }}
         titleView={{ ...styles.row, justifyContent: 'center' }}
         title={post?.name}
@@ -117,11 +121,16 @@ const IndividualChat = (props) => {
             <View>
               <View style={{ marginTop: HP(2), ...styles?.card, backgroundColor: item?.reciever == props?.user?.email ? "rgba(128,128,128,0.7)" : palette?.lighBlueBtnTitle, width: WP(85), alignSelf: item?.reciever == props?.user?.email ? 'flex-start' : 'flex-end' }}>
                 <View style={{ ...styles.row, }}>
-                  <TouchableOpacity onPress={() => { item?.email!=props?.user?.email?props?.navigation?.navigate('OtherProfile',{email:item?.email}) :console.log('my');}}>
+                  <TouchableOpacity onPress={() => { item?.email != props?.user?.email ? props?.navigation?.navigate('OtherProfile', { email: item?.email }) : console.log('my'); }}>
                     <Image source={{ uri: item?.profileUri }} style={{ width: WP(12), height: WP(12), borderRadius: WP(10) }} />
                   </TouchableOpacity>
                   <View style={{ paddingHorizontal: WP(2) }}>
-                    <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
+                  <View style={{ ...GlobalStyles?.row }}>
+                      <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
+                      {item?.verified &&
+                        <Image source={IMAGES?.tick} style={{ width: WP(6), height: WP(6), borderRadius: WP(10), marginLeft: WP(3) }} />
+                      }
+                    </View>
                     <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, paddingRight: WP(5), fontSize: 17 }}>{item?.msg}</Text>
                   </View>
                 </View>

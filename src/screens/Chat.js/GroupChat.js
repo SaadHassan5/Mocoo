@@ -18,6 +18,7 @@ import { onPost } from '../../Auth/manipulateData';
 import ParsedText from 'react-native-parsed-text';
 import { giveLink } from '../../Services/DynamicLink';
 import PostTypeModal from '../../assets/components/Modal/PostTypeModal';
+import { IMAGES } from '../../assets/imgs';
 const GroupChat = (props) => {
   const [post, setPost] = useState(props?.route?.params)
   const [chat, setChat] = useState([])
@@ -76,6 +77,7 @@ const GroupChat = (props) => {
         name: props?.user?.name,
         msg: newCom,
         chatId: chatId,
+        verified: props?.user?.verified ? props?.user?.verified : false,
         chatData: { id: chatId, screen: 'GroupChat' },
       }
       if (replyMod) {
@@ -129,15 +131,15 @@ const GroupChat = (props) => {
   async function makePost(item) {
     AlertService.confirm('Upload this message as Post?', 'Yes', 'No').then(async (res) => {
       if (res) {
-        setPos({});setPostMod(false)
-        await onPost(props, '', item?.msg, chatId, [],postType)
+        setPos({}); setPostMod(false)
+        await onPost(props, '', item?.msg, chatId, [], postType)
         AlertService.toastPrompt('Posted')
       }
     })
   }
   async function handleUrlPress(url, matchIndex /*: number*/) {
-    console.log(url,matchIndex);
-    giveLink(props,url)
+    console.log(url, matchIndex);
+    giveLink(props, url)
     // LinkingIOS.openURL(url);
   }
   return (
@@ -163,14 +165,7 @@ const GroupChat = (props) => {
             <View style={{ marginTop: HP(2) }}>
 
               <TouchableOpacity onLongPress={() => { setReplyMod(true); setReplyObj(item) }}
-                style={{ ...styles?.card, backgroundColor: item?.email != props?.user?.email ? "rgba(245,128,128,0.7)" : palette?.lighBlueBtnTitle, width: WP(85), alignSelf: item?.email != props?.user?.email ? 'flex-start' : 'flex-end' }}>
-                {/* <Menu
-                  visible={visible}
-                  onDismiss={() => { setVisible(false) }}
-                  anchor={<TouchableOpacity onPress={() => { setVisible(true) }}><Text style={{ ...styles.emailTxt }}>...</Text></TouchableOpacity>}>
-                  <Menu.Item onPress={() => { }} title="Item 1" />
-                  <Menu.Item onPress={() => { }} title="Item 1" />
-                </Menu> */}
+                style={{ ...styles?.card,paddingVertical:0, backgroundColor: item?.email != props?.user?.email ? "rgba(245,128,128,0.7)" : palette?.lighBlueBtnTitle, width: WP(85), alignSelf: item?.email != props?.user?.email ? 'flex-start' : 'flex-end' }}>
                 {item?.reply &&
                   <View style={{ paddingVertical: HP(1) }}>
                     <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light }}>{item?.email != props?.user?.name && item?.name?.split(' ')[0] + " "}Replied to {item?.reply?.replyEmail == props?.user?.email ? 'You' : item?.reply?.replyName?.split(' ')[0]}</Text>
@@ -178,14 +173,19 @@ const GroupChat = (props) => {
                     <Text style={{ ...styles.emailTxt, }}>{item?.reply?.replyTxt}</Text>
                   </View>
                 }
-                <View style={{ ...styles.row, }}>
+                <View style={{ ...styles.row,paddingVertical:HP(1),paddingTop:HP(2), }}>
                   <TouchableOpacity onPress={() => { item?.email != props?.user?.email ? props?.navigation?.navigate('OtherProfile', { email: item?.email }) : console.log('my'); }}>
                     <Image source={{ uri: item?.profileUri }} style={{ width: WP(12), height: WP(12), borderRadius: WP(10) }} />
                   </TouchableOpacity>
                   <View style={{ paddingHorizontal: WP(2) }}>
-                    <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
+                    <View style={{ ...GlobalStyles?.row }}>
+                      <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
+                      {item?.verified &&
+                        <Image source={IMAGES?.tick} style={{ width: WP(6), height: WP(6), borderRadius: WP(10), marginLeft: WP(3) }} />
+                      }
+                    </View>
                     <ParsedText
-                      style={{...GlobalStyles?.mediumTxt,color:'#fff'}}
+                      style={{ ...GlobalStyles?.mediumTxt, color: '#fff', width: WP(60) }}
                       parse={
                         [
                           { type: 'url', style: GlobalStyles.urlTxt, onPress: handleUrlPress },
@@ -204,11 +204,11 @@ const GroupChat = (props) => {
                 }
                 <View style={{ ...styles.row, position: 'absolute', right: 0, }}>
                   {props?.user?.email != item?.email &&
-                    <TouchableOpacity style={{ paddingHorizontal: WP(2) }}>
+                    <TouchableOpacity onPress={()=>{AlertService.show('Reported')}} style={{ paddingHorizontal: WP(2) }}>
                       <Text style={{ ...GlobalStyles.mediumTxt, color: '#fff' }}>Report</Text>
                     </TouchableOpacity>
                   }
-                  <TouchableOpacity onPress={() => { setPos(item);setPostMod(true) }} style={{ paddingHorizontal: WP(5) }}>
+                  <TouchableOpacity onPress={() => { setPos(item); setPostMod(true) }} style={{ paddingHorizontal: WP(5) }}>
                     <Text style={{ ...GlobalStyles.boldTxt, color: '#fff' }}>...</Text>
                   </TouchableOpacity>
                 </View>
@@ -236,7 +236,7 @@ const GroupChat = (props) => {
             <Text style={{ ...styles.emailTxt, color: palette.lighBlueBtnTitle, fontSize: 18 }}>Send</Text>
           </TouchableOpacity>
         </View>
-        <PostTypeModal onSave={()=>{makePost(pos)}} mod={postMod} onPress={()=>{setPostMod(false)}} type={postType} setType={setPostType}/>
+        <PostTypeModal onSave={() => { makePost(pos) }} mod={postMod} onPress={() => { setPostMod(false) }} type={postType} setType={setPostType} />
       </View>
     </>
   )
@@ -272,9 +272,9 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#fff", paddingHorizontal: spacing[8],
-    paddingVertical: spacing[2],
+    // paddingVertical: spacing[2],
     borderRadius: spacing[3],
-    marginBottom: spacing[5]
+    // marginBottom: spacing[5]
   },
   touchIcon: {
     paddingHorizontal: WP(3)

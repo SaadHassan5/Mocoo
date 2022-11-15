@@ -74,7 +74,6 @@ async function whatToDo(nav,notification) {
   if(notification?.data?.screen=='GroupChat'){
     let res=await getData('Groups',notification?.data?.id)
     nav?.current?.navigate('GroupChat',{...res})
-
   }
   else if(notification?.data?.screen=='IndividualChat'){
     let res=await getData('Users',notification?.data?.reciever)
@@ -85,5 +84,16 @@ async function whatToDo(nav,notification) {
     let res=await getData('CommunityChats',notification?.data?.id)
     console.log('DAAAA',res);
     nav?.current?.navigate('CommunityChat',{name:res?.communityName,communityId:notification?.data?.id,owner:res?.owner    })
+  }
+  else if(notification?.data?.screen=='newPost'){
+    let res=await getData('Posts',notification?.data?.postId)
+    console.log('DAAAA',res);
+    nav?.current?.navigate('PostDetails',{...res})
+  }
+  else if(notification?.data?.screen=='newComment'){
+    console.log('comooooooooooo');
+    let res=await getData('Posts',notification?.data?.postId)
+    console.log('DAAAA',res);
+    nav?.current?.navigate('PostDetails',{...res})
   }
 }

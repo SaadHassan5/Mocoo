@@ -20,6 +20,7 @@ import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { GlobalStyles } from '../../global/globalStyles';
 import { FireAuth } from '../../Auth/socialAuth';
+import { openInsta, VerifyMyAccount } from '../../Auth/manipulateData';
 
 function Profile(props) {
   const [email, setEmail] = useState(props?.user?.email)
@@ -95,7 +96,7 @@ function Profile(props) {
   const handleSignOut = async () => {
     AlertService.confirm("Are you sure you want to Logout?").then(async (res) => {
       if (res) {
-       FireAuth.Logout(props)
+        FireAuth.Logout(props)
       }
     })
   }
@@ -112,12 +113,19 @@ function Profile(props) {
       }
     })
   }
-  async function onDelete(){
-    AlertService?.confirm('Are You sure?').then(async(res)=>{if(res){
-      await deleteData('Users',props?.user?.email,)
-      await deleteData('Login',props?.user?.email,)
-      FireAuth.Logout(props)
-    }})
+  async function onDelete() {
+    AlertService?.confirm('Are You sure?').then(async (res) => {
+      if (res) {
+        await deleteData('Users', props?.user?.email,)
+        await deleteData('Login', props?.user?.email,)
+        FireAuth.Logout(props)
+      }
+    })
+  }
+  async function onVerify() {
+    AlertService?.confirm('For Verication Add Image!', 'Browse')?.then(async (res) => {
+      await VerifyMyAccount(props)
+    })
   }
   return (
     <>
@@ -159,18 +167,30 @@ function Profile(props) {
               </View>
               :
               <View>
-
-                <AppText style={{ ...styles.emailTxt, textAlign: 'center' }} preset='h4'>{props.user.name}</AppText>
-                {props?.user?.bio!="" &&
-                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center'}} preset='h4'>Bio: {props?.user?.bio}</AppText>
+                <View style={{ alignSelf: 'center' }}>
+                  <AppText style={{ ...styles.emailTxt, textAlign: 'center',}} preset='h4'>{props.user?.name}</AppText>
+                  {props.user?.verified &&
+                    <View style={{ ...GlobalStyles.row,paddingLeft:WP(3),paddingBottom:HP(1) }}>
+                      <Image source={IMAGES?.tick} style={{ width: WP(8), height: WP(8), }} />
+                  <AppText style={{ ...GlobalStyles.lightTxt,paddingLeft:WP(2) }} preset='h4'>ID Verified</AppText>
+                    </View>
+                  }
+                </View>
+                {props?.user?.bio != "" &&
+                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center' }} preset='h4'>Bio: {props?.user?.bio}</AppText>
                 }
-                {props?.user?.insta!="" &&
-                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center', }} preset='h4'>Insta: {props?.user?.insta}</AppText>
+                {props?.user?.insta &&
+                  <TouchableOpacity onPress={async () => { await openInsta(props?.user?.insta) }} style={{ paddingVertical: HP(1) }}>
+                    <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center', }} preset='h4'>Insta: {props?.user?.insta}</AppText>
+                  </TouchableOpacity>
                 }
               </View>
             }
             <AppText style={styles.userEmail}>{props.user.email}</AppText>
-            <CustomBtn1 onPress={()=>{onDelete()}} txt={'Delete My Account'} txtStyle={{color:palette.letterRed}} style={{paddingVertical:HP(1),backgroundColor:'transparent'}}/>
+            {!props?.user?.vericationApplied &&
+              <CustomBtn1 onPress={() => { onVerify() }} txt={'Verify My Account'} txtStyle={{ color: palette.status_dot_bg_green }} style={{ paddingVertical: HP(1), backgroundColor: 'transparent' }} />
+            }
+            <CustomBtn1 onPress={() => { onDelete() }} txt={'Delete My Account'} txtStyle={{ color: palette.letterRed }} style={{ paddingVertical: HP(1), backgroundColor: 'transparent' }} />
           </View>
 
         </View >
@@ -183,7 +203,7 @@ function Profile(props) {
           renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => { console.log('ITEM', item); props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner }) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10),width:WP(60) }}>{item?.groupName}</Text>
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10), width: WP(60) }}>{item?.groupName}</Text>
             </TouchableOpacity>
           } />
 

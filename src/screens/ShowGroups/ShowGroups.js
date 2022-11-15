@@ -44,18 +44,6 @@ const ShowGroups = (props) => {
       <Header goBack={false} title={props?.route?.params?.cityName} />
       <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewGroup', props?.route?.params) }} txt={'Add Group'} style={{ width: WP(70), backgroundColor: palette?.white, alignSelf: 'center' }} />
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5), paddingVertical: HP(2) }}>
-        {/* <FlatList
-          numColumns={1}
-          style={{ flex: 1, marginTop: HP(7) }}
-          data={allGroups}
-          contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
-          keyExtractor={item => item.id}
-          renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => { goToGroup(item) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
-              <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10),width:WP(60) }}>{item?.groupName}</Text>
-            </TouchableOpacity>
-          } /> */}
         {category?.map((cItem, cIndex) =>
           <View key={cIndex} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, marginBottom: HP(3) }}>
             <TouchableOpacity onPress={() => {

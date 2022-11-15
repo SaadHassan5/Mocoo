@@ -25,6 +25,7 @@ import OtherProfile from '../screens/OtherProfile/OtherProfile';
 import PostDetails from '../screens/PostDetails/PostDetails';
 import StateNav from './statesNav';
 import ShowPosts from '../screens/ShowPosts/ShowPosts';
+import TabNav from './TabNav';
 
 const MyStack = createStackNavigator();
 class Stack extends Component {
@@ -56,6 +57,7 @@ class Stack extends Component {
           <MyStack.Screen name="PostDetails" component={PostDetails} />
           <MyStack.Screen name="StateNav" component={StateNav} />
           <MyStack.Screen name="ShowPosts" component={ShowPosts} />
+          <MyStack.Screen name="TabNav" component={TabNav} />
         </MyStack.Navigator>
     )
   }

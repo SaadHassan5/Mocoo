@@ -46,6 +46,18 @@ const UserTab=(props)=> {
       }}
 
     >
+       <Tab.Screen name="Posts" component={ShowPosts}
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <FontAwesome name={'pagelines'} size={20} color={focused ? "#fff" : "grey"} />
+              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 10 }}>Posts/Events</Text>
+            </View>
+          )
+        }}
+      />
       <Tab.Screen name="ShowStates" component={StateNav}
         options={{
           headerShown: false,
@@ -70,18 +82,7 @@ const UserTab=(props)=> {
           )
         }}
       />
-      <Tab.Screen name="Posts" component={ShowPosts}
-        options={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <FontAwesome name={'pagelines'} size={20} color={focused ? "#fff" : "grey"} />
-              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Posts</Text>
-            </View>
-          )
-        }}
-      />
+     
       <Tab.Screen name="Profile" component={Profile}
         options={{
           headerShown: false,

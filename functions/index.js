@@ -198,10 +198,10 @@ exports.sendNewPostNotification = functions.firestore
                 const payload = {
                     notification: {
                         title: `${after?.userDetails?.name} added new Post`,
-                        body: `New Post`,
+                        body: `${after?.type}`,
                         sound: 'default',
                     },
-                    data:{screen:'newPost',groupId:after?.groupId,}
+                    data:{screen:'newPost',groupId:after?.groupId,postId:after?.postId}
                 };
                 const options = {
                     priority: 'high',
@@ -238,8 +238,8 @@ exports.sendNewPostNotification = functions.firestore
                 const allUsers = await filterCollections("Login",'email','in',p?.length>0?p:['anc']);
                 const payload = {
                     notification: {
-                        title: `${after?.name} added new Comment`,
-                        body: `${after?.text}`,
+                        title: `${after?.text}`,
+                        body: `${after?.name} added new comment`,
                         sound: 'default',
                     },
                     data:{screen:'newComment',groupId:after?.groupId,postId:after?.postId}

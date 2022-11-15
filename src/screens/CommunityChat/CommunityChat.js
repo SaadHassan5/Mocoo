@@ -13,6 +13,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import AlertService from '../../Services/alertService';
 import { GlobalStyles } from '../../global/globalStyles';
+import { IMAGES } from '../../assets/imgs';
 
 const CommunityChat = (props) => {
   const [post, setPost] = useState(props?.route?.params)
@@ -27,19 +28,19 @@ const CommunityChat = (props) => {
   const [isMember, setisMember] = useState(false);
   const scrollRef = useRef();
   useEffect(() => {
-    console.log("PROPS=======>",props?.route);
+    console.log("PROPS=======>", props?.route);
     db.collection('CommunityChats').doc(chatId)?.collection('messages')
       .onSnapshot(documentSnapshot => {
         getConservation();
       });
-      db?.collection('CommunityMembers').doc(chatId)
+    db?.collection('CommunityMembers').doc(chatId)
       .onSnapshot(documentSnapshot => {
         getMembers();
       });
 
   }, [])
-  async function getUser(){
-    const res =await getData('Users',props?.user?.email)
+  async function getUser() {
+    const res = await getData('Users', props?.user?.email)
     props?.getUser(res)
   }
   const getMembers = async () => {
@@ -68,6 +69,7 @@ const CommunityChat = (props) => {
         createdAt: new Date().getTime(),
         profileUri: props?.user?.profileUri,
         name: props?.user?.name,
+        verified: props?.user?.verified ? props?.user?.verified : false,
         msg: newCom,
         chatId: chatId,
         chatData: { id: chatId, screen: 'CommunityChat' },
@@ -93,44 +95,46 @@ const CommunityChat = (props) => {
       }
       scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 })
       setActive(false)
-     await joinGroup()
+      await joinGroup()
     }
   }
-  async function joinGroup(){
+  async function joinGroup() {
     setisMember(false)
-            AlertService?.toastPrompt("Subscribed")
-            let sub=props?.user?.subCommunity?[...props?.user?.subCommunity]:[]
-            let tempUser=!sub?.find(i => i == chatId)?[...sub,chatId]:[...sub];
-            await saveData('Users',props?.user?.email,{
-              subCommunity:tempUser,
-            })
-            let temp=members?[...members,props?.user?.email]:[props?.user?.email]
-            let tempD=membersDetail?[...membersDetail,{email:props?.user?.email,name:props?.user?.name,profileUri:props?.user?.profileUri}]:[{email:props?.user?.email,name:props?.user?.name,profileUri:props?.user?.profileUri}]
-            await saveData('CommunityMembers',chatId,{
-              members:temp,
-              membersDetails:tempD
-            })
-            setMembers(temp)
-            getUser()
+    AlertService?.toastPrompt("Subscribed")
+    let sub = props?.user?.subCommunity ? [...props?.user?.subCommunity] : []
+    let tempUser = !sub?.find(i => i == chatId) ? [...sub, chatId] : [...sub];
+    await saveData('Users', props?.user?.email, {
+      subCommunity: tempUser,
+    })
+    let temp = members ? [...members, props?.user?.email] : [props?.user?.email]
+    let tempD = membersDetail ? [...membersDetail, { email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri }] : [{ email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri }]
+    await saveData('CommunityMembers', chatId, {
+      members: temp,
+      membersDetails: tempD
+    })
+    setMembers(temp)
+    getUser()
   }
-  async function onDelete(item){
-    AlertService?.confirm('Are you sure?').then(async(res)=>{if(res){
-      await nestedDeleteData('CommunityChats',chatId,'messages',item?.id)
-    }})
+  async function onDelete(item) {
+    AlertService?.confirm('Are you sure?').then(async (res) => {
+      if (res) {
+        await nestedDeleteData('CommunityChats', chatId, 'messages', item?.id)
+      }
+    })
   }
-  async function onShareUrl(){
-    let url='whatsapp://send?text=' + `${props?.user?.name} has invited you to join community https://mocooproject.page.link/community/${chatId}`;
+  async function onShareUrl() {
+    let url = 'whatsapp://send?text=' + `${props?.user?.name} has invited you to join community https://mocooproject.page.link/community/${chatId}`;
     await Linking?.openURL(url)
   }
   return (
     <>
       <Header
         style={{ backgroundColor: colors.light }}
-        title={props?.route?.params?.name?.split('-')[2]} rightOptionPress={()=>{onShareUrl()}} rightOptionTxt={'Share'}
+        title={props?.route?.params?.name?.split('-')[2]} rightOptionPress={() => { onShareUrl() }} rightOptionTxt={'Share'}
         onPress={() => { props?.navigation?.goBack() }}
       />
       {isMember &&
-      <CustomBtn1 onPress={()=>{joinGroup()}} txt={'Join +'} txtStyle={{fontSize:14}} style={{width:WP(40),paddingVertical:HP(1),alignSelf:"center"}}/>
+        <CustomBtn1 onPress={() => { joinGroup() }} txt={'Join +'} txtStyle={{ fontSize: 14 }} style={{ width: WP(40), paddingVertical: HP(1), alignSelf: "center" }} />
       }
       <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
         <FlatList
@@ -154,23 +158,28 @@ const CommunityChat = (props) => {
                   </View>
                 }
                 <View style={{ ...styles.row, }}>
-                  <TouchableOpacity onPress={() => { item?.email!=props?.user?.email?props?.navigation?.navigate('OtherProfile',{email:item?.email}) :console.log('my');}}>
+                  <TouchableOpacity onPress={() => { item?.email != props?.user?.email ? props?.navigation?.navigate('OtherProfile', { email: item?.email }) : console.log('my'); }}>
                     <Image source={{ uri: item?.profileUri }} style={{ width: WP(12), height: WP(12), borderRadius: WP(10) }} />
                   </TouchableOpacity>
                   <View style={{ paddingHorizontal: WP(2) }}>
-                    <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
+                    <View style={{ ...GlobalStyles?.row }}>
+                      <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
+                      {item?.verified &&
+                        <Image source={IMAGES?.tick} style={{ width: WP(6), height: WP(6), borderRadius: WP(10), marginLeft: WP(3) }} />
+                      }
+                    </View>
                     <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, paddingRight: WP(5), fontSize: 17 }}>{item?.msg}</Text>
                   </View>
                 </View>
                 <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light, fontSize: 13, marginTop: HP(1), alignSelf: 'flex-end' }}>{new Date(item?.createdAt).toTimeString().split(" ")[0]}</Text>
-              {props?.user?.email=='921234567890' &&
-              <CustomBtn1 onPress={()=>{onDelete(item)}} txt={'Delete'} txtStyle={{fontSize:14}} style={{backgroundColor:palette?.purple,width:WP(20)}}/>
-              }
-              {props?.user?.email!=item?.email &&
-              <TouchableOpacity style={{position:'absolute',right:0,paddingHorizontal:WP(5)}}>
-                <Text style={{...GlobalStyles.mediumTxt,color:'#fff'}}>Report</Text>
-              </TouchableOpacity>
-              }
+                {props?.user?.email == '921234567890' &&
+                  <CustomBtn1 onPress={() => { onDelete(item) }} txt={'Delete'} txtStyle={{ fontSize: 14 }} style={{ backgroundColor: palette?.purple, width: WP(20) }} />
+                }
+                {props?.user?.email != item?.email &&
+                  <TouchableOpacity style={{ position: 'absolute', right: 0, paddingHorizontal: WP(5) }}>
+                    <Text style={{ ...GlobalStyles.mediumTxt, color: '#fff' }}>Report</Text>
+                  </TouchableOpacity>
+                }
               </TouchableOpacity>
             </View>
           } />

@@ -30,7 +30,7 @@ const Splash = (props) => {
     const adm = await AsyncStorage.getItem("Admin")
     if (adm != null) {
       setTimeout(() => {
-        props.navigation.replace('TabNavigator');
+        props.navigation.replace('TabNav');
       }, 1000);
     }
     else {

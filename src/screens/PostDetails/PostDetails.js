@@ -17,7 +17,7 @@ import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import AlertService from '../../Services/alertService';
 import { GlobalStyles } from '../../global/globalStyles';
 import { makeid } from '../../assets/config/MakeId';
-import Fontiso from 'react-native-vector-icons/Fontisto'
+import Fontiso from 'react-native-vector-icons/EvilIcons'
 const PostDetails = (props) => {
   const [img, setImg] = useState([])
   const [comment, setComments] = useState([])
@@ -183,17 +183,17 @@ const PostDetails = (props) => {
             <View style={{ ...GlobalStyles?.row, justifyContent:'space-around',paddingHorizontal:WP(10) ,paddingVertical:HP(2)}}>
                 {post?.likedBy?.find(e => e?.email == props?.user?.email) ?
                   <TouchableOpacity onPress={() => { unLike() }} style={{ ...GlobalStyles?.row }}>
-                    <Fontiso name='like' size={25} color={palette?.angry} />
+                    <AntDesign name='like1' size={25} color={palette?.purple} />
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.likes ? post?.likes : 0}</Text>
                   </TouchableOpacity>
                   :
                   <TouchableOpacity onPress={() => { onLike() }} style={{ ...GlobalStyles?.row }}>
-                    <AntDesign name='like2' size={25} color={palette?.angry} />
+                    <AntDesign name='like2' size={25} color={palette?.purple} />
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.likes ? post?.likes : 0}</Text>
                   </TouchableOpacity>
                 }
                 <TouchableOpacity onPress={() => {  }} style={{ ...GlobalStyles?.row }}>
-                    <Fontiso name='comments' size={25} color={palette?.angry} />
+                    <Fontiso name='comment' size={30} color={palette?.purple} />
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.commentCount}</Text>
                   </TouchableOpacity>
               </View>

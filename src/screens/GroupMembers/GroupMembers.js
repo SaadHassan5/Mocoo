@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, FlatList, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, FlatList, Text, Image, TouchableOpacity, Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { IMAGES } from '../../assets/imgs';
@@ -11,6 +11,7 @@ import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
+import { openInsta } from '../../Auth/manipulateData';
 
 const GroupMembers = (props) => {
   const [active, setActive] = useState(false)
@@ -44,17 +45,19 @@ const GroupMembers = (props) => {
           contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => { props?.navigation?.navigate('OtherProfile',{email:item?.email})}} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, alignItems: 'flex-start', marginBottom: HP(3) }}>
+            <TouchableOpacity onPress={() => { props?.navigation?.navigate('OtherProfile', { email: item?.email }) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, alignItems: 'flex-start', marginBottom: HP(3) }}>
               <Image source={{ uri: item?.profileUri }} style={{ width: WP(14), height: WP(14), borderRadius: WP(12) }} />
               <View style={{ paddingLeft: WP(5) }}>
                 <Text style={{ ...GlobalStyles.boldTxt, width: WP(60) }}>{item?.name}</Text>
                 {item?.bio != "" &&
                   <TouchableOpacity>
-                    <Text style={{ ...GlobalStyles.lightTxt, width: WP(60),textDecorationLine:'underline' }}>{item?.bio}</Text>
+                    <Text style={{ ...GlobalStyles.lightTxt, width: WP(60), textDecorationLine: 'underline' }}>{item?.bio}</Text>
                   </TouchableOpacity>
                 }
-                {item?.insta != "" &&
-                  <Text style={{ ...GlobalStyles.lightTxt, width: WP(60) ,textDecorationLine:'underline'}}>Insta: {item?.insta}</Text>
+                {item?.insta &&
+                  <TouchableOpacity style={{paddingVertical:HP(1)}} onPress={async()=>{openInsta(item?.insta)}}>
+                    <Text style={{ ...GlobalStyles.lightTxt, width: WP(60), textDecorationLine: 'underline' }}>Insta: {item?.insta}</Text>
+                  </TouchableOpacity>
                 }
               </View>
             </TouchableOpacity>
