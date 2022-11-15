@@ -7,7 +7,7 @@ import { colors } from "../theme";
 import { HP, WP } from "../assets/config";
 import fontFamily from "../assets/config/fontFamily";
 
-export default function Header({ goBack = true, onPress, title, titleStyle, style, logout, rightOptionTxt, rightOptionPress, leftOptionTxt, leftOptionPress, titleView, img,imgStyle }) {
+export default function Header({ goBack = true, onPress, title, titleStyle, style, logout, rightOptionTxt, rightOptionPress, leftOptionTxt, leftOptionPress, titleView, img, imgStyle,onPressImg }) {
     return (
         <SafeAreaView
             style={[{
@@ -97,7 +97,9 @@ export default function Header({ goBack = true, onPress, title, titleStyle, styl
             )}
             <View style={{ width: WP(65), ...titleView }}>
                 {img &&
-                    <Image source={{ uri: img }} style={{ ...imgStyle }} />
+                    <TouchableOpacity onPress={onPressImg}>
+                        <Image source={{ uri: img }} style={{ ...imgStyle }} />
+                    </TouchableOpacity>
                 }
                 <AppText
                     preset="h4"

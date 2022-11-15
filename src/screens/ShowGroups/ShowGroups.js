@@ -11,51 +11,40 @@ import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
-
+import Entypo from 'react-native-vector-icons/Entypo'
 const ShowGroups = (props) => {
   const [active, setActive] = useState(false)
   const [allGroups, setAllGroups] = useState([])
+  const [category, setCategory] = useState([])
 
   useEffect(() => {
     db.collection('Groups')?.where('cityId', '==', props?.route?.params?.cityId)
-    .onSnapshot(documentSnapshot => {
+      .onSnapshot(documentSnapshot => {
         getStates();
-    });
+      });
+    getCategories()
   }, [])
+  async function getCategories() {
+    let res = await getData('AdminData', 'group');
+    let temp = res?.categorie?.map((i,index) => {
+      return { category: i,select:index==0?true:false }
+    })
+    setCategory(temp)
+  }
   async function getStates() {
     const res = await filterCollectionSingle('Groups', 'cityId', '==', props?.route?.params?.cityId)
     console.log('States=======>', res);
     setAllGroups(res)
   }
   async function goToGroup(item) {
-    // const res = await getData('GroupMembers', item?.id)
-    // console.log('resss',res?.members);
-    // if (!res?.members?.find(i => i == props?.user?.email)){
-    //   AlertService.confirm('You need to Join Group', 'Subscribe', 'cancel').then(async (r) => {
-    //     if (r) {
-    //       AlertService?.toastPrompt("Subscribed")
-    //       props?.navigation?.navigate('GroupChat', item)
-    //       let temp=res?.members?[...res?.members,props?.user?.email]:[props?.user?.email]
-    //       let tempUser=!props?.user?.subscribedIds?.find(i => i == item?.id)?[...props?.user?.subscribedIds,item?.id]:[...props?.user?.subscribedIds]
-    //       await saveData('GroupMembers',item?.id,{
-    //         members:temp,
-    //       })
-    //       await saveData('Users',props?.user?.email,{
-    //         subscribedIds:tempUser,
-    //       })
-    //     }
-    //   })
-    // }
-    // else {
-      props?.navigation?.navigate('GroupChat', item)
-    // }
+    props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner })
   }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
-      <Header goBack={false} title={'Groups'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewGroup', props?.route?.params)}} txt={'Add Group'} style={{ width: WP(70),backgroundColor:palette?.white, alignSelf: 'center' }} />
-      <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
-        <FlatList
+      <Header goBack={false} title={props?.route?.params?.cityName} />
+      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewGroup', props?.route?.params) }} txt={'Add Group'} style={{ width: WP(70), backgroundColor: palette?.white, alignSelf: 'center' }} />
+      <ScrollView contentContainerStyle={{ paddingBottom: HP(5), paddingVertical: HP(2) }}>
+        {/* <FlatList
           numColumns={1}
           style={{ flex: 1, marginTop: HP(7) }}
           data={allGroups}
@@ -64,9 +53,38 @@ const ShowGroups = (props) => {
           renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => { goToGroup(item) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.groupName}</Text>
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10),width:WP(60) }}>{item?.groupName}</Text>
             </TouchableOpacity>
-          } />
+          } /> */}
+        {category?.map((cItem, cIndex) =>
+          <View key={cIndex} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, marginBottom: HP(3) }}>
+            <TouchableOpacity onPress={() => {
+              let temp = [...category]; temp[cIndex] = { ...cItem, select: !cItem?.select }; setCategory(temp)
+            }} style={{ ...GlobalStyles.row, justifyContent: 'space-between', }}>
+              {/* <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} /> */}
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10), width: WP(60) }}>{cItem?.category}</Text>
+              <Entypo name='triangle-down' size={30} color='black' />
+            </TouchableOpacity>
+            {cItem?.select &&
+              <FlatList
+                numColumns={1}
+                style={{ flex: 1,marginTop:HP(2) }}
+                data={allGroups}
+                contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
+                keyExtractor={item => item.id}
+                renderItem={({ item, index }) =>
+                  <View>
+                    {item?.category == cItem?.category &&
+                      <TouchableOpacity onPress={() => {goToGroup(item)}} style={{  ...GlobalStyles.row, marginBottom: HP(3) }}>
+                        <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
+                        <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10), width: WP(60) }}>{item?.groupName}</Text>
+                      </TouchableOpacity>
+                    }
+                  </View>
+                } />
+            }
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   )

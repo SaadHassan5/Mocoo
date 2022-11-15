@@ -16,6 +16,7 @@ export interface Props {
   onPressIn?: any;
   multi?: any;
   styles?: any;
+  pros?:any;
   // value?:any;
 }
 
@@ -32,7 +33,7 @@ const Styles = StyleSheet.create({
     borderRadius: WP(4),
     paddingHorizontal: WP(6),
     color:palette.black,
-    height:55,
+    // height:55,
     // width: '100%',
   }
 })
@@ -43,7 +44,7 @@ export class Input extends React.Component<Props, State> {
         {this.props.password ?
           <TextInput autoCapitalize='none' onChangeText={this.props.onChange} secureTextEntry={this.props.eye} textContentType={'password'}  placeholder={this.props.placeTxt} placeholderTextColor={'#B7C1DF'} style={{ ...Styles.inp, ...this?.props?.styles, }} />
           :
-          <TextInput multiline={this.props?.multi} autoCapitalize='none' keyboardType={this.props.keyboardType}  onChangeText={this.props.onChange} value={this.props.value} editable={this.props.editable?false:true} placeholder={this.props.placeTxt} placeholderTextColor={'#B7C1DF'} style={{ ...Styles.inp, ...this?.props?.styles,}} />
+          <TextInput multiline={this.props?.multi} autoCapitalize='none' {...this?.props?.pros} keyboardType={this.props.keyboardType}  onChangeText={this.props.onChange} value={this.props.value} editable={this.props.editable?false:true} placeholder={this.props.placeTxt} placeholderTextColor={'#B7C1DF'} style={{ ...Styles.inp, ...this?.props?.styles,}} />
         }
       </View>
     );

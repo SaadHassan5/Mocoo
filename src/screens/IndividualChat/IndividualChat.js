@@ -37,14 +37,14 @@ const IndividualChat = (props) => {
     const value = await AsyncStorage.getItem("User")
     const res = await filterCollectionSingle("IndividualChat", "members", "array-contains", value + "", "members", "array-contains", props?.route?.params?.email);
     console.log('main', res);
-    let kk=res?.find((k) => {
+    let kk = res?.find((k) => {
       return k?.members?.find(j => j == props?.route?.params?.email)
     })
-    const ch = await getAllOfNestedCollection("IndividualChat", kk?.chatId?kk?.chatId:'abc', "messages")
+    const ch = await getAllOfNestedCollection("IndividualChat", kk?.chatId ? kk?.chatId : 'abc', "messages")
     console.log('sub msgs', ch);
     let chatSort = ch?.sort((a, b) => b?.createdAt - a?.createdAt)
     setChat(chatSort)
-    setChatId(kk?.chatId?kk?.chatId:'')
+    setChatId(kk?.chatId ? kk?.chatId : '')
     scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 })
 
   }
@@ -61,7 +61,7 @@ const IndividualChat = (props) => {
           profileImgs: [props?.route?.params?.profileUri, props?.user?.profileUri],
           chatId: props?.route?.params?.email + '-' + value,
           lastMsg: new Date().getTime(),
-          lastMsgTxt:newCom,
+          lastMsgTxt: newCom,
         });
         await saveNestedData("IndividualChat", props?.route?.params?.email + '-' + value, "messages", {
           email: value,
@@ -70,7 +70,7 @@ const IndividualChat = (props) => {
           name: props?.user?.name,
           msg: newCom,
           reciever: props?.route?.params?.email,
-          chatData: { id: props?.route?.params?.email + '-' + value, screen: 'IndividualChat' }
+          chatData: { id: props?.route?.params?.email + '-' + value, screen: 'IndividualChat', reciever: props?.route?.params?.email }
         })
       }
       else {
@@ -81,11 +81,11 @@ const IndividualChat = (props) => {
           name: props?.user?.name,
           msg: newCom,
           reciever: props?.route?.params?.email,
-          chatData: { id: chatId, screen: 'OpenChat' },
+          chatData: { id: chatId, screen: 'IndividualChat', reciever: props?.route?.params?.email },
         })
         await saveData("IndividualChat", chatId, {
           lastMsg: new Date().getTime(),
-          lastMsgTxt:newCom,
+          lastMsgTxt: newCom,
         });
       }
       setNewCom('')
@@ -98,8 +98,9 @@ const IndividualChat = (props) => {
       <Header
         style={{ backgroundColor: colors.light }}
         img={post?.profileUri}
-        imgStyle={{width:WP(13),height:WP(13),borderRadius:WP(10),marginRight:WP(5)}}
-        titleView={{...styles.row,justifyContent:'center'}}
+        onPressImg={()=>{props?.navigation?.navigate('OtherProfile',{email:post?.email})}}
+        imgStyle={{ width: WP(13), height: WP(13), borderRadius: WP(10), marginRight: WP(5) }}
+        titleView={{ ...styles.row, justifyContent: 'center' }}
         title={post?.name}
         onPress={() => { props?.navigation?.goBack() }}
       />
@@ -116,7 +117,9 @@ const IndividualChat = (props) => {
             <View>
               <View style={{ marginTop: HP(2), ...styles?.card, backgroundColor: item?.reciever == props?.user?.email ? "rgba(128,128,128,0.7)" : palette?.lighBlueBtnTitle, width: WP(85), alignSelf: item?.reciever == props?.user?.email ? 'flex-start' : 'flex-end' }}>
                 <View style={{ ...styles.row, }}>
-                  <Image source={{ uri: item?.profileUri }} style={{ width: WP(12), height: WP(12), borderRadius: WP(10) }} />
+                  <TouchableOpacity onPress={() => { item?.email!=props?.user?.email?props?.navigation?.navigate('OtherProfile',{email:item?.email}) :console.log('my');}}>
+                    <Image source={{ uri: item?.profileUri }} style={{ width: WP(12), height: WP(12), borderRadius: WP(10) }} />
+                  </TouchableOpacity>
                   <View style={{ paddingHorizontal: WP(2) }}>
                     <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text>
                     <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, paddingRight: WP(5), fontSize: 17 }}>{item?.msg}</Text>

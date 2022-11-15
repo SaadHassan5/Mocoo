@@ -9,52 +9,54 @@ import { colors } from '../../theme'
 import { saveData, uploadFile } from '../../Auth/fire'
 import AlertService from '../../Services/alertService'
 import { styles } from './style'
+import DropDownPicker from 'react-native-dropdown-picker'
 import { connect } from 'react-redux'
 import { ChangeBackgroundColor, GetUser } from '../../root/action'
+import { makeid } from '../../assets/config/MakeId'
 
-function NewState(props) {
-    const [active, setActive] = useState(false)
-    const [change, setChange] = useState(false)
+function NewPost(props) {
     const [imgs, setImgs] = useState([])
-    const [countryName, setCountryName] = useState(props?.user?.country)
-    const [cState, setcState] = useState("")
+    const [title, setTitle] = useState('')
+    const [desc, setDesc] = useState("")
+
     useEffect(() => {
         console.log(props?.route);
 
     }, [])
-    function makeid(length) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-        return result;
-    }
     async function onPost() {
-        if (countryName?.trim() != "" && cState?.trim() != "" && imgs?.length > 0) {
+        if (title?.trim() != "" && desc?.trim() != "" && imgs?.length > 0) {
 
             // console.log("TMEMATCH", tempMatch);
             AlertService.confirm("Confirmation").then(async (res) => {
                 if (res) {
+                    let iid= props?.route?.params?.groupId+""?.slice(0,5)+"-"+ makeid(20);
                     let obj = {
-                        country: countryName?.toLowerCase(),
-                        state: cState,
-                        owner:props?.user?.email,
-                    }
+                        title: title,
+                        description: desc,
+                        email:props?.user?.email,
+                        approve:true,
+                        reject:false,
+                        groupId:props?.route?.params?.groupId,
+                        postId:iid,
+                        userDetails:{
+                            name:props?.user?.name,
+                            email:props?.user?.email,
+                            profileUri:props?.user?.profileUri,
+                        },
+                        time:new Date()?.getTime(),   }
                     props?.navigation?.goBack();
-                            let r = await uploadFile(imgs[0]?.uri, imgs[0]?.fileName, countryName)
+                    let upImgs=[];
+                    for (let index = 0; index < imgs.length; index++) {
+                        let r = await uploadFile(imgs[index]?.uri, imgs[index]?.fileName, title)
+                        upImgs?.push(r)
+                    }
                     obj = {
                         ...obj,
-                        image: r,
+                        images: upImgs,
                     }
-                    let iid= props?.user?.name?.split(' ')[0]?.toLowerCase()+ makeid(20);
                     console.log('Save obj',obj);
-                    await saveData("States", iid, {
+                    await saveData("Posts", iid, {
                         ...obj,
-                        stateId:iid,
-                        time:new Date()?.getTime(),
                     })
                 }
             })
@@ -67,7 +69,7 @@ function NewState(props) {
         const options = {
             mediaType: 'photos',
             base64: true,
-            selectionLimit: 1
+            selectionLimit: 2
         }
         await launchImageLibrary(options, async (response) => {
             console.log('Response = ', response);
@@ -78,7 +80,6 @@ function NewState(props) {
             else {
                 console.log("image---->", response?.assets);
                 setImgs(response?.assets)
-                setChange(true)
                 // toastPrompt("Image Uploaded")
             }
         })
@@ -88,15 +89,15 @@ function NewState(props) {
             <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
                 <Header
                     style={{ backgroundColor: colors.light }}
-                    title="Add State"
+                    title="Add Post"
                     onPress={() => props.navigation.goBack()}
                 />
 
                     <View style={styles.paymentWrapper}>
                         <View style={styles.paymentBox}>
-                            <AppTextInput value={countryName} onChange={(e) => { setCountryName(e) }} placeholderText="Country" />
-                            <AppTextInput value={cState} onChange={(e) => { setcState(e) }} placeholderText="State Name" />
-                           
+                            <AppTextInput value={title} onChange={(e) => { setTitle(e) }} placeholderText="Title" />
+                            <AppTextInput value={desc} multi numLines={3} onChange={(e) => { setDesc(e) }} placeholderText="Description" />
+                          
                             {imgs?.length > 0 &&
                                 <FlatList
                                     numColumns={2}
@@ -112,8 +113,8 @@ function NewState(props) {
                                         </View>
                                     } />
                             }
-                            <AppButton onPress={() => onBrowse()} style={{ marginTop: 15 }} title="Add Image" />
-                            <AppButton onPress={() => onPost()} style={{ marginTop: 15 }} title="Add State" />
+                            <AppButton onPress={() => onBrowse()} style={{ marginTop: 15 }} title="Add Images" />
+                            <AppButton onPress={() => onPost()} style={{ marginTop: 15 }} title="Add Post" />
                         </View>
                     </View>
             </ScrollView>
@@ -134,4 +135,4 @@ const mapStateToProps = (state) => {
     }
   }
   // export default Home
-  export default connect(mapStateToProps, mapDispatchToProps)(NewState);
+  export default connect(mapStateToProps, mapDispatchToProps)(NewPost);

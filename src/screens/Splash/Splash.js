@@ -4,16 +4,28 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { IMAGES } from '../../assets/imgs';
 import { connect } from 'react-redux';
-import { ChangeBackgroundColor, GetUser } from '../../root/action';
+import { ChangeBackgroundColor, GetUpdateApp, GetUser } from '../../root/action';
 import { getData } from '../../Auth/fire';
+import DeviceInfo from 'react-native-device-info';
 
 const Splash = (props) => {
   const [active, setActive] = useState(false)
 
   useEffect(() => {
-      checkUser();
-      // checkDate();
+    checkUser();
+    UpdateCheck();
+    // checkDate();
   }, [])
+  const UpdateCheck = async () => {
+    let vv = await DeviceInfo.getVersion();
+    console.log('device', vv);
+    const res = await getData('UpdateApp', 'mocoo');
+    console.log('res', res);
+    if (vv == res?.version) {
+      console.log("UPDATE");
+      props?.getUpdateApp(true)
+    }
+  }
   const checkUser = async () => {
     const adm = await AsyncStorage.getItem("Admin")
     if (adm != null) {
@@ -24,7 +36,7 @@ const Splash = (props) => {
     else {
       const value = await AsyncStorage.getItem("User")
       if (value != null) {
-        const res =await getData('Users',value)
+        const res = await getData('Users', value)
         props?.getUser(res)
         props.navigation.replace('UserTab');
       }
@@ -37,7 +49,7 @@ const Splash = (props) => {
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <View style={{ width: '100%', height: "100%", backgroundColor: '#FF5757', alignSelf: 'center', justifyContent: 'center', alignItems: 'center', position: 'absolute', }}>
-        <ImageBackground resizeMode='contain' style={{width: '100%', height: "100%", }} source={IMAGES.blackLogo}>
+        <ImageBackground resizeMode='contain' style={{ width: '100%', height: "100%", }} source={IMAGES.blackLogo}>
 
         </ImageBackground>
       </View>
@@ -54,8 +66,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-      changeBackgroundColor: (bg) => dispatch(ChangeBackgroundColor(bg)),
-      getUser: (userInfo) => dispatch(GetUser(userInfo)),
+    changeBackgroundColor: (bg) => dispatch(ChangeBackgroundColor(bg)),
+    getUser: (userInfo) => dispatch(GetUser(userInfo)),
+    getUpdateApp: (userInfo) => dispatch(GetUpdateApp(userInfo)),
   }
 }
 // export default Home

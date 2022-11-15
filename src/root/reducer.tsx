@@ -1,9 +1,7 @@
 const initialState = {
     backgroundColor: 'red',
-    Imgs: [],
     user: {},
-    ln: 'gm',
-    routy: 'GroupGoals',
+    updateApp:false,
 };
 
 export const reducer = (state = initialState, action: any) => {
@@ -15,29 +13,16 @@ export const reducer = (state = initialState, action: any) => {
                 backgroundColor: action.payload
             }
 
-        case 'Get_Imgs':
-            return {
-                ...state,
-                Imgs: action.payload
-            }
-
         case 'user':
             return {
                 ...state,
                 user: action.payload
             }
-
-        case 'ln':
+            case 'updateApp':
             return {
                 ...state,
-                ln: action.payload
+                updateApp: action.payload
             }
-        case 'routy':
-            return {
-                ...state,
-                routy: action.payload
-            }
-        // break;
 
         default:
             return state;

@@ -11,6 +11,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ShowStates from '../screens/ShowStates/ShowStates';
 import Profile from '../screens/Profile/Profile';
 import MyChat from '../screens/MyChat/MyChat';
+import StateNav from './statesNav';
+import ShowPosts from '../screens/ShowPosts/ShowPosts';
 
 const ScannerButton = (prop) => {
   return (
@@ -43,10 +45,8 @@ const UserTab=(props)=> {
       }}
 
     >
-      <Tab.Screen name="ShowStates" component={ShowStates}
+      <Tab.Screen name="ShowStates" component={StateNav}
         options={{
-          // tabBarLabel: true,
-          // title: 'Group',
           headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused }) => (
@@ -59,14 +59,24 @@ const UserTab=(props)=> {
       />
       <Tab.Screen name="Chat" component={MyChat}
         options={{
-          // tabBarLabel: true,
-          // title: 'Group',
           headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused }) => (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <Entypo name={'chat'} size={20} color={focused ? "#fff" : "grey"} />
               <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Chat</Text>
+            </View>
+          )
+        }}
+      />
+      <Tab.Screen name="Posts" component={ShowPosts}
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <FontAwesome name={'pagelines'} size={20} color={focused ? "#fff" : "grey"} />
+              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Posts</Text>
             </View>
           )
         }}

@@ -25,6 +25,9 @@ const MyChat = (props) => {
     const value = await AsyncStorage.getItem("User")
     const res = await filterCollectionSingle("IndividualChat", "members", "array-contains", value);
     console.log('myyy', res);
+    if(res?.length<1)
+    return
+    let tempSort=res?.sort((a,b)=> b?.lastMsg-a?.lastMsg)
     setChat(res)
   }
   return (
