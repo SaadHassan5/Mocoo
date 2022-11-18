@@ -30,7 +30,7 @@ export default function LoginScreen(props) {
   const [eye, setEye] = useState(true);
   const [countryCode, setCountryCode] = useState('');
   const [phone, setPhone] = useState('');
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   useEffect(() => {
     // getToken()
   }, [])
