@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, Alert } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, Alert, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors, spacing } from '../../theme';
 import Header from '../../components/Header';
@@ -141,7 +141,7 @@ const GroupChat = (props) => {
     // LinkingIOS.openURL(url);
   }
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <Header
         style={{ backgroundColor: colors.light }}
         title={post?.groupName}
@@ -216,7 +216,7 @@ const GroupChat = (props) => {
             </View>
           } />
       </View>
-      <View>
+      <KeyboardAvoidingView behavior='padding'>
         {replyMod &&
           <View style={{ backgroundColor: 'rgba(215,245,245,1)', paddingVertical: HP(1), ...styles.row }}>
             <View style={{ paddingHorizontal: WP(6) }}>
@@ -237,8 +237,8 @@ const GroupChat = (props) => {
           </TouchableOpacity>
         </View>
         <PostTypeModal onSave={()=>{makePost(pos)}} mod={postMod} onPress={()=>{setPostMod(false)}} type={postType} setType={setPostType}/>
-      </View>
-    </>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 

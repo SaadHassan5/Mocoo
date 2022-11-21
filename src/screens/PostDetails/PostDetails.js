@@ -18,6 +18,7 @@ import AlertService from '../../Services/alertService';
 import { GlobalStyles } from '../../global/globalStyles';
 import { makeid } from '../../assets/config/MakeId';
 import Fontiso from 'react-native-vector-icons/Fontisto'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 const PostDetails = (props) => {
   const [img, setImg] = useState([])
   const [comment, setComments] = useState([])
@@ -193,7 +194,7 @@ const PostDetails = (props) => {
                   </TouchableOpacity>
                 }
                 <TouchableOpacity onPress={() => {  }} style={{ ...GlobalStyles?.row }}>
-                    <Fontiso name='comments' size={25} color={palette?.angry} />
+                    <FontAwesome name='comment-o' size={25} color={palette?.angry} />
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.commentCount}</Text>
                   </TouchableOpacity>
               </View>

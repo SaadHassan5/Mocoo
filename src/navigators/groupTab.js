@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAw5 from "react-native-vector-icons/FontAwesome5"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -23,7 +23,7 @@ const GroupTab=(props)=> {
           borderColor: 'red',
           height: HP(9),
           position: 'absolute',
-          top: 0
+          top: 40
         }
       }}
     >

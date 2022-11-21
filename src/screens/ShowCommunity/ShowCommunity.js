@@ -42,9 +42,9 @@ const ShowCommunity = (props) => {
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
       <Header goBack={false} title={'Community'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewCommunity', props?.route?.params) }} txt={'Add Your Community'} style={{ width: WP(80), alignSelf: 'center', marginTop: HP(4) }} />
+      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewCommunity', props?.route?.params) }} txt={'Add Your Community'} style={{ width: WP(80), alignSelf: 'center', marginTop: HP(5.5) }} />
       <View style={{...GlobalStyles.row,alignSelf: "center",  marginTop: HP(3)}}>
-        <Input onChange={(e)=>{setSearchTxt(e)}} placeTxt={'Search'} styles={{ borderRadius: WP(0), width: WP(60), }} />
+        <Input onChange={(e)=>{setSearchTxt(e)}} placeTxt={'Search'} styles={{ borderRadius: WP(0), width: WP(60),padding:14 }} />
         <CustomBtn1 onPress={()=>{onSearch()}} txt={'Search'} txtStyle={{fontSize:13}} style={{height:HP(7),width:WP(20)}}/>
       </View>
         {allGroups?.length==0 &&

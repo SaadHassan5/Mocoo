@@ -125,9 +125,9 @@ export default function RegisterScreen(props) {
             <AppFormField autoCapitalize="none" placeholderText="Name" name="name" />
             <View style={{ flexDirection: 'row', marginBottom: HP(2) }}>
               <TouchableOpacity style={{ backgroundColor: colors.light }} onPress={() => { setShow(true) }}>
-                <Input editable placeTxt={"Code"} value={countryCode} styles={{ borderTopLeftRadius: WP(2), borderBottomLeftRadius: WP(2), borderRadius: 0, width: WP(27), backgroundColor: 'transparent' }} />
+                <Input editable placeTxt={"Code"} value={countryCode} styles={{ borderTopLeftRadius: WP(2), borderBottomLeftRadius: WP(2), borderRadius: 0, width: WP(27), backgroundColor: 'transparent', padding:10 }} />
               </TouchableOpacity>
-              <Input onChange={(e) => { setPhone(e) }} keyboardType={'number-pad'} placeTxt={'Phone'} styles={{ borderTopRightRadius: WP(2), borderBottomRightRadius: WP(2), borderRadius: 0, width: WP(60), backgroundColor: colors.light }} />
+              <Input onChange={(e) => { setPhone(e) }} keyboardType={'number-pad'} placeTxt={'Phone'} styles={{ borderTopRightRadius: WP(2), borderBottomRightRadius: WP(2), borderRadius: 0, width: WP(60), backgroundColor: colors.light, padding:10 }} />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <AppFormField autoCapitalize="none" placeholderText="Password" name="password" secureTextEntry={eye} style={{ width: '100%' }} />

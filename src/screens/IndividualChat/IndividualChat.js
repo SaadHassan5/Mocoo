@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors, spacing } from '../../theme';
 import Header from '../../components/Header';
@@ -94,7 +94,7 @@ const IndividualChat = (props) => {
     }
   }
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <Header
         style={{ backgroundColor: colors.light }}
         img={post?.profileUri}
@@ -130,16 +130,16 @@ const IndividualChat = (props) => {
             </View>
           } />
       </View>
-      <View style={{ paddingHorizontal: WP(3), ...styles.row }}>
+      <KeyboardAvoidingView behavior='padding' style={{ paddingHorizontal: WP(3), ...styles.row }}>
         <View style={{ width: '100%' }}>
           <Input multi style={{ paddingRight: WP(18), borderRadius: 0 }} value={newCom} onChange={(e) => { setNewCom(e) }} placeTxt={"Send Text"} />
         </View>
-        <TouchableOpacity disabled={active} onPress={() => { onSend() }} style={{ position: 'absolute', right: 0, paddingRight: WP(5) }}>
+        <TouchableOpacity disabled={active} onPress={() => { onSend() }} style={{ position: 'relative', right: 35, paddingRight: WP(5) }}>
           {/* <Text style={{ ...styles.emailTxt, color: palette.lighBlueBtnTitle, fontSize: 18 }}>Send</Text> */}
           <Ionicons name={'send'} size={30} color={palette?.lighBlueBtnTitle} />
         </TouchableOpacity>
-      </View>
-    </>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, Alert, Linking } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Keyboard, Alert, Linking, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors, spacing } from '../../theme';
 import Header from '../../components/Header';
@@ -123,7 +123,7 @@ const CommunityChat = (props) => {
     await Linking?.openURL(url)
   }
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <Header
         style={{ backgroundColor: colors.light }}
         title={props?.route?.params?.name?.split('-')[2]} rightOptionPress={()=>{onShareUrl()}} rightOptionTxt={'Share'}
@@ -175,7 +175,7 @@ const CommunityChat = (props) => {
             </View>
           } />
       </View>
-      <View>
+      <KeyboardAvoidingView behavior='padding'>
         {replyMod &&
           <View style={{ backgroundColor: 'rgba(215,245,245,1)', paddingVertical: HP(1), ...styles.row }}>
             <View style={{ paddingHorizontal: WP(6) }}>
@@ -191,12 +191,12 @@ const CommunityChat = (props) => {
           <View style={{ width: '100%' }}>
             <Input multi numberOfLines={5} styles={{ paddingRight: WP(18) }} value={newCom} onChange={(e) => { setNewCom(e) }} placeTxt={"Send Text"} />
           </View>
-          <TouchableOpacity disabled={active} onPress={() => { onSend() }} style={{ position: 'absolute', right: 0, paddingRight: WP(5) }}>
+          <TouchableOpacity disabled={active} onPress={() => { onSend() }} style={{ position: 'relative', right: 35, paddingRight: WP(5) }}>
             <Text style={{ ...styles.emailTxt, color: palette.lighBlueBtnTitle, fontSize: 18 }}>Send</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 

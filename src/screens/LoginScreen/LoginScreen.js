@@ -96,9 +96,9 @@ export default function LoginScreen(props) {
           >
             <View style={{ flexDirection: 'row', marginBottom: HP(2) }}>
               <TouchableOpacity style={{ backgroundColor: colors.light }} onPress={() => { setShow(true) }}>
-                <Input editable placeTxt={"Code"} value={countryCode} styles={{ borderTopLeftRadius: WP(2), borderBottomLeftRadius: WP(2), borderRadius: 0, width: WP(25), backgroundColor: 'transparent' }} />
+                <Input editable placeTxt={"Code"} value={countryCode} styles={{ borderTopLeftRadius: WP(2), borderBottomLeftRadius: WP(2), borderRadius: 0, width: WP(25), backgroundColor: 'transparent', padding:10 }} />
               </TouchableOpacity>
-              <Input onChange={(e) => { setPhone(e) }} keyboardType={'number-pad'} placeTxt={'Phone'} styles={{ borderTopRightRadius: WP(2), borderBottomRightRadius: WP(2), borderRadius: 0, width: WP(57), backgroundColor: colors.light }} />
+              <Input onChange={(e) => { setPhone(e) }} keyboardType={'number-pad'} placeTxt={'Phone'} styles={{ borderTopRightRadius: WP(2), borderBottomRightRadius: WP(2), borderRadius: 0, width: WP(57), backgroundColor: colors.light, padding:10 }} />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <AppFormField placeholderText="Password" name="password" secureTextEntry={eye} style={{ width: '100%' }} />

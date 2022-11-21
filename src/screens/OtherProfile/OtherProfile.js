@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Share, View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, FlatList, Text } from 'react-native';
+import { Share, View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, FlatList, Text, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
@@ -40,7 +40,7 @@ function Profile(props) {
     // Alert.alert(JSON.stringify(res))
   }
   return (
-    <>
+    <SafeAreaView>
       <Header title="Profile" onPress={() => { props?.navigation?.goBack() }} style={{ backgroundColor: colors.light }} />
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -86,7 +86,7 @@ function Profile(props) {
           } />
 
       </ScrollView>
-    </>
+    </SafeAreaView>
   )
 }
 

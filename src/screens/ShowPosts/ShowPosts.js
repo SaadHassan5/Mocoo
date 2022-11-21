@@ -13,6 +13,7 @@ import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
 import Fontiso from 'react-native-vector-icons/Fontisto'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 const ShowPosts = (props) => {
   const [active, setActive] = useState(false)
   const [allGroups, setAllGroups] = useState([])
@@ -91,7 +92,7 @@ const ShowPosts = (props) => {
                   </TouchableOpacity>
                 }
                 <TouchableOpacity onPress={() => {  }} style={{ ...GlobalStyles?.row }}>
-                    <Fontiso name='comments' size={25} color={palette?.angry} />
+                    <FontAwesome name='comment-o' size={25} color={palette?.angry} />
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{item?.commentCount}</Text>
                   </TouchableOpacity>
               </View>

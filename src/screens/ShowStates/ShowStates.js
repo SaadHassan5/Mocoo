@@ -65,7 +65,7 @@ const ShowStates = (props) => {
       <Header goBack={false} title={'States'} />
       <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewState') }} txt={'Add States'} style={{ width: WP(70), alignSelf: 'center', backgroundColor: palette?.white }} />
       <View style={{ ...GlobalStyles.row, alignSelf: "center", marginTop: HP(3) }}>
-        <Input onChange={(e) => { setSearchTxt(e) }} placeTxt={'Search'} styles={{ borderRadius: WP(0), width: WP(60), }} />
+        <Input onChange={(e) => { setSearchTxt(e) }} placeTxt={'Search'} styles={{ borderRadius: WP(0), width: WP(60),padding:14 }} />
         <CustomBtn1 onPress={() => { onSearch() }} txt={'Search'} txtStyle={{ fontSize: 13 }} style={{ height: HP(7), width: WP(20) }} />
       </View>
       {allStates?.length == 0 &&
