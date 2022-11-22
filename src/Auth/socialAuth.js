@@ -56,7 +56,7 @@ Date.prototype.getWeek = function () {
 
 const Signup = async (email, password, name, props) => {
 
-  let response = {};
+  let response = false;
   const today = new Date();
   const currentWeekNumber = today.getWeek();
   const res = await getData('Login', email)

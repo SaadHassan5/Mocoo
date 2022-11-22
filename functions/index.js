@@ -222,7 +222,6 @@ exports.sendNewPostNotification = functions.firestore
             console.log('error in Post Notification', error);
         }
     });
-
     exports.sendNewCommentNotification = functions.firestore
     .document('Comments/{id}')
     .onWrite(async (change, context) => {
@@ -263,3 +262,19 @@ exports.sendNewPostNotification = functions.firestore
             console.log('error in Comment Notification', error);
         }
     })
+
+    //////////Delete
+    exports.scheduledFunctionDelOntheGo = functions.pubsub.schedule('every 5 minutes').onRun(async(context) => {
+        const res=await filterCollections('Posts','type','==','On The Go')
+      console.log('reeeees',res);
+      for (let index = 0; index < res?.length; index++){
+        let da=new Date(res[index]?.time);
+        if(da?.setHours(da?.getHours()+3)<new Date()?.getTime()){
+          console.log('Valid for delete',res[index]);
+          await deleteData('Posts',res[index]?.id)
+        }
+        else{
+          console.log('Not valid',da?.setHours(da?.getHours()+3),'===>',new Date().getTime());
+        }
+      }
+      });

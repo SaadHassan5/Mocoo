@@ -59,6 +59,9 @@ const ShowPosts = (props) => {
       <Header goBack={false} title={'Posts'} />
       {/* <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewPost', props?.route?.params) }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(4), backgroundColor: '#fff' }} /> */}
       {/* backgroundColor:palette?.white, */}
+      {allGroups?.length<1 &&
+                    <Text style={{ ...GlobalStyles.boldTxt, fontSize:22,textAlign:"center",marginTop:HP(20)}}>Join Group to See Posts</Text>
+      }
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
         <FlatList
           numColumns={1}
