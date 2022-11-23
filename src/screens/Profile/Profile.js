@@ -20,7 +20,7 @@ import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { GlobalStyles } from '../../global/globalStyles';
 import { FireAuth } from '../../Auth/socialAuth';
-import { openInsta, VerifyMyAccount } from '../../Auth/manipulateData';
+import { contactUs, openInsta, VerifyMyAccount } from '../../Auth/manipulateData';
 
 function Profile(props) {
   const [email, setEmail] = useState(props?.user?.email)
@@ -191,6 +191,7 @@ function Profile(props) {
               <CustomBtn1 onPress={() => { onVerify() }} txt={'Verify My Account'} txtStyle={{ color: palette.status_dot_bg_green }} style={{ paddingVertical: HP(1), backgroundColor: 'transparent' }} />
             }
             <CustomBtn1 onPress={() => { onDelete() }} txt={'Delete My Account'} txtStyle={{ color: palette.letterRed }} style={{ paddingVertical: HP(1), backgroundColor: 'transparent' }} />
+            <CustomBtn1 onPress={() => { contactUs('ronakjoshifly@Gmail.com','','') }} txt={'Contact us'} txtStyle={{ color: palette.blue,fontSize:14,textDecorationLine:'underline' }} style={{ paddingVertical: HP(1), backgroundColor: 'transparent' }} />
           </View>
 
         </View >

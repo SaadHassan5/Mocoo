@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, FlatList, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, FlatList, Text, Image, TouchableOpacity, Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { IMAGES } from '../../assets/imgs';
@@ -12,6 +12,7 @@ import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
 import Entypo from 'react-native-vector-icons/Entypo'
+import { Menu, MenuItem } from 'react-native-material-menu';
 const ShowGroups = (props) => {
   const [active, setActive] = useState(false)
   const [allGroups, setAllGroups] = useState([])
@@ -26,8 +27,8 @@ const ShowGroups = (props) => {
   }, [])
   async function getCategories() {
     let res = await getData('AdminData', 'group');
-    let temp = res?.categorie?.map((i,index) => {
-      return { category: i,select:index==0?true:false }
+    let temp = res?.categorie?.map((i, index) => {
+      return { category: i, select: index == 0 ? true : false }
     })
     setCategory(temp)
   }
@@ -38,6 +39,22 @@ const ShowGroups = (props) => {
   }
   async function goToGroup(item) {
     props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner })
+  }
+    const hideMenu = (item, index) => {
+    let temp = [...allGroups];
+    temp[index] = { ...item, select: false }
+    setAllGroups(temp)
+  }
+
+  const showMenu = (item, index) => {
+    let temp = [...allGroups];
+    temp[index] = { ...item, select: true }
+    setAllGroups(temp)
+  }
+  async function onShare(item,index) {
+    const url = `whatsapp://send?text=https://mocooproject.page.link/group/${item?.id}`
+    await Linking.openURL(url)
+    hideMenu(item,index)
   }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
@@ -56,17 +73,28 @@ const ShowGroups = (props) => {
             {cItem?.select &&
               <FlatList
                 numColumns={1}
-                style={{ flex: 1,marginTop:HP(2) }}
+                style={{ flex: 1, marginTop: HP(2) }}
                 data={allGroups}
                 contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
                 keyExtractor={item => item.id}
                 renderItem={({ item, index }) =>
                   <View>
                     {item?.category == cItem?.category &&
-                      <TouchableOpacity onPress={() => {goToGroup(item)}} style={{  ...GlobalStyles.row, marginBottom: HP(3) }}>
-                        <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-                        <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10), width: WP(60) }}>{item?.groupName}</Text>
-                      </TouchableOpacity>
+                      <View>
+                        <TouchableOpacity onPress={() => { goToGroup(item) }} style={{ ...GlobalStyles.row, marginBottom: HP(3) }}>
+                          <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
+                          <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10), width: WP(60) }}>{item?.groupName}</Text>
+                        </TouchableOpacity>
+                        <View style={{ position: 'absolute', right: 0, }}>
+                          <Menu
+                            visible={item?.select ? item?.select : false}
+                            anchor={<TouchableOpacity onPress={() => { showMenu(item, index) }}><Text style={{ ...GlobalStyles.boldTxt, fontSize: 25, paddingHorizontal: WP(3), top: -12 }}>...</Text></TouchableOpacity>}
+                            onRequestClose={() => { hideMenu(item, index) }}
+                          >
+                            <MenuItem onPress={() => { onShare(item, index) }}>Share</MenuItem>
+                          </Menu>
+                        </View>
+                      </View>
                     }
                   </View>
                 } />

@@ -96,4 +96,7 @@ async function whatToDo(nav,notification) {
     console.log('DAAAA',res);
     nav?.current?.navigate('PostDetails',{...res})
   }
+  else if(notification?.data?.screen=='newFriendPost'){
+    nav?.current?.navigate('Friends')
+  }
 }

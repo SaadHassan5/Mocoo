@@ -20,6 +20,8 @@ import AlertService from "../../Services/alertService";
 import { useEffect } from "react";
 import { CountryPicker } from "react-native-country-codes-picker";
 import { filterCollectionDouble, filterCollectionSingle, saveData } from "../../Auth/fire";
+import { CustomBtn1 } from "../../assets/components/CustomButton/CustomBtn1";
+import { contactUs } from "../../Auth/manipulateData";
 
 const validationSchema = Yup.object().shape({
 });
@@ -72,14 +74,14 @@ export default function LoginScreen(props) {
             onSubmit={async (values) => {
               const password = values.password;
               if (check == 'uncheck') {
-              if (phone.length < 7 || countryCode?.trim() == "") {
-                AlertService?.show('Enter valid number')
-                return
-              }
+                if (phone.length < 7 || countryCode?.trim() == "") {
+                  AlertService?.show('Enter valid number')
+                  return
+                }
                 await FireAuth.Signin(countryCode + phone, password, props)
               }
               else {
-                const adm = await filterCollectionDouble("Admin", 'email', '==',phone, "password", '==', password);
+                const adm = await filterCollectionDouble("Admin", 'email', '==', phone, "password", '==', password);
                 if (adm.length > 0) {
                   const fcmToken = await messaging().getToken()
                   await saveData("Admin", adm?.id, {
@@ -116,8 +118,8 @@ export default function LoginScreen(props) {
               <Text style={{ ...styles.label }}>Login as Admin</Text>
               <Checkbox status={check == "check" ? 'checked' : 'unchecked'} color={colors.primary} uncheckedColor={'red'} />
             </TouchableOpacity>
+            <CustomBtn1 onPress={() => { contactUs() }} txt={'Forgot Password/Contact us'} txtStyle={{ color: palette?.blackGray, fontSize: 14 }} style={{ backgroundColor: 'transparent', paddingHorizontal: 0, width: WP(70), alignSelf: 'center' }} />
             <SubmitButton title="Login" style={{ marginTop: spacing[4], paddingVertical: HP(1) }} />
-
           </AppForm>
         </View>
       </ScrollView>

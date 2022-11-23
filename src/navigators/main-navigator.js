@@ -26,6 +26,9 @@ import PostDetails from '../screens/PostDetails/PostDetails';
 import StateNav from './statesNav';
 import ShowPosts from '../screens/ShowPosts/ShowPosts';
 import TabNav from './TabNav';
+import Friends from '../screens/Friends/Friends';
+import NewFriendPost from '../screens/NewFriendPost';
+import ShowSubscribed from '../screens/ShowSubscribed/ShowSubscribed';
 
 const MyStack = createStackNavigator();
 class Stack extends Component {
@@ -58,6 +61,9 @@ class Stack extends Component {
           <MyStack.Screen name="StateNav" component={StateNav} />
           <MyStack.Screen name="ShowPosts" component={ShowPosts} />
           <MyStack.Screen name="TabNav" component={TabNav} />
+          <MyStack.Screen name="Friends" component={Friends} />
+          <MyStack.Screen name="NewFriendPost" component={NewFriendPost} />
+          <MyStack.Screen name="ShowSubscribed" component={ShowSubscribed} />
         </MyStack.Navigator>
     )
   }
