@@ -19,18 +19,45 @@ const GroupMembers = (props) => {
 
   useEffect(() => {
     console.log('PROPS', props);
-    // props?.navigation?.navigate('NewPost', props?.route?.params)
-    // db.collection('Groups')?.where('Posts', 'groupId', '==', props?.route?.params?.groupId)
-    // .onSnapshot(documentSnapshot => {
-    getStates();
-    // });
+    db.collection('GroupMembers').doc(props?.route?.params?.groupId)
+      .onSnapshot(documentSnapshot => {
+        getStates();
+      });
+    joinGroup()
   }, [])
+  async function getUser() {
+    const res = await getData('Users', props?.user?.email)
+    props?.getUser(res)
+  }
   async function getStates() {
     const res = await getData('GroupMembers', props?.route?.params?.groupId)
     console.log('States=======>', res);
     setAllGroups(res?.membersDetails ? res?.membersDetails : [])
   }
-
+  async function joinGroup() {
+    // AlertService?.toastPrompt("Subscribed")
+    let res = await getData('GroupMembers', props?.route?.params?.groupId)
+    let members = res?.members ? res?.members : [];
+    let membersDetail = res?.membersDetails ? res?.membersDetails : [];
+    let tempUser = !props?.user?.subscribedIds?.find(i => i == props?.route?.params?.groupId) ? [...props?.user?.subscribedIds, props?.route?.params?.groupId] : [...props?.user?.subscribedIds]
+    await saveData('Users', props?.user?.email, {
+      subscribedIds: tempUser,
+    })
+    if (!members?.find(i => i == props?.user?.email)) {
+    AlertService?.toastPrompt("Subscribed")
+      
+      let temp =[...members, props?.user?.email]
+      let us = { email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri, insta: props?.user?.insta ? props?.user?.insta : '', bio: props?.user?.bio ? props?.user?.bio : '' }
+      console.log('CHH',membersDetail);
+      let tempD = [...membersDetail, us] 
+      console.log('OBJ',tempD,temp);
+      await saveData('GroupMembers', props?.route?.params?.groupId, {
+        members: temp,
+        membersDetails: tempD
+      })
+    }
+  await  getUser()
+  }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
       <Header goBack={false} title={'Members'} />
@@ -55,7 +82,7 @@ const GroupMembers = (props) => {
                   </TouchableOpacity>
                 }
                 {item?.insta &&
-                  <TouchableOpacity style={{paddingVertical:HP(1)}} onPress={async()=>{openInsta(item?.insta)}}>
+                  <TouchableOpacity style={{ paddingVertical: HP(1) }} onPress={async () => { openInsta(item?.insta) }}>
                     <Text style={{ ...GlobalStyles.lightTxt, width: WP(60), textDecorationLine: 'underline' }}>Insta: {item?.insta}</Text>
                   </TouchableOpacity>
                 }

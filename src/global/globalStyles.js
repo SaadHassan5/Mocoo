@@ -37,5 +37,8 @@ export const GlobalStyles=StyleSheet.create({
       },
       urlTxt:{
         fontFamily:fontFamily.light,fontSize:14,color:palette.white,textDecorationLine:'underline'
+      },
+      btnView:{
+        paddingVertical:HP(1),width:WP(40)
       }
 })

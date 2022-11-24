@@ -25,7 +25,7 @@ export const palette = {
   inputColor: '#99A2AD',
   grayWhite: '#F5F5F5',
   grayLight: '#E5E5E5',
-
+  airbnb:'#d70465',
   blackGray: '#3B4857',
   capGray: '#B4B8BB',
   tagLabelColor: '#3B4857',

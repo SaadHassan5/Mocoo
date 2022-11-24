@@ -18,12 +18,12 @@ const PostRender = ({ props, item, index, hideMenu, showMenu, onShare, onType, o
                     <Image source={{ uri: item?.userDetails?.profileUri }} style={{ width: WP(14), height: WP(14), borderRadius: WP(12) }} />
                 </TouchableOpacity>
                 <View style={{ paddingLeft: WP(5) }}>
-                    <Text style={{ ...GlobalStyles.boldTxt, width: WP(60) }}>{item?.userDetails?.name}</Text>
+                    <Text style={{ ...GlobalStyles.boldTxt, width: WP(60) }}>{item?.userDetails?.name}{item?.groupName?' - '+item?.groupName:''}</Text>
                     {/* <Text style={{ ...GlobalStyles.mediumTxt, width: WP(60) }}>{item?.title}</Text> */}
                     <Text style={{ ...GlobalStyles.lightTxt, width: WP(60) }}>{item?.description}</Text>
                     {item?.type &&
                         <TouchableOpacity onPress={onType} style={{ backgroundColor: 'rgba(15, 201, 169,1)', alignSelf: 'flex-start', paddingHorizontal: WP(5), marginTop: HP(2), paddingVertical: HP(0.6), borderRadius: WP(10) }}>
-                            <Text style={{ ...GlobalStyles.mediumTxt, color: palette.white }}>{item?.type} {item?.type == 'On The Go' && `(will be hide after${'\n'}3 hours)`}</Text>
+                            <Text style={{ ...GlobalStyles.mediumTxt, color: palette.white }}>{item?.type} {item?.type == 'On The Go' && `- Happening Now.`}</Text>
                         </TouchableOpacity>
                     }
                 </View>

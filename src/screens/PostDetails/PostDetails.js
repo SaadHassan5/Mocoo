@@ -4,7 +4,7 @@ import IconMatCom from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { colors, spacing } from '../../theme';
 import Header from '../../components/Header';
-import { db, filterCollectionSingle, getData,  saveData } from '../../Auth/fire';
+import { db, filterCollectionSingle, getData, saveData } from '../../Auth/fire';
 import AppText from '../../components/AppText';
 import fontFamily from '../../assets/config/fontFamily';
 import { HP, palette, WP } from '../../assets/config';
@@ -53,7 +53,7 @@ const PostDetails = (props) => {
     setPost(res)
   }
   const getComments = async () => {
-    const res = await filterCollectionSingle("Comments", "postId",'==',post?.postId,)
+    const res = await filterCollectionSingle("Comments", "postId", '==', post?.postId,)
     console.log("Cooooo COm", res);
     let tempSort = res?.sort((a, b) => b?.time - a?.time)
     let sp8 = [], sp = []; let spPre = [];
@@ -84,10 +84,10 @@ const PostDetails = (props) => {
         groupId: post?.groupId,
         profileUri: props.user.profileUri,
         name: props?.user?.name,
-        commentId:iid,
+        commentId: iid,
       }
       setNewCom("")
-      console.log('OBJ',obj);
+      console.log('OBJ', obj);
       // let tCom = [obj, ...comment]
       // setComments(tCom)
 
@@ -123,7 +123,7 @@ const PostDetails = (props) => {
     console.log(post);
     let sub = post?.likedBy ? [...post?.likedBy] : [];
     sub.push({ email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri })
-    console.log('Sub', post?.id,sub);
+    console.log('Sub', post?.id, sub);
     await saveData("Posts", post?.postId, {
       likes: post?.likedBy ? post?.likes + 1 : 1,
       likedBy: sub
@@ -134,9 +134,9 @@ const PostDetails = (props) => {
     let sub = [];
     post.likedBy.filter((i) => {
       if (i?.email != props?.user?.email)
-      sub.push(i)
+        sub.push(i)
     })
-    console.log("unlike",sub);
+    console.log("unlike", sub);
     await saveData("Posts", post?.postId, {
       likes: post.likes - 1,
       likedBy: sub
@@ -168,7 +168,7 @@ const PostDetails = (props) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <Header
         style={{}}
-        title={post?.description?.substring(0,10)}
+        title={post?.description?.substring(0, 10)}
         onPress={() => props.navigation.goBack()}
       />
       <ScrollView
@@ -178,25 +178,28 @@ const PostDetails = (props) => {
       >
         <View style={{ paddingHorizontal: WP(7), flex: 1 }}>
           <View style={{ backgroundColor: "#fff", marginTop: HP(3), paddingBottom: HP(2) }}>
-            {/* < */}
-            <Text style={{...GlobalStyles.mediumTxt}}>{post?.description}</Text>
-            <View style={{ ...GlobalStyles?.row, justifyContent:'space-around',paddingHorizontal:WP(10) ,paddingVertical:HP(2)}}>
-                {post?.likedBy?.find(e => e?.email == props?.user?.email) ?
-                  <TouchableOpacity onPress={() => { unLike() }} style={{ ...GlobalStyles?.row }}>
-                    <AntDesign name='like1' size={25} color={palette?.purple} />
-                    <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.likes ? post?.likes : 0}</Text>
-                  </TouchableOpacity>
-                  :
-                  <TouchableOpacity onPress={() => { onLike() }} style={{ ...GlobalStyles?.row }}>
-                    <AntDesign name='like2' size={25} color={palette?.purple} />
-                    <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.likes ? post?.likes : 0}</Text>
-                  </TouchableOpacity>
-                }
-                <TouchableOpacity onPress={() => {  }} style={{ ...GlobalStyles?.row }}>
-                    <Fontiso name='comment' size={30} color={palette?.purple} />
-                    <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.commentCount}</Text>
-                  </TouchableOpacity>
-              </View>
+            <TouchableOpacity disabled={post?.email==props?.user?.email?true:false} onPress={()=>{props?.navigation?.navigate('OtherProfile',{email:post?.email,})}} style={{ ...GlobalStyles.row,marginBottom:HP(2) }}>
+              <Image source={{ uri: post?.userDetails?.profileUri }} style={{ width: WP(15), height: WP(15), borderRadius: WP(10) }} />
+              <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(5) }}>{post?.userDetails?.name}</Text>
+            </TouchableOpacity>
+            <Text style={{ ...GlobalStyles.mediumTxt }}>{post?.description}</Text>
+            <View style={{ ...GlobalStyles?.row, justifyContent: 'space-around', paddingHorizontal: WP(10), paddingVertical: HP(2) }}>
+              {post?.likedBy?.find(e => e?.email == props?.user?.email) ?
+                <TouchableOpacity onPress={() => { unLike() }} style={{ ...GlobalStyles?.row }}>
+                  <AntDesign name='like1' size={25} color={palette?.purple} />
+                  <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.likes ? post?.likes : 0}</Text>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity onPress={() => { onLike() }} style={{ ...GlobalStyles?.row }}>
+                  <AntDesign name='like2' size={25} color={palette?.purple} />
+                  <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.likes ? post?.likes : 0}</Text>
+                </TouchableOpacity>
+              }
+              <TouchableOpacity onPress={() => { }} style={{ ...GlobalStyles?.row }}>
+                <Fontiso name='comment' size={30} color={palette?.purple} />
+                <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{post?.commentCount}</Text>
+              </TouchableOpacity>
+            </View>
             <View>
               <FlatList
                 numColumns={1}
@@ -222,8 +225,8 @@ const PostDetails = (props) => {
           <View style={{ width: '100%' }}>
             <Input styles={{ paddingRight: WP(25), borderRadius: 4, }} numLines={4} value={newCom} multi onChange={(e) => { setNewCom(e) }} placeTxt={"Add Comment"} />
           </View>
-          <TouchableOpacity onPress={()=>{onSend()}} style={{position:'absolute',paddingHorizontal:WP(5),right:0}}>
-            <Text style={{...GlobalStyles.mediumTxt}}>Send</Text>
+          <TouchableOpacity onPress={() => { onSend() }} style={{ position: 'absolute', paddingHorizontal: WP(5), right: 0 }}>
+            <Text style={{ ...GlobalStyles.mediumTxt }}>Send</Text>
           </TouchableOpacity>
         </View>
       </View>

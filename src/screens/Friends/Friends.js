@@ -90,7 +90,7 @@ const Friends = (props) => {
                       <Text style={{ ...GlobalStyles.boldTxt, width: WP(60) }}>{item?.userDetails?.name}</Text>
                       <Text style={{ ...GlobalStyles.mediumTxt, color: palette.blackGray, width: WP(60) }}>{item?.title}</Text>
                       {item?.type &&
-                        <Text style={{ ...GlobalStyles.mediumTxt, width: WP(70), color: palette.primary1 }}>{item?.type} {item?.type == 'On The Go' && `(will be hide after${'\n'}3 hours)`}</Text>
+                        <Text style={{ ...GlobalStyles.mediumTxt, width: WP(70), color: palette.primary1 }}>{item?.type} {item?.type == 'On The Go' && `- Happening Now.`}</Text>
                       }
                     </View>
                   </TouchableOpacity>

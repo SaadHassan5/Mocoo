@@ -371,3 +371,67 @@ exports.sendNewPostNotification = functions.firestore
             console.log('error in new friend  Notification', error);
         }
     })
+    exports.scheduledFunctionSendNotification3Hours = functions.pubsub.schedule('every 360 minutes') // Users can choose timezone - default is America/Los_Angeles
+    .onRun(async (context) => {
+        try {
+            let not = await getData("AdminData",'notifications');
+            let allUsers = await getAllData("Login");
+            const payload = {
+                notification: {
+                    title: not?.notifications[Math.floor(Math.random() * not?.notifications?.length)],
+                    body: ` ...`,
+                    sound: 'default',
+                },
+            };
+            const options = {
+                priority: 'high',
+                timeToLive: 60 * 60 * 24,
+            };
+            console.log("All", allUsers?.length);
+            allUsers?.map(i => {
+                if (i?.token) {
+                    admin
+                        .messaging()
+                        .sendToDevice(i?.token, payload, options)
+                        .then(reponse => {
+                            console.log('Send Schedule 8 hours Notification ');
+                        });
+                }
+            })
+
+        } catch (error) {
+            console.log('error in schedule 8 hours Notification', error);
+        }
+    });
+    exports.scheduledFunctionSendNotification3Hours = functions.pubsub.schedule('every 2 minutes') // Users can choose timezone - default is America/Los_Angeles
+    .onRun(async (context) => {
+        try {
+            let not = await getData("AdminData",'notifications');
+            let allUsers = await getAllData("Login");
+            const payload = {
+                notification: {
+                    title: not?.notifications[Math.floor(Math.random() * not?.notifications?.length)],
+                    body: ` ...`,
+                    sound: 'default',
+                },
+            };
+            const options = {
+                priority: 'high',
+                timeToLive: 60 * 60 * 24,
+            };
+            console.log("All", allUsers?.length);
+            allUsers?.map(i => {
+                if (i?.token) {
+                    admin
+                        .messaging()
+                        .sendToDevice(i?.token, payload, options)
+                        .then(reponse => {
+                            console.log('Send Schedule 8 hours Notification ');
+                        });
+                }
+            })
+
+        } catch (error) {
+            console.log('error in schedule 8 hours Notification', error);
+        }
+    });

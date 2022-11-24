@@ -18,12 +18,9 @@ const ShowStates = (props) => {
   const [allStates, setAllStates] = useState([])
   const [forSearch, setForSearch] = useState([])
   const [searchTxt, setSearchTxt] = useState('')
-  const [updeteMod, setUpdateMod] = useState(false)
 
   useEffect(() => {
     console.log('RED', props?.user);
-    if (props?.updateApp)
-      setUpdateMod(true)
     db.collection('States')?.where('country', '==', props?.user?.country?.toLowerCase())
       .onSnapshot(documentSnapshot => {
         getStates();
@@ -94,7 +91,6 @@ const ShowStates = (props) => {
           } />
 
       </ScrollView>
-      {/* <UpdateModal mod={updeteMod} onPress={()=>{setUpdateMod(false)}} onUpate={async()=>{await Linking?.openURL('https://play.google.com/store/apps/details?id=com.mocooproject')}}/> */}
     </SafeAreaView>
   )
 }

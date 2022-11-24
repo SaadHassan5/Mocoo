@@ -75,7 +75,7 @@ const SubGroupPosts = (props) => {
                   {/* <Text style={{ ...GlobalStyles.mediumTxt, width: WP(60) }}>{item?.title}</Text> */}
                   <Text style={{ ...GlobalStyles.lightTxt, width: WP(70) }}>{item?.description}</Text>
                   {item?.type &&
-                    <Text style={{ ...GlobalStyles.mediumTxt, width: WP(70),color:palette.primary1 }}>{item?.type}</Text>
+                    <Text style={{ ...GlobalStyles.mediumTxt, width: WP(70),color:palette.primary1 }}>{item?.type} {item?.type=='On The Go'&&'- Happening Now.'}</Text>
                   }
                 </View>
               </TouchableOpacity>

@@ -17,6 +17,7 @@ export async function onPost(props, title, desc, groupId, imgs, type) {
             groupId: groupId,
             postId: iid,
             type: type,
+            groupName:props?.route?.params?.groupName?props?.route?.params?.groupName:'',
             userDetails: {
                 name: props?.user?.name,
                 profileUri: props?.user?.profileUri,

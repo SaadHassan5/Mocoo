@@ -21,7 +21,7 @@ const Splash = (props) => {
     console.log('device', vv);
     const res = await getData('UpdateApp', 'mocoo');
     console.log('res', res);
-    if (vv == res?.version) {
+    if (vv != res?.version) {
       console.log("UPDATE");
       props?.getUpdateApp(true)
     }

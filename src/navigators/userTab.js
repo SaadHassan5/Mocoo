@@ -84,18 +84,6 @@ const UserTab=(props)=> {
           )
         }}
       />
-       <Tab.Screen name="Sub" component={ShowSubscribed}
-        options={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Entypo name={'documents'} size={20} color={focused ? "#fff" : "grey"} />
-              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Sub</Text>
-            </View>
-          )
-        }}
-      />
       {/* <Tab.Screen name="Chat" component={MyChat}
         options={{
           headerShown: false,
