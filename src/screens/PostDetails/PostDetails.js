@@ -29,11 +29,11 @@ const PostDetails = (props) => {
 
   useEffect(() => {
     console.log('Props', post);
-    db.collection('Comments').where('postId', '==', post?.postId)
+    db.collection('Comments').where('postId', '==', props?.route?.params?.postId)
       .onSnapshot(documentSnapshot => {
         getComments()
       });
-    db.collection('Posts').where('postId', '==', post?.postId)
+    db.collection('Posts').where('postId', '==', props?.route?.params?.postId)
       .onSnapshot(documentSnapshot => {
         getItem()
       });
@@ -48,9 +48,9 @@ const PostDetails = (props) => {
     props.getUser(res)
   }
   const getItem = async () => {
-    const res = await getData("Posts", post?.postId)
-    console.log(res);
-    setPost(res)
+    const res = await getData("Posts", props?.route?.params?.postId)
+    console.log('poooooooos',res,post);
+    // setPost(res)
   }
   const getComments = async () => {
     const res = await filterCollectionSingle("Comments", "postId", '==', post?.postId,)

@@ -53,6 +53,7 @@ export default function LoginScreen(props) {
       <CountryPicker
         show={show}
         pickerButtonOnPress={(item) => {
+          console.log(item);
           setCountryCode(item.dial_code?.split('+')[1]);
           setShow(false);
         }}

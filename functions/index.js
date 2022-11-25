@@ -403,7 +403,7 @@ exports.sendNewPostNotification = functions.firestore
             console.log('error in schedule 8 hours Notification', error);
         }
     });
-    exports.scheduledFunctionSendNotification3Hours = functions.pubsub.schedule('every 2 minutes') // Users can choose timezone - default is America/Los_Angeles
+    exports.scheduledFunctionSendNotification3Hours = functions.pubsub.schedule('every 240 minutes') // Users can choose timezone - default is America/Los_Angeles
     .onRun(async (context) => {
         try {
             let not = await getData("AdminData",'notifications');
