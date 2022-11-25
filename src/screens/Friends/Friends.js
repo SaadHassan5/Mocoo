@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, SafeAreaView, ScrollView, FlatList, Text, Image, Linking, TouchableOpacity, Alert } from 'react-native';
+import { View, SafeAreaView, ScrollView, FlatList, Text, Image, Linking, TouchableOpacity, Alert, Share } from 'react-native';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUser } from '../../root/action';
@@ -48,8 +48,25 @@ const Friends = (props) => {
     })
   }
   async function shareFriends() {
-    const url = `whatsapp://send?text=https://mocooproject.page.link/profile/${props?.user?.email}`
-    await Linking.openURL(url)
+    // const url = `whatsapp://send?text=https://mocooproject.page.link/profile/${props?.user?.email}`
+    // await Linking.openURL(url)
+    try {
+      const result = await Share.share({
+        message:
+          `${props?.user?.name} invited you to join https://mocooproject.page.link/profile/${props?.user?.email}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      // alert(error.message);
+    }
   }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container, }}>
