@@ -92,6 +92,7 @@ const Friends = (props) => {
       <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewFriendPost') }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(2), backgroundColor: palette.blackGray, paddingVertical: HP(1) }} />
       {/* backgroundColor:palette?.white, */}
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
+      <Text style={{ ...GlobalStyles.boldTxt,fontSize:22, textAlign:"center",paddingTop:HP(2) }}>Your Status </Text>
         <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', paddingVertical: HP(2) }}>
           <TouchableOpacity onPress={() => { onChangeUserStatus('Food', '🍕') }} style={{ alignItems: 'center' }}>
             <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Food' ? 40 : 22 }}>🍕</Text>
