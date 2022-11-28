@@ -13,6 +13,7 @@ import PostRender from '../../assets/components/FlatRender/postRender';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import { AdminPopUp } from '../../assets/components/Modal/AdminPopUp';
 import UpdateModal from '../../assets/components/Modal/UpdateModal';
+import AlertService from '../../Services/alertService';
 const ShowPosts = (props) => {
   const [active, setActive] = useState(false)
   const [allGroups, setAllGroups] = useState([])
@@ -132,7 +133,7 @@ const ShowPosts = (props) => {
         }
       </ScrollView>
       <AdminPopUp obj={adminPopObj} mod={adminPop} onPress={() => { setAdminPop(false) }} />
-      <UpdateModal mod={updeteMod} onPress={() => { setUpdateMod(false) }} onUpate={async () => { await Linking?.openURL('https://play.google.com/store/apps/details?id=com.mocooproject') }} />
+      <UpdateModal mod={updeteMod} onPress={() => { props?.updateAppClose?AlertService.show('Update First'):setUpdateMod(false) }} onUpate={async () => { await Linking?.openURL('https://play.google.com/store/apps/details?id=com.mocooproject') }} />
 
     </SafeAreaView>
   )
@@ -142,6 +143,7 @@ const mapStateToProps = (state) => {
   const { backgroundColor } = state;
   const { user } = state;
   const { updateApp } = state;
+  const { updateAppClose } = state;
   console.log('Redux Profile=>', user);
 
   return state;

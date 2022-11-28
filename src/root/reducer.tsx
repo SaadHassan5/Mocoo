@@ -2,6 +2,7 @@ const initialState = {
     backgroundColor: 'red',
     user: {},
     updateApp:false,
+    updateAppClose:false,
 };
 
 export const reducer = (state = initialState, action: any) => {
@@ -22,6 +23,11 @@ export const reducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 updateApp: action.payload
+            }
+            case 'updateAppClose':
+            return {
+                ...state,
+                updateAppClose: action.payload
             }
 
         default:

@@ -17,3 +17,9 @@ export const GetUpdateApp = (updateApp: any) => {
         payload: updateApp
     };
 }
+export const GetUpdateAppClose = (updateAppClose: any) => {
+    return {
+        type: 'updateAppClose',
+        payload: updateAppClose
+    };
+}
