@@ -128,3 +128,12 @@ export const onReport=(chatId)=>{
 export async function contactUs(email='ronakjoshifly@Gmail.com',desc='Forgot MY Password',body=''){
     await Linking.openURL(`mailto:${email}?subject=${desc}&body=${body}`)
 }
+export async function onChangeStatus(props,st,emj){
+    await saveData('Users',props?.user?.email,{
+        userStatus:st,
+        statusTime:new Date()?.getTime(),
+        statusActive:true,
+        statusEmoji:emj
+    })
+    return;
+}

@@ -8,30 +8,45 @@ import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import { db, filterCollectionSingle, getData } from '../../Auth/fire';
-import Fontiso from 'react-native-vector-icons/EvilIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { onLike, onPost, onPostFriend, unLike } from '../../Auth/manipulateData';
+import { onChangeStatus, onLike, onPost, onPostFriend, unLike } from '../../Auth/manipulateData';
 import SuggestedPostsRender from '../../assets/components/FlatRender/SuggestedPosts';
 import AlertService from '../../Services/alertService';
 import { suggestedPosts } from '../../assets/config/Constants';
+import { Checkbox } from 'react-native-paper';
+import { G } from 'react-native-svg';
 const Friends = (props) => {
   const [active, setActive] = useState(false)
   const [allPosts, setAllPosts] = useState([])
-  const [opt, setOpt] = useState('posts')
+  const [opt, setOpt] = useState('friends')
+  const [history, setHistory] = useState([])
+  const [status, setStatus] = useState(props?.user?.userStatus ? props?.user?.userStatus : '')
   useEffect(() => {
+    db.collection('Users').where('email', '==', props?.user?.email)
+      .onSnapshot(documentSnapshot => {
+        getUser();
+      });
+    db.collection('Users').where('history', '!=', props?.user?.history)
+      .onSnapshot(documentSnapshot => {
+        getFriends();
+      });
     let p = props?.user?.history?.map(i => i?.email);
     db.collection('FriendsPosts').where('email', 'in', p?.length > 0 ? [...p, props?.user?.email] : [props?.user?.email])
       .onSnapshot(documentSnapshot => {
         getPosts();
       });
-    db.collection('Users').where('email', '==', props?.user?.email)
-      .onSnapshot(documentSnapshot => {
-        getUser();
-      });
   }, [])
   async function getUser() {
     const res = await getData('Users', props?.user?.email)
     props?.getUser(res)
+  }
+  async function getFriends() {
+    let p = props?.user?.history?.map(i => i?.email);
+    const res = await filterCollectionSingle('Users', 'email', 'in', p);
+    setHistory(res);
+    console.log('HISTORY', res);
   }
   async function getPosts() {
     let p = props?.user?.history?.map(i => i?.email);
@@ -48,8 +63,6 @@ const Friends = (props) => {
     })
   }
   async function shareFriends() {
-    // const url = `whatsapp://send?text=https://mocooproject.page.link/profile/${props?.user?.email}`
-    // await Linking.openURL(url)
     try {
       const result = await Share.share({
         message:
@@ -68,6 +81,10 @@ const Friends = (props) => {
       // alert(error.message);
     }
   }
+  async function onChangeUserStatus(stat, emj) {
+    setStatus(stat)
+    await onChangeStatus(props, stat, emj)
+  }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container, }}>
       <Header goBack={false} title={'Friends'} leftOptionPress={() => { props?.navigation?.navigate('Profile') }} leftOptionTxt={'Profile'} rightOptionPress={() => { props?.navigation?.navigate('MyChat') }} rightOptionTxt={'Chats'} />
@@ -75,9 +92,41 @@ const Friends = (props) => {
       <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewFriendPost') }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(2), backgroundColor: palette.blackGray, paddingVertical: HP(1) }} />
       {/* backgroundColor:palette?.white, */}
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
-        <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', marginTop: HP(7) }}>
-          <CustomBtn1 onPress={() => { setOpt('posts') }} txt={'Posts'} style={{ width: WP(40), alignSelf: 'center', backgroundColor: opt == 'posts' ? palette.purple : palette.lightGrey, paddingVertical: HP(1) }} />
+        <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', paddingVertical: HP(2) }}>
+          <TouchableOpacity onPress={() => { onChangeUserStatus('Food', '🍕') }} style={{ alignItems: 'center' }}>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Food' ? 40 : 22 }}>🍕</Text>
+            <Text style={{ ...GlobalStyles.mediumTxt, }}>Food</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { onChangeUserStatus('Walk', '🚶🏻') }} style={{ alignItems: 'center' }}>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Walk' ? 40 : 22 }}>🚶🏻</Text>
+            <Text style={{ ...GlobalStyles.mediumTxt, }}>Walk</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { onChangeUserStatus('Going Out', '⛳') }} style={{ alignItems: 'center' }}>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Going Out' ? 40 : 22 }}>⛳</Text>
+            <Text style={{ ...GlobalStyles.mediumTxt, }}>Going Out</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', paddingVertical: HP(2) }}>
+          <TouchableOpacity onPress={() => { onChangeUserStatus('Drinks', '🍻') }} style={{ alignItems: 'center' }}>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Drinks' ? 40 : 22 }}>🍻</Text>
+            <Text style={{ ...GlobalStyles.mediumTxt, }}>Drinks</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { onChangeUserStatus('Movie', '🍿') }} style={{ alignItems: 'center' }}>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Movie' ? 40 : 22 }}>🍿</Text>
+            <Text style={{ ...GlobalStyles.mediumTxt, }}>Movie</Text>
+          </TouchableOpacity>
+        </View>
+        {/* <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', }}>
+          <TouchableOpacity style={{ ...GlobalStyles.row, }}>
+            <MaterialIcons name={'restaurant'} size={30} color={palette?.airbnb}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ ...GlobalStyles.row, }}>
+            <MaterialCommunityIcons name={'walk'} size={30} color={palette?.airbnb}/>
+          </TouchableOpacity>
+        </View> */}
+        <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', marginTop: HP(2) }}>
           <CustomBtn1 onPress={() => { setOpt('friends') }} txt={'Friends'} style={{ width: WP(40), alignSelf: 'center', backgroundColor: opt == 'friends' ? palette.purple : palette.lightGrey, paddingVertical: HP(1) }} />
+          <CustomBtn1 onPress={() => { setOpt('posts') }} txt={'Posts'} style={{ width: WP(40), alignSelf: 'center', backgroundColor: opt == 'posts' ? palette.purple : palette.lightGrey, paddingVertical: HP(1) }} />
         </View>
         {opt == 'posts' ?
           <View>
@@ -135,7 +184,7 @@ const Friends = (props) => {
           <FlatList
             numColumns={1}
             style={{ flex: 1, marginTop: HP(2) }}
-            data={props?.user?.history}
+            data={history}
             contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
             keyExtractor={item => item.id}
             renderItem={({ item, index }) =>
@@ -143,6 +192,9 @@ const Friends = (props) => {
                 <View style={{ ...GlobalStyles.row }}>
                   <Image source={{ uri: item?.profileUri }} style={{ width: WP(14), height: WP(14), borderRadius: WP(12) }} />
                   <Text style={{ ...GlobalStyles.mediumTxt, paddingLeft: WP(5) }}>{item?.name}</Text>
+                  {item?.statusActive &&
+                    <Text style={{ ...GlobalStyles.boldTxt,fontSize:22, paddingLeft: WP(5) }}>{item?.statusEmoji}</Text>
+                  }
                 </View>
               </View>
             } />

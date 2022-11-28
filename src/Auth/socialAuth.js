@@ -147,6 +147,7 @@ async function asGuest(props) {
         country:'United States',
         subscribedIds: [],
         QA: [],
+        userStatus:'',
       })
       props.navigation.dispatch(
         CommonActions.reset({
