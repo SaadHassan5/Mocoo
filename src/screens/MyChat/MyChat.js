@@ -8,6 +8,9 @@ import { HP, palette, WP } from '../../assets/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUser } from '../../root/action';
+import MatCom from "react-native-vector-icons/MaterialCommunityIcons"
+import { GlobalStyles } from '../../global/globalStyles';
+import { onReport } from '../../Auth/manipulateData';
 
 const MyChat = (props) => {
   const [chat, setChat] = useState([])
@@ -25,9 +28,9 @@ const MyChat = (props) => {
     const value = await AsyncStorage.getItem("User")
     const res = await filterCollectionSingle("IndividualChat", "members", "array-contains", value);
     console.log('myyy', res);
-    if(res?.length<1)
-    return
-    let tempSort=res?.sort((a,b)=> b?.lastMsg-a?.lastMsg)
+    if (res?.length < 1)
+      return
+    let tempSort = res?.sort((a, b) => b?.lastMsg - a?.lastMsg)
     setChat(res)
   }
   return (
@@ -42,7 +45,7 @@ const MyChat = (props) => {
         <FlatList
           numColumns={1}
           data={chat}
-          style={{marginTop:HP(3)}}
+          style={{ marginTop: HP(3) }}
           contentContainerStyle={{ paddingBottom: HP(6) }}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) =>
@@ -51,13 +54,18 @@ const MyChat = (props) => {
                 <View style={{}}>
                   {/* <Text style={{ ...styles.emailTxt, }}>{item?.name}</Text> */}
                   {subItem != props?.user?.email &&
-                    <TouchableOpacity onPress={() => { props?.navigation?.navigate("IndividualChat", { email: item?.members[index], name: item?.membersName[index], profileUri: item?.profileImgs[index] }) }} style={{ ...styles.row, ...styles?.card }}>
-                      <Image source={{ uri: item?.profileImgs[index] }} style={{ width: WP(15), height: WP(15), borderRadius: WP(10) }} />
-                      <View style={{ paddingHorizontal: WP(5) }}>
-                        <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light, fontSize: 17 }}>{item?.membersName[index]}</Text>
-                        <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, color: palette?.labelGray }}>{item?.lastMsgTxt}</Text>
-                      </View>
-                    </TouchableOpacity>
+                    <View style={{ ...styles?.card }}>
+                      <TouchableOpacity onPress={() => { props?.navigation?.navigate("IndividualChat", { email: item?.members[index], name: item?.membersName[index], profileUri: item?.profileImgs[index] }) }} style={{ ...styles.row, }}>
+                        <Image source={{ uri: item?.profileImgs[index] }} style={{ width: WP(15), height: WP(15), borderRadius: WP(10) }} />
+                        <View style={{ paddingHorizontal: WP(5) }}>
+                          <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.light, fontSize: 17 }}>{item?.membersName[index]}</Text>
+                          <Text style={{ ...styles.emailTxt, fontFamily: fontFamily.regular, color: palette?.labelGray }}>{item?.lastMsgTxt}</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{onReport(item?.id)}} style={{position:"absolute",top:0,right:0,paddingHorizontal:WP(4),paddingVertical:HP(.3)}}>
+                        <Text style={{...GlobalStyles.mediumTxt}}>Block</Text>
+                      </TouchableOpacity>
+                    </View>
                   }
                 </View>
               )

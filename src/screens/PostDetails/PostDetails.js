@@ -4,7 +4,7 @@ import IconMatCom from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { colors, spacing } from '../../theme';
 import Header from '../../components/Header';
-import { db, filterCollectionSingle, getData,  saveData } from '../../Auth/fire';
+import { db, filterCollectionSingle, getData, saveData } from '../../Auth/fire';
 import AppText from '../../components/AppText';
 import fontFamily from '../../assets/config/fontFamily';
 import { HP, palette, WP } from '../../assets/config';
@@ -30,11 +30,11 @@ const PostDetails = (props) => {
 
   useEffect(() => {
     console.log('Props', post);
-    db.collection('Comments').where('postId', '==', post?.postId)
+    db.collection('Comments').where('postId', '==', props?.route?.params?.postId)
       .onSnapshot(documentSnapshot => {
         getComments()
       });
-    db.collection('Posts').where('postId', '==', post?.postId)
+    db.collection('Posts').where('postId', '==', props?.route?.params?.postId)
       .onSnapshot(documentSnapshot => {
         getItem()
       });
@@ -49,12 +49,12 @@ const PostDetails = (props) => {
     props.getUser(res)
   }
   const getItem = async () => {
-    const res = await getData("Posts", post?.postId)
-    console.log(res);
-    setPost(res)
+    const res = await getData("Posts", props?.route?.params?.postId)
+    console.log('poooooooos',res,post);
+    // setPost(res)
   }
   const getComments = async () => {
-    const res = await filterCollectionSingle("Comments", "postId",'==',post?.postId,)
+    const res = await filterCollectionSingle("Comments", "postId", '==', post?.postId,)
     console.log("Cooooo COm", res);
     let tempSort = res?.sort((a, b) => b?.time - a?.time)
     let sp8 = [], sp = []; let spPre = [];
@@ -85,10 +85,10 @@ const PostDetails = (props) => {
         groupId: post?.groupId,
         profileUri: props.user.profileUri,
         name: props?.user?.name,
-        commentId:iid,
+        commentId: iid,
       }
       setNewCom("")
-      console.log('OBJ',obj);
+      console.log('OBJ', obj);
       // let tCom = [obj, ...comment]
       // setComments(tCom)
 
@@ -124,7 +124,7 @@ const PostDetails = (props) => {
     console.log(post);
     let sub = post?.likedBy ? [...post?.likedBy] : [];
     sub.push({ email: props?.user?.email, name: props?.user?.name, profileUri: props?.user?.profileUri })
-    console.log('Sub', post?.id,sub);
+    console.log('Sub', post?.id, sub);
     await saveData("Posts", post?.postId, {
       likes: post?.likedBy ? post?.likes + 1 : 1,
       likedBy: sub
@@ -135,9 +135,9 @@ const PostDetails = (props) => {
     let sub = [];
     post.likedBy.filter((i) => {
       if (i?.email != props?.user?.email)
-      sub.push(i)
+        sub.push(i)
     })
-    console.log("unlike",sub);
+    console.log("unlike", sub);
     await saveData("Posts", post?.postId, {
       likes: post.likes - 1,
       likedBy: sub
@@ -169,7 +169,7 @@ const PostDetails = (props) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <Header
         style={{}}
-        title={post?.description?.substring(0,10)}
+        title={post?.description?.substring(0, 10)}
         onPress={() => props.navigation.goBack()}
       />
       <ScrollView
@@ -223,8 +223,8 @@ const PostDetails = (props) => {
           <View style={{ width: '100%' }}>
             <Input styles={{ paddingRight: WP(25), borderRadius: 4, }} numLines={4} value={newCom} multi onChange={(e) => { setNewCom(e) }} placeTxt={"Add Comment"} />
           </View>
-          <TouchableOpacity onPress={()=>{onSend()}} style={{position:'absolute',paddingHorizontal:WP(5),right:0}}>
-            <Text style={{...GlobalStyles.mediumTxt}}>Send</Text>
+          <TouchableOpacity onPress={() => { onSend() }} style={{ position: 'absolute', paddingHorizontal: WP(5), right: 0 }}>
+            <Text style={{ ...GlobalStyles.mediumTxt }}>Send</Text>
           </TouchableOpacity>
         </View>
       </View>

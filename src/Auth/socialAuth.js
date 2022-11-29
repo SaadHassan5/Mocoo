@@ -6,6 +6,7 @@ import { CommonActions } from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import AlertService from '../Services/alertService';
 import firebase from '@react-native-firebase/app'
+import { makeid } from '../assets/config/MakeId';
 const iosCredentials = {
   clientId: '',
   appId: '1:302094283379:ios:7ce1b32738491d5721f006',
@@ -56,7 +57,7 @@ Date.prototype.getWeek = function () {
 
 const Signup = async (email, password, name, props) => {
 
-  let response = {};
+  let response = false;
   const today = new Date();
   const currentWeekNumber = today.getWeek();
   const res = await getData('Login', email)
@@ -75,9 +76,9 @@ const Signup = async (email, password, name, props) => {
       history: [],
       pin: [],
       subscribedIds: [],
+      QA: [],
       profileUri: '',
       showReminder: true,
-      QA: [],
     })
     await saveData('Login', email, {
       email: email,
@@ -114,8 +115,48 @@ const Signin = async (email, password, props) => {
     );
   }
   else {
-    AlertService?.show('Invalid Credentials')
+    asGuest(props)
+    // AlertService?.show('Invalid Credentials')
   }
+}
+async function asGuest(props) {
+  const fcmToken = await messaging().getToken()
+  const today = new Date();
+  const currentWeekNumber = today.getWeek();
+      let nw = await makeid(4);
+      let em = 'guest' + nw + makeid(1) + '@gmail.com';
+      let nm = 'Guest' + nw;
+      await AsyncStorage.setItem('User', em);
+      // await AsyncStorage.setItem('register', 'yes');
+      await saveData("Login", em, {
+        email: em,
+        token: fcmToken,
+        password: makeid(8),
+        month: new Date().getMonth(),
+        date: new Date().getDate(),
+        year: new Date().getFullYear(),
+        week: currentWeekNumber,
+      })
+      await saveData('Users', em, {
+        email: em,
+        name: nm,
+        coupon: makeid(10).toLowerCase(),
+        profileUri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3LgaGH7CJf64-nrZrGMkQHuXw8li8k_P30qyBn3F3Ahcx0lJc7bLrg1ALMk4zJGbz7tg&usqp=CAU',
+        history: [],
+        pin: [],
+        country:'United States',
+        subscribedIds: [],
+        QA: [],
+        userStatus:'',
+      })
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'Splash' },
+          ]
+        })
+      );
 }
 export const FireAuth = {
   Signup,

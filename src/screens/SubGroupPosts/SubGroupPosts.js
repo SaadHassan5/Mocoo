@@ -11,7 +11,7 @@ import { HP, palette, WP } from '../../assets/config';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import AlertService from '../../Services/alertService';
-import Fontiso from 'react-native-vector-icons/Fontisto'
+import Fontiso from 'react-native-vector-icons/EvilIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 const SubGroupPosts = (props) => {
@@ -28,7 +28,9 @@ const SubGroupPosts = (props) => {
   async function getStates() {
     const res = await filterCollectionSingle('Posts', 'groupId', '==', props?.route?.params?.groupId)
     console.log('States=======>', res);
-    setAllGroups(res)
+    console.log('States=======>', res);
+    let temp=res?.sort((a,b)=> b?.time-a?.time)
+    setAllGroups(temp)
   }
   const onLike = async (item1) => {
     console.log(item1);
@@ -56,7 +58,7 @@ const SubGroupPosts = (props) => {
   return (
     <SafeAreaView style={{ ...GlobalStyles.container, }}>
       <Header goBack={false} title={'Posts'} />
-      <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewPost', props?.route?.params) }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(4), backgroundColor: '#fff' }} />
+      {/* <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewPost', props?.route?.params) }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(4), backgroundColor: palette?.blackGray }} /> */}
       {/* backgroundColor:palette?.white, */}
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
         <FlatList
@@ -74,14 +76,14 @@ const SubGroupPosts = (props) => {
                   {/* <Text style={{ ...GlobalStyles.mediumTxt, width: WP(60) }}>{item?.title}</Text> */}
                   <Text style={{ ...GlobalStyles.lightTxt, width: WP(70) }}>{item?.description}</Text>
                   {item?.type &&
-                    <Text style={{ ...GlobalStyles.mediumTxt, width: WP(70),color:palette.primary1 }}>{item?.type}</Text>
+                    <Text style={{ ...GlobalStyles.mediumTxt, width: WP(70),color:palette.primary1 }}>{item?.type} {item?.type=='On The Go'&&'- Happening Now.'}</Text>
                   }
                 </View>
               </TouchableOpacity>
               <View style={{ ...GlobalStyles?.row, justifyContent: 'space-around', paddingHorizontal: WP(10) }}>
                 {item?.likedBy?.find(e => e?.email == props?.user?.email) ?
                   <TouchableOpacity onPress={() => { unLike(item) }} style={{ ...GlobalStyles?.row }}>
-                    <Fontiso name='like' size={25} color={palette?.angry} />
+                    <AntDesign name='like1' size={25} color={palette?.angry} />
                     <Text style={{ ...GlobalStyles?.boldTxt, paddingLeft: WP(2) }}>{item?.likes ? item?.likes : 0}</Text>
                   </TouchableOpacity>
                   :

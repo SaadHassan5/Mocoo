@@ -13,6 +13,8 @@ import Profile from '../screens/Profile/Profile';
 import MyChat from '../screens/MyChat/MyChat';
 import StateNav from './statesNav';
 import ShowPosts from '../screens/ShowPosts/ShowPosts';
+import Friends from '../screens/Friends/Friends';
+import ShowSubscribed from '../screens/ShowSubscribed/ShowSubscribed';
 
 const ScannerButton = (prop) => {
   return (
@@ -45,6 +47,30 @@ const UserTab=(props)=> {
       }}
 
     >
+       <Tab.Screen name="Posts" component={ShowPosts}
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <FontAwesome name={'pagelines'} size={20} color={focused ? "#fff" : "grey"} />
+              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 10 }}>Posts/Events</Text>
+            </View>
+          )
+        }}
+      />
+       <Tab.Screen name="Friends" component={Friends}
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Entypo name={'user'} size={20} color={focused ? "#fff" : "grey"} />
+              <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 12 }}>Friends</Text>
+            </View>
+          )
+        }}
+      />
       <Tab.Screen name="ShowStates" component={StateNav}
         options={{
           headerShown: false,
@@ -57,7 +83,7 @@ const UserTab=(props)=> {
           )
         }}
       />
-      <Tab.Screen name="Chat" component={MyChat}
+      {/* <Tab.Screen name="Chat" component={MyChat}
         options={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -92,7 +118,8 @@ const UserTab=(props)=> {
             </View>
           )
         }}
-      />
+      /> */}
+     
     </Tab.Navigator >
   );
 }

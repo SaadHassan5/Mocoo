@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import * as Yup from 'yup';
-import { ActivityIndicator, View, Image, StyleSheet, TouchableOpacity, Text, SafeAreaView,ScrollView } from "react-native";
+import { ActivityIndicator, View, Image, StyleSheet, TouchableOpacity, Text, SafeAreaView, ScrollView } from "react-native";
 import Header from "../../components/Header";
 import AppText from "../../components/AppText";
 import AppForm from './../../components/form/AppForm';
@@ -19,7 +19,9 @@ import { Input } from "../../assets/components/Input/Input";
 import AlertService from "../../Services/alertService";
 import { useEffect } from "react";
 import { CountryPicker } from "react-native-country-codes-picker";
-import { filterCollectionDouble, filterCollectionSingle } from "../../Auth/fire";
+import { filterCollectionDouble, filterCollectionSingle, saveData } from "../../Auth/fire";
+import { CustomBtn1 } from "../../assets/components/CustomButton/CustomBtn1";
+import { contactUs } from "../../Auth/manipulateData";
 
 const validationSchema = Yup.object().shape({
 });
@@ -36,7 +38,7 @@ export default function LoginScreen(props) {
   }, [])
   const getToken = async () => {
     const fcmToken = await messaging().getToken()
-    const res = await filterCollectionSingle('Guests','token','==', fcmToken + '')
+    const res = await filterCollectionSingle('Guests', 'token', '==', fcmToken + '')
     if (res?.length > 0) {
       console.log('Exist');
     }
@@ -51,6 +53,7 @@ export default function LoginScreen(props) {
       <CountryPicker
         show={show}
         pickerButtonOnPress={(item) => {
+          console.log(item);
           setCountryCode(item.dial_code?.split('+')[1]);
           setShow(false);
         }}
@@ -67,31 +70,33 @@ export default function LoginScreen(props) {
         </View>
         <View style={styles.formContainer}>
           <AppForm
-          validationSchema={validationSchema}
+            validationSchema={validationSchema}
             initialValues={{ password: "" }}
             onSubmit={async (values) => {
               const password = values.password;
-              if (phone.length < 7 || countryCode?.trim() == "") {
-                AlertService?.show('Enter valid number')
-                return
-              }
-              if (check == 'uncheck')
+              if (check == 'uncheck') {
+                if (phone.length < 7 || countryCode?.trim() == "") {
+                  AlertService?.show('Enter valid number')
+                  return
+                }
                 await FireAuth.Signin(countryCode + phone, password, props)
+              }
               else {
-                const adm = await filterCollectionDouble("Admin", 'email','==',countryCode + phone, "password",'==', password);
+                const adm = await filterCollectionDouble("Admin", 'email', '==', phone, "password", '==', password);
                 if (adm.length > 0) {
                   const fcmToken = await messaging().getToken()
                   await saveData("Admin", adm?.id, {
                     token: fcmToken,
                   })
-                  await AsyncStorage.setItem('User', countryCode + phone);
-                  await AsyncStorage.setItem('Admin', countryCode + phone);
-                  props.navigation.replace('TabNavigator')
+                  await AsyncStorage.setItem('User', phone);
+                  await AsyncStorage.setItem('Admin', phone);
+                  props.navigation.replace('TabNav')
                 }
                 else
                   console.warn("Incorrect");
                 AlertService?.toastPrompt("Wrong Credentials")
               }
+
             }}
           >
             <View style={{ flexDirection: 'row', marginBottom: HP(2) }}>
@@ -114,17 +119,17 @@ export default function LoginScreen(props) {
               <Text style={{ ...styles.label }}>Login as Admin</Text>
               <Checkbox status={check == "check" ? 'checked' : 'unchecked'} color={colors.primary} uncheckedColor={'red'} />
             </TouchableOpacity>
-            <SubmitButton title="Login" style={{ marginTop: spacing[4],paddingVertical:HP(1) }} />
-            
+            <CustomBtn1 onPress={() => { contactUs() }} txt={'Forgot Password/Contact us'} txtStyle={{ color: palette?.blackGray, fontSize: 14 }} style={{ backgroundColor: 'transparent', paddingHorizontal: 0, width: WP(70), alignSelf: 'center' }} />
+            <SubmitButton title="Login" style={{ marginTop: spacing[4], paddingVertical: HP(1) }} />
           </AppForm>
         </View>
       </ScrollView>
-        <View style={styles.signUpLinkContainer}>
-          <TouchableOpacity onPress={() => props.navigation.navigate("RegisterScreen")} style={styles.signUpTextContainer}>
-            <AppText>Don’t have an account?</AppText>
-            <AppText  style={styles.link}>Sign Up</AppText>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.signUpLinkContainer}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("RegisterScreen")} style={styles.signUpTextContainer}>
+          <AppText>Don’t have an account?</AppText>
+          <AppText style={styles.link}>Sign Up</AppText>
+        </TouchableOpacity>
+      </View>
 
     </SafeAreaView>
   );

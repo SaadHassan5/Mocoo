@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { IMAGES } from '../../assets/imgs';
 import { connect } from 'react-redux';
-import { ChangeBackgroundColor, GetUpdateApp, GetUser } from '../../root/action';
+import { ChangeBackgroundColor, GetUpdateApp, GetUpdateAppClose, GetUser } from '../../root/action';
 import { getData } from '../../Auth/fire';
 import DeviceInfo from 'react-native-device-info';
 
@@ -19,18 +19,19 @@ const Splash = (props) => {
   const UpdateCheck = async () => {
     let vv = await DeviceInfo.getVersion();
     console.log('device', vv);
-    const res = await getData('UpdateApp', 'mocoo');
+    const res = await getData('AdminData', 'updateapp');
     console.log('res', res);
-    if (vv == res?.version) {
+    if (vv != res?.version) {
       console.log("UPDATE");
       props?.getUpdateApp(true)
+      props?.getUpdateAppClose(res?.close?res?.close:false)
     }
   }
   const checkUser = async () => {
     const adm = await AsyncStorage.getItem("Admin")
     if (adm != null) {
       setTimeout(() => {
-        props.navigation.replace('TabNavigator');
+        props.navigation.replace('TabNav');
       }, 1000);
     }
     else {
@@ -69,6 +70,7 @@ const mapDispatchToProps = (dispatch) => {
     changeBackgroundColor: (bg) => dispatch(ChangeBackgroundColor(bg)),
     getUser: (userInfo) => dispatch(GetUser(userInfo)),
     getUpdateApp: (userInfo) => dispatch(GetUpdateApp(userInfo)),
+    getUpdateAppClose: (userInfo) => dispatch(GetUpdateAppClose(userInfo)),
   }
 }
 // export default Home

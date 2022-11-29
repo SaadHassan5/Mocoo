@@ -12,42 +12,20 @@ import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import { Input } from '../../assets/components/Input/Input';
 import UpdateModal from '../../assets/components/Modal/UpdateModal';
-// import Geocoder from 'react-native-geocoding';
-// import { _returnAddress } from '../../Services/LocationService';
-// Geocoder.init('AIzaSyA-nEsnSMgDAHbXJpP81LIxkW_ITv23VMc');
-
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 const ShowStates = (props) => {
   const [active, setActive] = useState(false)
   const [allStates, setAllStates] = useState([])
   const [forSearch, setForSearch] = useState([])
   const [searchTxt, setSearchTxt] = useState('')
-  const [updeteMod, setUpdateMod] = useState(false)
 
   useEffect(() => {
     console.log('RED', props?.user);
-    if (props?.updateApp)
-      setUpdateMod(true)
     db.collection('States')?.where('country', '==', props?.user?.country?.toLowerCase())
       .onSnapshot(documentSnapshot => {
         getStates();
       });
-      // if(!props?.user?.city){
-      //   getLocation()
-      // }
   }, [])
-  // async function getLocation(){
-  //   Geocoder.from(32.585411, 71.54361700000004)
-  //   .then(async(json) => {
-  //       var addressComponent = _returnAddress(json);
-  //      console.log('Add',addressComponent);
-  //      await saveData('Users',props?.user?.email,{
-  //       city:addressComponent?.city,
-  //      })
-  //   }).catch(error => {
-  //    console.log('error',error);
-        
-  //   })
-  // }
   async function getStates() {
     const res = await filterCollectionSingle('States', 'country', '==', props?.user?.country ? props?.user?.country.toLowerCase() : "")
     console.log('States=======>', res);
@@ -59,6 +37,22 @@ const ShowStates = (props) => {
       return item.state.toLowerCase().includes(searchTxt?.toLowerCase());
     });
     setAllStates(filteredData)
+  }
+  const hideMenu = (item, index) => {
+    let temp = [...allStates];
+    temp[index] = { ...item, select: false }
+    setAllStates(temp)
+  }
+
+  const showMenu = (item, index) => {
+    let temp = [...allStates];
+    temp[index] = { ...item, select: true }
+    setAllStates(temp)
+  }
+  async function onShare(item,index) {
+    const url = `whatsapp://send?text=https://mocooproject.page.link/states/${item?.id}`
+    await Linking.openURL(url)
+    hideMenu(item,index)
   }
   return (
     <SafeAreaView style={{ ...GlobalStyles.container }}>
@@ -79,13 +73,24 @@ const ShowStates = (props) => {
           contentContainerStyle={{ paddingBottom: HP(10), paddingHorizontal: WP(5) }}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => { props?.navigation?.navigate('ShowCities', item) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
-              <Image source={{ uri: item?.image }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.state}</Text>
-            </TouchableOpacity>
+            <View style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, marginBottom: HP(3) }}>
+              <TouchableOpacity onPress={() => { props?.navigation?.navigate('ShowCities', item) }} style={{ ...GlobalStyles.row, }}>
+                <Image source={{ uri: item?.image }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
+                <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10) }}>{item?.state}</Text>
+              </TouchableOpacity>
+              {/* <View style={{ position: 'absolute', right: 0, }}>
+                <Menu
+                  visible={item?.select ? item?.select : false}
+                  anchor={<TouchableOpacity onPress={() => { showMenu(item, index) }}><Text style={{ ...GlobalStyles.boldTxt, fontSize: 25,paddingHorizontal:WP(3),top:-12 }}>...</Text></TouchableOpacity>}
+                  onRequestClose={() => { hideMenu(item, index) }}
+                >
+                  <MenuItem onPress={() => { onShare(item,index) }}>Share</MenuItem>
+                </Menu>
+              </View> */}
+            </View>
           } />
+
       </ScrollView>
-      {/* <UpdateModal mod={updeteMod} onPress={()=>{setUpdateMod(false)}} onUpate={async()=>{await Linking?.openURL('https://play.google.com/store/apps/details?id=com.mocooproject')}}/> */}
     </SafeAreaView>
   )
 }
