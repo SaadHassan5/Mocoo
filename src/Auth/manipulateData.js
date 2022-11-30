@@ -2,7 +2,7 @@ import { Linking } from "react-native";
 import { onBrowse } from "../assets/config/Browse";
 import { makeid } from "../assets/config/MakeId";
 import AlertService from "../Services/alertService";
-import { deleteData, saveData, uploadFile } from "./fire";
+import { deleteData, getData, saveData, uploadFile } from "./fire";
 import Clipboard from '@react-native-clipboard/clipboard';
 
 export async function onPost(props, title, desc, groupId, imgs, type) {
@@ -136,4 +136,30 @@ export async function onChangeStatus(props,st,emj){
         statusEmoji:emj
     })
     return;
+}
+export async function muteFriend(props,item,value){
+    let temp=[];
+    props?.user?.history?.map((i)=>{
+        if(i?.email!=item?.email)
+        temp?.push(i)
+        else
+        temp?.push({...i,mute:value})
+    })
+    console.log('temp',temp);
+     saveData('Users',props?.user?.email,{
+        history:temp
+    })
+    const res=await getData('Users',item?.email);
+    let temp2=[];
+    res?.history?.map((i)=>{
+        if(i?.email!=props?.user?.email)
+        temp2?.push(i)
+        else
+        temp2?.push({...i,mute:value})
+    })
+    console.log('temp2222',temp2);
+    
+     saveData('Users',item?.email,{
+        history:temp2,
+    })
 }

@@ -9,14 +9,12 @@ import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Header from '../../components/Header';
 import { db, filterCollectionSingle, getData } from '../../Auth/fire';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { onChangeStatus, onLike, onPost, onPostFriend, unLike } from '../../Auth/manipulateData';
+import { muteFriend, onChangeStatus, onLike, onPost, onPostFriend, unLike } from '../../Auth/manipulateData';
 import SuggestedPostsRender from '../../assets/components/FlatRender/SuggestedPosts';
 import AlertService from '../../Services/alertService';
 import { suggestedPosts } from '../../assets/config/Constants';
-import { Checkbox } from 'react-native-paper';
-import { G } from 'react-native-svg';
 const Friends = (props) => {
   const [active, setActive] = useState(false)
   const [allPosts, setAllPosts] = useState([])
@@ -28,10 +26,7 @@ const Friends = (props) => {
       .onSnapshot(documentSnapshot => {
         getUser();
       });
-    db.collection('Users').where('history', '!=', props?.user?.history)
-      .onSnapshot(documentSnapshot => {
-        getFriends();
-      });
+      getFriends();
     let p = props?.user?.history?.map(i => i?.email);
     db.collection('FriendsPosts').where('email', 'in', p?.length > 0 ? [...p, props?.user?.email] : [props?.user?.email])
       .onSnapshot(documentSnapshot => {
@@ -43,10 +38,21 @@ const Friends = (props) => {
     props?.getUser(res)
   }
   async function getFriends() {
-    let p = props?.user?.history?.map(i => i?.email);
+    const his = await getData('Users', props?.user?.email)
+
+    let p = his?.history?.map(i => i?.email);
     const res = await filterCollectionSingle('Users', 'email', 'in', p);
-    setHistory(res);
-    console.log('HISTORY', res);
+    let temp = [];
+    res?.map((i) => {
+      if (his?.history?.find(k => k?.email == i?.email && k?.mute)) {
+        temp?.push({ ...i, mute: true })
+      }
+      else {
+        temp?.push(i)
+      }
+    })
+    setHistory(temp);
+    console.log('HISTORY', temp);
   }
   async function getPosts() {
     let p = props?.user?.history?.map(i => i?.email);
@@ -82,9 +88,23 @@ const Friends = (props) => {
     }
   }
   async function onChangeUserStatus(stat, emj) {
-    setStatus(stat)
-    await onChangeStatus(props, stat, emj)
+    AlertService.confirm('Are You Sure?').then(async (res) => {
+      if (res) {
+        setStatus(stat)
+        await onChangeStatus(props, stat, emj)
+      }
+    })
   }
+  async function muteFriendHere(item, value,index) {
+    let temp=[...history]
+    temp[index]={...item,mute:value}
+    setHistory(temp)
+    if(value){
+      AlertService.show('You will not recieve this user Status Notification')
+    }
+  await  muteFriend(props, item, value)
+  }
+
   return (
     <SafeAreaView style={{ ...GlobalStyles.container, }}>
       <Header goBack={false} title={'Friends'} leftOptionPress={() => { props?.navigation?.navigate('Profile') }} leftOptionTxt={'Profile'} rightOptionPress={() => { props?.navigation?.navigate('MyChat') }} rightOptionTxt={'Chats'} />
@@ -92,28 +112,28 @@ const Friends = (props) => {
       <CustomBtn1 onPress={() => { props?.navigation?.navigate('NewFriendPost') }} txt={'Add Post'} style={{ width: WP(70), alignSelf: 'center', marginTop: HP(2), backgroundColor: palette.blackGray, paddingVertical: HP(1) }} />
       {/* backgroundColor:palette?.white, */}
       <ScrollView contentContainerStyle={{ paddingBottom: HP(5) }}>
-      <Text style={{ ...GlobalStyles.boldTxt,fontSize:22, textAlign:"center",paddingTop:HP(2) }}>Your Status </Text>
+        <Text style={{ ...GlobalStyles.boldTxt, fontSize: 22, textAlign: "center", paddingTop: HP(2) }}>Your Status </Text>
         <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', paddingVertical: HP(2) }}>
           <TouchableOpacity onPress={() => { onChangeUserStatus('Food', '🍕') }} style={{ alignItems: 'center' }}>
-            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Food' ? 40 : 22 }}>🍕</Text>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Food' ? 50 : 22 }}>🍕</Text>
             <Text style={{ ...GlobalStyles.mediumTxt, }}>Food</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => { onChangeUserStatus('Walk', '🚶🏻') }} style={{ alignItems: 'center' }}>
-            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Walk' ? 40 : 22 }}>🚶🏻</Text>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Walk' ? 50 : 22 }}>🚶🏻</Text>
             <Text style={{ ...GlobalStyles.mediumTxt, }}>Walk</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => { onChangeUserStatus('Going Out', '⛳') }} style={{ alignItems: 'center' }}>
-            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Going Out' ? 40 : 22 }}>⛳</Text>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Going Out' ? 50 : 22 }}>⛳</Text>
             <Text style={{ ...GlobalStyles.mediumTxt, }}>Going Out</Text>
           </TouchableOpacity>
         </View>
         <View style={{ ...GlobalStyles.row, justifyContent: 'space-evenly', paddingVertical: HP(2) }}>
           <TouchableOpacity onPress={() => { onChangeUserStatus('Drinks', '🍻') }} style={{ alignItems: 'center' }}>
-            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Drinks' ? 40 : 22 }}>🍻</Text>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Drinks' ? 50 : 22 }}>🍻</Text>
             <Text style={{ ...GlobalStyles.mediumTxt, }}>Drinks</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => { onChangeUserStatus('Movie', '🍿') }} style={{ alignItems: 'center' }}>
-            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Movie' ? 40 : 22 }}>🍿</Text>
+            <Text style={{ ...GlobalStyles.boldTxt, fontSize: status == 'Movie' ? 50 : 22 }}>🍿</Text>
             <Text style={{ ...GlobalStyles.mediumTxt, }}>Movie</Text>
           </TouchableOpacity>
         </View>
@@ -182,6 +202,10 @@ const Friends = (props) => {
               } />
           </View>
           :
+          <View>
+            {props?.user?.statusEmoji &&
+                    <Text style={{ ...GlobalStyles.boldTxt, fontSize: 18, textAlign:'center',}}>Your current status is <Text style={{fontSize:29}}>{props?.user?.statusEmoji}</Text></Text>
+            }
           <FlatList
             numColumns={1}
             style={{ flex: 1, marginTop: HP(2) }}
@@ -190,15 +214,25 @@ const Friends = (props) => {
             keyExtractor={item => item.id}
             renderItem={({ item, index }) =>
               <View style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, marginTop: HP(4) }}>
-                <View style={{ ...GlobalStyles.row }}>
+                <TouchableOpacity disabled={item?.email==props?.user?.email?true:false} onPress={() => { props?.navigation?.navigate('IndividualChat', { email: item?.email, profileUri: item?.profileUri, name: item?.name }) }} style={{ ...GlobalStyles.row }}>
                   <Image source={{ uri: item?.profileUri }} style={{ width: WP(14), height: WP(14), borderRadius: WP(12) }} />
                   <Text style={{ ...GlobalStyles.mediumTxt, paddingLeft: WP(5) }}>{item?.name}</Text>
                   {item?.statusActive &&
-                    <Text style={{ ...GlobalStyles.boldTxt,fontSize:22, paddingLeft: WP(5) }}>{item?.statusEmoji}</Text>
+                    <Text style={{ ...GlobalStyles.boldTxt, fontSize: 22, paddingLeft: WP(5) }}>{item?.statusEmoji}</Text>
                   }
-                </View>
+                </TouchableOpacity>
+                {item?.mute ?
+                  <TouchableOpacity onPress={() => { muteFriendHere(item, false,index) }} style={{ position: "absolute", right: 0, paddingHorizontal: WP(5), paddingVertical: HP(1) }}>
+                    <Entypo name={'sound-mute'} size={20} color={palette.blackGray} />
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity onPress={() => { muteFriendHere(item, true,index) }} style={{ position: "absolute", right: 0, paddingHorizontal: WP(5), paddingVertical: HP(1) }}>
+                    <MaterialCommunityIcons name={'volume-high'} size={20} color={palette.airbnb} />
+                  </TouchableOpacity>
+                }
               </View>
             } />
+            </View>
         }
       </ScrollView>
     </SafeAreaView>

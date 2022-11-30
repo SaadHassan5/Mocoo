@@ -19,6 +19,7 @@ import AppTextInput from '../../components/AppTextInput';
 import { CustomBtn1 } from '../../assets/components/CustomButton/CustomBtn1';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { GlobalStyles } from '../../global/globalStyles';
+import { openInsta } from '../../Auth/manipulateData';
 
 function Profile(props) {
   const [email, setEmail] = useState(props?.route?.params?.email)
@@ -57,12 +58,14 @@ function Profile(props) {
 
               <AppText style={{ ...styles.emailTxt, textAlign: 'center' }} preset='h4'>{user.name}</AppText>
               {/* <AppText style={{ ...styles.emailTxt, textAlign: 'center', fontFamily: fontFamily.medium }} preset='h4'>{user?.bio}</AppText> */}
-              {props?.user?.bio!="" &&
-                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center'}} >Bio: {props?.user?.bio}</AppText>
-                }
-                {props?.user?.insta!="" &&
-                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center', }} >Insta: {props?.user?.insta}</AppText>
-                }
+              {user?.bio != "" &&
+                <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center' }} >Bio: {user?.bio}</AppText>
+              }
+              {user?.insta != "" &&
+                <TouchableOpacity style={{ paddingVertical: HP(1) }} onPress={async () => { openInsta(user?.insta) }}>
+                  <AppText style={{ ...GlobalStyles.lightTxt, textAlign: 'center', }} >Insta: {user?.insta}</AppText>
+                </TouchableOpacity>
+              }
               {/* <AppText style={styles.userEmail}>{user.email}</AppText> */}
 
             </View>
@@ -81,7 +84,7 @@ function Profile(props) {
           renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => { console.log('ITEM', item); props?.navigation?.navigate('GroupTab', { groupId: item?.groupId, groupName: item?.groupName, owner: item?.owner }) }} style={{ ...GlobalStyles?.card, ...GlobalStyles.shadow, ...GlobalStyles.row, marginBottom: HP(3) }}>
               <Image source={{ uri: item?.groupImage }} style={{ width: WP(20), height: WP(20), borderRadius: WP(2) }} />
-              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10),width:WP(60) }}>{item?.groupName}</Text>
+              <Text style={{ ...GlobalStyles.boldTxt, paddingLeft: WP(10), width: WP(60) }}>{item?.groupName}</Text>
             </TouchableOpacity>
           } />
 

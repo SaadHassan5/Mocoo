@@ -37,16 +37,24 @@ const IndividualChat = (props) => {
   }, [])
   const getConservation = async () => {
     const value = await AsyncStorage.getItem("User")
-    const res = await filterCollectionSingle("IndividualChat", "members", "array-contains", value + "", "members", "array-contains", props?.route?.params?.email);
-    console.log('main', res);
-    let kk = res?.find((k) => {
-      return k?.members?.find(j => j == props?.route?.params?.email)
+    const res = await filterCollectionSingle("IndividualChat", "members", "array-contains", value);
+    let f = await res?.find((k) => {
+      if (k?.members[0] == value && k?.members[1] == props?.route?.params?.email) {
+        return k;
+      }
+      else if (k?.members[1] == value && k?.members[0] == props?.route?.params?.email) {
+        return k;
+      }
     })
-    const ch = await getAllOfNestedCollection("IndividualChat", kk?.chatId ? kk?.chatId : 'abc', "messages")
-    console.log('sub msgs', ch);
-    let chatSort = ch?.sort((a, b) => b?.createdAt - a?.createdAt)
-    setChat(chatSort)
-    setChatId(kk?.chatId ? kk?.chatId : '')
+    console.log('main', f, value, props?.route?.params?.email, res);
+    if (f) {
+      const ch = await getAllOfNestedCollection("IndividualChat", f?.chatId, "messages")
+      console.log('sub msgs', ch);
+      let chatSort = ch?.sort((a, b) => b?.createdAt - a?.createdAt)
+      setChat(chatSort)
+      setChatId(f?.chatId)
+      await getUser(f?.chatId)
+    }
     scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 })
 
   }

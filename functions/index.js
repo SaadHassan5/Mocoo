@@ -340,9 +340,9 @@ exports.scheduledFunctionDelStatus = functions.pubsub.schedule('every 5 minutes'
         let da = new Date(res[index]?.statusTime);
         if (da?.setHours(da?.getHours() + 3) < new Date()?.getTime()) {
             console.log('Valid for delete', res[index]);
-            await saveData('Users', res[index]?.email,{
-                userStatus:'',
-                statusActive:false
+            await saveData('Users', res[index]?.email, {
+                userStatus: '',
+                statusActive: false
             })
         }
         else {
@@ -461,10 +461,15 @@ exports.sendFriendStatusNotification = functions.firestore
             let docId = context.params.id;
             console.log("After", after);
             console.log("Before", before);
-            if (after?.userStatus != before?.userStatus && after?.userStatus!="") {
+            if (after?.userStatus != before?.userStatus && after?.userStatus != "") {
                 // let group = await getData('Users', after?.groupId);
-                let p = after?.history.map(x => x?.email);
-                console.log('pppppp',p);
+                let temp = [];
+                after?.history?.map((x) => {
+                    if (!x?.mute)
+                        temp?.push(x)
+                })
+                let p = temp?.map(x=> x?.email);
+                console.log('pppppp', p);
                 const allUsers = await filterCollections("Login", 'email', 'in', p?.length > 0 ? p : ['anc']);
                 const payload = {
                     notification: {
