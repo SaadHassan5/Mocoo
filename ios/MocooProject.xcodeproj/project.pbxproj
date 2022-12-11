@@ -9,6 +9,19 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* MocooProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MocooProjectTests.m */; };
 		0A1AE5D816674DCA97B7929B /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 358D1C0CDADD484DAB4E849C /* Poppins-ExtraBoldItalic.ttf */; };
+		0D6D57C52944F5C8001BFF7C /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57C42944F5C8001BFF7C /* Lato-Bold.ttf */; };
+		0D6D57CF2944F788001BFF7C /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57C62944F788001BFF7C /* Lato-Thin.ttf */; };
+		0D6D57D02944F788001BFF7C /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57C72944F788001BFF7C /* Lato-Italic.ttf */; };
+		0D6D57D12944F788001BFF7C /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57C82944F788001BFF7C /* Lato-Regular.ttf */; };
+		0D6D57D22944F788001BFF7C /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57C92944F788001BFF7C /* Lato-Black.ttf */; };
+		0D6D57D32944F788001BFF7C /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57CA2944F788001BFF7C /* Lato-Light.ttf */; };
+		0D6D57D42944F788001BFF7C /* Lato-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57CB2944F788001BFF7C /* Lato-LightItalic.ttf */; };
+		0D6D57D52944F788001BFF7C /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57CC2944F788001BFF7C /* Lato-BlackItalic.ttf */; };
+		0D6D57D62944F788001BFF7C /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57CD2944F788001BFF7C /* Lato-BoldItalic.ttf */; };
+		0D6D57D72944F788001BFF7C /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57CE2944F788001BFF7C /* Lato-ThinItalic.ttf */; };
+		0D6D57DB2944FB5D001BFF7C /* Hind-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57D82944FB5D001BFF7C /* Hind-Bold.ttf */; };
+		0D6D57DC2944FB5D001BFF7C /* Hind-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57D92944FB5D001BFF7C /* Hind-Regular.ttf */; };
+		0D6D57DD2944FB5D001BFF7C /* Hind-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D57DA2944FB5D001BFF7C /* Hind-SemiBold.ttf */; };
 		0FA6CE92291D796200D98452 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0FA6CE91291D796200D98452 /* GoogleService-Info.plist */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -49,6 +62,19 @@
 		00E356EE1AD99517003FC87E /* MocooProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MocooProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* MocooProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MocooProjectTests.m; sourceTree = "<group>"; };
+		0D6D57C42944F5C8001BFF7C /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "../src/assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		0D6D57C62944F788001BFF7C /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Thin.ttf"; path = "../src/assets/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
+		0D6D57C72944F788001BFF7C /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Italic.ttf"; path = "../src/assets/fonts/Lato-Italic.ttf"; sourceTree = "<group>"; };
+		0D6D57C82944F788001BFF7C /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "../src/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
+		0D6D57C92944F788001BFF7C /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Black.ttf"; path = "../src/assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
+		0D6D57CA2944F788001BFF7C /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "../src/assets/fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
+		0D6D57CB2944F788001BFF7C /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-LightItalic.ttf"; path = "../src/assets/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; };
+		0D6D57CC2944F788001BFF7C /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-BlackItalic.ttf"; path = "../src/assets/fonts/Lato-BlackItalic.ttf"; sourceTree = "<group>"; };
+		0D6D57CD2944F788001BFF7C /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-BoldItalic.ttf"; path = "../src/assets/fonts/Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
+		0D6D57CE2944F788001BFF7C /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-ThinItalic.ttf"; path = "../src/assets/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
+		0D6D57D82944FB5D001BFF7C /* Hind-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Hind-Bold.ttf"; path = "../src/assets/fonts/Hind-Bold.ttf"; sourceTree = "<group>"; };
+		0D6D57D92944FB5D001BFF7C /* Hind-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Hind-Regular.ttf"; path = "../src/assets/fonts/Hind-Regular.ttf"; sourceTree = "<group>"; };
+		0D6D57DA2944FB5D001BFF7C /* Hind-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Hind-SemiBold.ttf"; path = "../src/assets/fonts/Hind-SemiBold.ttf"; sourceTree = "<group>"; };
 		0F5EA1B12922304900F73769 /* MocooProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MocooProject.entitlements; path = MocooProject/MocooProject.entitlements; sourceTree = "<group>"; };
 		0FA6CE91291D796200D98452 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		11C01FB296AD426890EF10D2 /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../src/assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -182,6 +208,19 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				0D6D57D82944FB5D001BFF7C /* Hind-Bold.ttf */,
+				0D6D57D92944FB5D001BFF7C /* Hind-Regular.ttf */,
+				0D6D57DA2944FB5D001BFF7C /* Hind-SemiBold.ttf */,
+				0D6D57C92944F788001BFF7C /* Lato-Black.ttf */,
+				0D6D57CC2944F788001BFF7C /* Lato-BlackItalic.ttf */,
+				0D6D57CD2944F788001BFF7C /* Lato-BoldItalic.ttf */,
+				0D6D57C72944F788001BFF7C /* Lato-Italic.ttf */,
+				0D6D57CA2944F788001BFF7C /* Lato-Light.ttf */,
+				0D6D57CB2944F788001BFF7C /* Lato-LightItalic.ttf */,
+				0D6D57C82944F788001BFF7C /* Lato-Regular.ttf */,
+				0D6D57C62944F788001BFF7C /* Lato-Thin.ttf */,
+				0D6D57CE2944F788001BFF7C /* Lato-ThinItalic.ttf */,
+				0D6D57C42944F5C8001BFF7C /* Lato-Bold.ttf */,
 				13B07FAE1A68108700A75B9A /* MocooProject */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MocooProjectTests */,
@@ -310,6 +349,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D6D57DB2944FB5D001BFF7C /* Hind-Bold.ttf in Resources */,
+				0D6D57DC2944FB5D001BFF7C /* Hind-Regular.ttf in Resources */,
+				0D6D57DD2944FB5D001BFF7C /* Hind-SemiBold.ttf in Resources */,
+				0D6D57CF2944F788001BFF7C /* Lato-Thin.ttf in Resources */,
+				0D6D57D02944F788001BFF7C /* Lato-Italic.ttf in Resources */,
+				0D6D57D12944F788001BFF7C /* Lato-Regular.ttf in Resources */,
+				0D6D57D22944F788001BFF7C /* Lato-Black.ttf in Resources */,
+				0D6D57D32944F788001BFF7C /* Lato-Light.ttf in Resources */,
+				0D6D57D42944F788001BFF7C /* Lato-LightItalic.ttf in Resources */,
+				0D6D57D52944F788001BFF7C /* Lato-BlackItalic.ttf in Resources */,
+				0D6D57D62944F788001BFF7C /* Lato-BoldItalic.ttf in Resources */,
+				0D6D57D72944F788001BFF7C /* Lato-ThinItalic.ttf in Resources */,
+				0D6D57C52944F5C8001BFF7C /* Lato-Bold.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3928641608914FE3A7C7036D /* Poppins-Black.ttf in Resources */,
@@ -586,7 +638,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MocooProject/MocooProject.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 82K95MKN8L;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MocooProject/Info.plist;
@@ -597,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -618,7 +670,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MocooProject/MocooProject.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 82K95MKN8L;
 				INFOPLIST_FILE = MocooProject/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MocooProject;
@@ -628,7 +680,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

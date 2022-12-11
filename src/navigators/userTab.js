@@ -53,7 +53,7 @@ const UserTab=(props)=> {
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused }) => (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <FontAwesome name={'pagelines'} size={20} color={focused ? "#fff" : "grey"} />
+              <FontAwesome5 name={'pagelines'} size={20} color={focused ? "#fff" : "grey"} />
               <Text style={{ color: focused ? "#fff" : "grey", fontFamily: fontFamily.bold, fontSize: 10 }}>Posts/Events</Text>
             </View>
           )
