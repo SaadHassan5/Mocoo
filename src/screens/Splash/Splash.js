@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { ChangeBackgroundColor, GetUpdateApp, GetUpdateAppClose, GetUser } from '../../root/action';
 import { getData } from '../../Auth/fire';
 import DeviceInfo from 'react-native-device-info';
+import { FireAuth } from '../../Auth/socialAuth';
 
 const Splash = (props) => {
   const [active, setActive] = useState(false)
@@ -42,7 +43,10 @@ const Splash = (props) => {
         props.navigation.replace('UserTab');
       }
       else
-        props.navigation.replace('LoginScreen');
+      {
+       await FireAuth?.asGuest();
+        checkUser();
+      }
 
     }
   }
