@@ -1,136 +1,237 @@
-
-import React, { useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
+import React, {useState} from 'react';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {Checkbox} from 'react-native-paper';
+import Entypo from 'react-native-vector-icons/Entypo';
 import * as Yup from 'yup';
-import { ActivityIndicator, View, Image, StyleSheet, TouchableOpacity, Text, SafeAreaView, ScrollView } from "react-native";
-import Header from "../../components/Header";
-import AppText from "../../components/AppText";
+import {HP, palette, WP} from '../../assets/config';
+import {FireAuth} from '../../Auth/socialAuth';
+import AppText from '../../components/AppText';
+import Header from '../../components/Header';
+import {colors, spacing} from '../../theme';
 import AppForm from './../../components/form/AppForm';
 import AppFormField from './../../components/form/AppFormField';
 import SubmitButton from './../../components/form/SubmitButton';
-import { spacing, colors } from "../../theme";
-import { FireAuth } from '../../Auth/socialAuth';
-import { Checkbox } from 'react-native-paper';
-import { HP, palette, WP } from "../../assets/config";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Entypo from "react-native-vector-icons/Entypo"
-import messaging from '@react-native-firebase/messaging';
 // import CountryPicker from "react-native-country-codes-picker";
-import { Input } from "../../assets/components/Input/Input";
-import AlertService from "../../Services/alertService";
-import { useEffect } from "react";
-import { CountryPicker } from "react-native-country-codes-picker";
-import { filterCollectionDouble, filterCollectionSingle, saveData } from "../../Auth/fire";
-import { CustomBtn1 } from "../../assets/components/CustomButton/CustomBtn1";
-import { contactUs } from "../../Auth/manipulateData";
+import {useEffect} from 'react';
+import {CountryPicker} from 'react-native-country-codes-picker';
+import {CustomBtn1} from '../../assets/components/CustomButton/CustomBtn1';
+import {Input} from '../../assets/components/Input/Input';
+import {
+  filterCollectionDouble,
+  filterCollectionSingle,
+  saveData,
+} from '../../Auth/fire';
+import {contactUs} from '../../Auth/manipulateData';
+import AlertService from '../../Services/alertService';
 
-const validationSchema = Yup.object().shape({
-});
+const validationSchema = Yup.object().shape({});
 
 export default function LoginScreen(props) {
-  const [active, setActive] = useState(false)
-  const [check, setCheck] = useState("uncheck")
+  const [active, setActive] = useState(false);
+  const [check, setCheck] = useState('uncheck');
   const [eye, setEye] = useState(true);
   const [countryCode, setCountryCode] = useState('');
   const [phone, setPhone] = useState('');
   const [show, setShow] = useState(false);
   useEffect(() => {
     // getToken()
-  }, [])
+  }, []);
   const getToken = async () => {
-    const fcmToken = await messaging().getToken()
-    const res = await filterCollectionSingle('Guests', 'token', '==', fcmToken + '')
+    const fcmToken = await messaging().getToken();
+    const res = await filterCollectionSingle(
+      'Guests',
+      'token',
+      '==',
+      fcmToken + '',
+    );
     if (res?.length > 0) {
       console.log('Exist');
-    }
-    else
+    } else
       await saveData('Guests', '', {
-        token: fcmToken
-      })
-  }
+        token: fcmToken,
+      });
+  };
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff', flex: 1 }}>
+    <SafeAreaView style={{backgroundColor: '#fff', flex: 1}}>
       <Header title="Login" goBack={false} />
       <CountryPicker
         show={show}
-        pickerButtonOnPress={(item) => {
+        pickerButtonOnPress={item => {
           console.log(item);
           setCountryCode(item.dial_code?.split('+')[1]);
           setShow(false);
         }}
-        onBackdropPress={() => { setShow(false) }}
+        onBackdropPress={() => {
+          setShow(false);
+        }}
       />
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: 10,
           paddingVertical: 25,
-        }}
-      >
+        }}>
         <View style={styles.logoContainer}>
-          <Image style={{ height: WP(30), width: WP(70) }} source={require("../../assets/images/logo/logo.png")} />
+          <Image
+            style={{height: WP(30), width: WP(70)}}
+            source={require('../../assets/images/logo/logo.png')}
+          />
         </View>
         <View style={styles.formContainer}>
           <AppForm
             validationSchema={validationSchema}
-            initialValues={{ password: "" }}
-            onSubmit={async (values) => {
+            initialValues={{password: ''}}
+            onSubmit={async values => {
               const password = values.password;
               if (check == 'uncheck') {
-                if (phone.length < 7 || countryCode?.trim() == "") {
-                  AlertService?.show('Enter valid number')
-                  return
+                if (phone.length < 7 || countryCode?.trim() == '') {
+                  AlertService?.show('Enter valid number');
+                  return;
                 }
-                await FireAuth.Signin(countryCode + phone, password, props)
-              }
-              else {
-                const adm = await filterCollectionDouble("Admin", 'email', '==', phone, "password", '==', password);
+                await FireAuth.Signin(countryCode + phone, password, props);
+              } else {
+                const adm = await filterCollectionDouble(
+                  'Admin',
+                  'email',
+                  '==',
+                  phone,
+                  'password',
+                  '==',
+                  password,
+                );
                 if (adm.length > 0) {
-                  const fcmToken = await messaging().getToken()
-                  await saveData("Admin", adm?.id, {
+                  const fcmToken = await messaging().getToken();
+                  await saveData('Admin', adm?.id, {
                     token: fcmToken,
-                  })
+                  });
                   await AsyncStorage.setItem('User', phone);
                   await AsyncStorage.setItem('Admin', phone);
-                  props.navigation.replace('TabNav')
-                }
-                else
-                  console.warn("Incorrect");
-                AlertService?.toastPrompt("Wrong Credentials")
+                  props.navigation.replace('TabNav');
+                } else console.warn('Incorrect');
+                AlertService?.toastPrompt('Wrong Credentials');
               }
-
-            }}
-          >
-            <View style={{ flexDirection: 'row', marginBottom: HP(2) }}>
-              <TouchableOpacity style={{ backgroundColor: colors.light }} onPress={() => { setShow(true) }}>
-                <Input editable placeTxt={"Code"} value={countryCode} styles={{ borderTopLeftRadius: WP(2), borderBottomLeftRadius: WP(2), borderRadius: 0, width: WP(25), backgroundColor: 'transparent', padding:10 }} />
+            }}>
+            <View style={{flexDirection: 'row', marginBottom: HP(2)}}>
+              <TouchableOpacity
+                style={{backgroundColor: colors.light}}
+                onPress={() => {
+                  setShow(true);
+                }}>
+                <Input
+                  editable
+                  placeTxt={'Code'}
+                  value={countryCode}
+                  styles={{
+                    borderTopLeftRadius: WP(2),
+                    borderBottomLeftRadius: WP(2),
+                    borderRadius: 0,
+                    width: WP(25),
+                    backgroundColor: 'transparent',
+                    padding: 10,
+                  }}
+                />
               </TouchableOpacity>
-              <Input onChange={(e) => { setPhone(e) }} keyboardType={'number-pad'} placeTxt={'Phone'} styles={{ borderTopRightRadius: WP(2), borderBottomRightRadius: WP(2), borderRadius: 0, width: WP(57), backgroundColor: colors.light, padding:10 }} />
+              <Input
+                onChange={e => {
+                  setPhone(e);
+                }}
+                keyboardType={'number-pad'}
+                placeTxt={'Phone'}
+                styles={{
+                  borderTopRightRadius: WP(2),
+                  borderBottomRightRadius: WP(2),
+                  borderRadius: 0,
+                  width: WP(57),
+                  backgroundColor: colors.light,
+                  padding: 10,
+                }}
+              />
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <AppFormField placeholderText="Password" name="password" secureTextEntry={eye} style={{ width: '100%' }} />
-              <TouchableOpacity onPress={() => { setEye(!eye) }} style={{ position: 'absolute', paddingBottom: WP(3), right: 0, paddingHorizontal: WP(5) }}>
-                {eye ?
-                  <Entypo name={'eye'} size={25} color={palette?.lighBlueBtnTitle} />
-                  :
-                  <Entypo name={'eye-with-line'} size={25} color={palette?.lighBlueBtnTitle} />
-                }
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <AppFormField
+                placeholderText="Password"
+                name="password"
+                secureTextEntry={eye}
+                style={{width: '100%'}}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setEye(!eye);
+                }}
+                style={{
+                  position: 'absolute',
+                  paddingBottom: WP(3),
+                  right: 0,
+                  paddingHorizontal: WP(5),
+                }}>
+                {eye ? (
+                  <Entypo
+                    name={'eye'}
+                    size={25}
+                    color={palette?.lighBlueBtnTitle}
+                  />
+                ) : (
+                  <Entypo
+                    name={'eye-with-line'}
+                    size={25}
+                    color={palette?.lighBlueBtnTitle}
+                  />
+                )}
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => { check == "check" ? setCheck('uncheck') : setCheck('check') }} style={{ flexDirection: 'row', alignItems: 'center', marginTop: HP(1) }}>
-              <Text style={{ ...styles.label }}>Login as Admin</Text>
-              <Checkbox status={check == "check" ? 'checked' : 'unchecked'} color={colors.primary} uncheckedColor={'red'} />
+            <TouchableOpacity
+              onPress={() => {
+                check == 'check' ? setCheck('uncheck') : setCheck('check');
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: HP(1),
+              }}>
+              <Text style={{...styles.label}}>Login as Admin</Text>
+              <Checkbox
+                status={check == 'check' ? 'checked' : 'unchecked'}
+                color={colors.primary}
+                uncheckedColor={'red'}
+              />
             </TouchableOpacity>
-            <CustomBtn1 onPress={() => { contactUs() }} txt={'Forgot Password/Contact us'} txtStyle={{ color: palette?.blackGray, fontSize: 14 }} style={{ backgroundColor: 'transparent', paddingHorizontal: 0, width: WP(70), alignSelf: 'center' }} />
-            <SubmitButton title="Login" style={{ marginTop: spacing[4], paddingVertical: HP(1) }} />
+            <CustomBtn1
+              onPress={() => {
+                contactUs();
+              }}
+              txt={'Forgot Password/Contact us'}
+              txtStyle={{color: palette?.blackGray, fontSize: 14}}
+              style={{
+                backgroundColor: 'transparent',
+                paddingHorizontal: 0,
+                width: WP(70),
+                alignSelf: 'center',
+              }}
+            />
+            <SubmitButton
+              title="Login"
+              style={{marginTop: spacing[4], paddingVertical: HP(1)}}
+            />
           </AppForm>
         </View>
       </ScrollView>
       <View style={styles.signUpLinkContainer}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("RegisterScreen")} style={styles.signUpTextContainer}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('RegisterScreen')}
+          style={styles.signUpTextContainer}>
           <AppText>Don’t have an account?</AppText>
           <AppText style={styles.link}>Sign Up</AppText>
         </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 }
@@ -139,27 +240,27 @@ const styles = StyleSheet.create({
   logoContainer: {
     marginTop: 15,
     marginBottom: 50,
-    alignItems: "center",
+    alignItems: 'center',
   },
   userCheckMeta: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   formContainer: {
     paddingHorizontal: 20,
   },
   forgotPass: {
-    textAlign: "right",
-    color: colors.black
+    textAlign: 'right',
+    color: colors.black,
   },
   checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   label: {
     margin: 8,
-    color: colors.black
+    color: colors.black,
   },
   loginBtn: {
     marginTop: 20,
@@ -168,10 +269,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   signUpTextContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   link: {
     marginLeft: 5,

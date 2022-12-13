@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { createStackNavigator } from '@react-navigation/stack';
+import React, {Component} from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen/RegisterScreen';
 import Splash from '../screens/Splash/Splash';
@@ -34,41 +34,41 @@ const MyStack = createStackNavigator();
 class Stack extends Component {
   render() {
     return (
-        <MyStack.Navigator initialRouteName={'Splash'} screenOptions={{headerShown:false}}>
-          <MyStack.Screen name="LoginScreen" component={LoginScreen} />
-          <MyStack.Screen name="Splash" component={Splash} />
-          <MyStack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <MyStack.Screen name="UserTab" component={UserTab} />
-          <MyStack.Screen name="NewState" component={NewState} />
-          <MyStack.Screen name="ShowCities" component={ShowCities} />
-          <MyStack.Screen name="ShowStates" component={ShowStates} />
-          <MyStack.Screen name="NewCities" component={NewCities} />
-          <MyStack.Screen name="GroupChat" component={GroupChat} />
-          <MyStack.Screen name="ShowGroups" component={ShowGroups} />
-          <MyStack.Screen name="NewGroup" component={NewGroup} />
-          <MyStack.Screen name="Profile" component={Profile} />
-          <MyStack.Screen name="IndividualChat" component={IndividualChat} />
-          <MyStack.Screen name="MyChat" component={MyChat} />
-          <MyStack.Screen name="SubGroupPosts" component={SubGroupPosts} />
-          <MyStack.Screen name="GroupTab" component={GroupTab} />
-          <MyStack.Screen name="NewPost" component={NewPost} />
-          <MyStack.Screen name="GroupMembers" component={GroupMembers} />
-          <MyStack.Screen name="ShowCommunity" component={ShowCommunity} />
-          <MyStack.Screen name="NewCommunity" component={NewCommunity} />
-          <MyStack.Screen name="CommunityChat" component={CommunityChat} />
-          <MyStack.Screen name="OtherProfile" component={OtherProfile} />
-          <MyStack.Screen name="PostDetails" component={PostDetails} />
-          <MyStack.Screen name="StateNav" component={StateNav} />
-          <MyStack.Screen name="ShowPosts" component={ShowPosts} />
-          <MyStack.Screen name="TabNav" component={TabNav} />
-          <MyStack.Screen name="Friends" component={Friends} />
-          <MyStack.Screen name="NewFriendPost" component={NewFriendPost} />
-          <MyStack.Screen name="ShowSubscribed" component={ShowSubscribed} />
-        </MyStack.Navigator>
-    )
+      <MyStack.Navigator
+        initialRouteName={'Splash'}
+        screenOptions={{headerShown: false}}>
+        <MyStack.Screen name="LoginScreen" component={LoginScreen} />
+        <MyStack.Screen name="Splash" component={Splash} />
+        <MyStack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <MyStack.Screen name="UserTab" component={UserTab} />
+        <MyStack.Screen name="NewState" component={NewState} />
+        <MyStack.Screen name="ShowCities" component={ShowCities} />
+        <MyStack.Screen name="ShowStates" component={ShowStates} />
+        <MyStack.Screen name="NewCities" component={NewCities} />
+        <MyStack.Screen name="GroupChat" component={GroupChat} />
+        <MyStack.Screen name="ShowGroups" component={ShowGroups} />
+        <MyStack.Screen name="NewGroup" component={NewGroup} />
+        <MyStack.Screen name="Profile" component={Profile} />
+        <MyStack.Screen name="IndividualChat" component={IndividualChat} />
+        <MyStack.Screen name="MyChat" component={MyChat} />
+        <MyStack.Screen name="SubGroupPosts" component={SubGroupPosts} />
+        <MyStack.Screen name="GroupTab" component={GroupTab} />
+        <MyStack.Screen name="NewPost" component={NewPost} />
+        <MyStack.Screen name="GroupMembers" component={GroupMembers} />
+        <MyStack.Screen name="ShowCommunity" component={ShowCommunity} />
+        <MyStack.Screen name="NewCommunity" component={NewCommunity} />
+        <MyStack.Screen name="CommunityChat" component={CommunityChat} />
+        <MyStack.Screen name="OtherProfile" component={OtherProfile} />
+        <MyStack.Screen name="PostDetails" component={PostDetails} />
+        <MyStack.Screen name="StateNav" component={StateNav} />
+        <MyStack.Screen name="ShowPosts" component={ShowPosts} />
+        <MyStack.Screen name="TabNav" component={TabNav} />
+        <MyStack.Screen name="Friends" component={Friends} />
+        <MyStack.Screen name="NewFriendPost" component={NewFriendPost} />
+        <MyStack.Screen name="ShowSubscribed" component={ShowSubscribed} />
+      </MyStack.Navigator>
+    );
   }
 }
-
-
 
 export default Stack;
